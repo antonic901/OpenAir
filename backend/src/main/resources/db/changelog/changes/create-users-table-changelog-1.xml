@@ -40,7 +40,7 @@
             <column name="address" type="VARCHAR(255)"/>
         </createTable>
         <rollback>
-            <dropTable tableName="person"/>
+            <dropTable tableName="users"/>
         </rollback>
     </changeSet>
 </databaseChangeLog>
