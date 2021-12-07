@@ -7,5 +7,9 @@
     http://www.liquibase.org/xml/ns/dbchangelog-ext http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-ext.xsd">
     <include file="/db/changelog/changes/create-person-table-changelog-1.xml"/>
     <include file="/db/changelog/changes/create-users-table-changelog-1.xml"/>
+    <include file="/db/changelog/changes/create-projects-table-changelog-1.xml"/>
+    <include file="/db/changelog/changes/create-tasks-table-changelog-1.xml"/>
+    <include file="/db/changelog/changes/create-projects-tasks-table-changelog-1.xml"/>
     <include file="/db/changelog/changes/create-time_sheet_day-table-changelog-1.xml"/>
+
 </databaseChangeLog>
