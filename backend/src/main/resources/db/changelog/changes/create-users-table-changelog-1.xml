@@ -37,7 +37,6 @@
             <column name="admin_id" type="BIGINT">
                 <constraints nullable="false" foreignKeyName="fk_project_admin" references="users(id)"/>
             </column>
-
         </createTable>
         <rollback>
             <dropTable tableName="users"/>
