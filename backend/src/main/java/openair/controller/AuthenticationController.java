@@ -3,7 +3,7 @@ package openair.controller;
 import openair.dto.UserTokenState;
 import openair.exception.ResourceConflictException;
 import openair.model.User;
-import openair.security.auth.JwtAuthenticationRequest;
+import openair.dto.JwtAuthenticationRequest;
 import openair.service.UserService;
 import openair.utils.TokenUtils;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -11,7 +11,6 @@ import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
-import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.Authentication;
@@ -19,10 +18,7 @@ import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.util.UriComponentsBuilder;
 
-import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
-import java.util.HashMap;
-import java.util.Map;
 
 @RestController
 @RequestMapping(value = "/auth", produces = MediaType.APPLICATION_JSON_VALUE)
@@ -37,31 +33,23 @@ public class AuthenticationController {
     @Autowired
     private UserService userService;
 
-
-    // Prvi endpoint koji pogadja korisnik kada se loguje.
-    // Tada zna samo svoje korisnicko ime i lozinku i to prosledjuje na backend.
     @PostMapping("/login")
     public ResponseEntity<UserTokenState> createAuthenticationToken(@RequestBody JwtAuthenticationRequest authenticationRequest,
                                                                     HttpServletResponse response) {
 
-        //
         Authentication authentication = authenticationManager
                 .authenticate(new UsernamePasswordAuthenticationToken(authenticationRequest.getUsername(),
                         authenticationRequest.getPassword()));
 
-        // Ubaci korisnika u trenutni security kontekst
         SecurityContextHolder.getContext().setAuthentication(authentication);
 
-        // Kreiraj token za tog korisnika
         User user = (User) authentication.getPrincipal();
         String jwt = tokenUtils.generateToken(user.getUsername());
         int expiresIn = tokenUtils.getExpiredIn();
 
-        // Vrati token kao odgovor na uspesnu autentifikaciju
         return ResponseEntity.ok(new UserTokenState(jwt, expiresIn));
     }
 
-    // Endpoint za registraciju novog korisnika
     @PostMapping("/signup")
     public ResponseEntity<User> addUser(@RequestBody User userRequest, UriComponentsBuilder ucBuilder) {
 

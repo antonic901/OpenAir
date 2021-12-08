@@ -18,15 +18,15 @@ import java.util.List;
 @Setter
 public class Employee extends User{
 
-    @Column
+    @Column(nullable = true)
     @Enumerated(EnumType.STRING)
     private Department department;
 
-    @Column
+    @Column(nullable = true)
     private double salary;
 
     @ManyToOne
-    @JoinColumn(name = "admin_id", nullable = false)
+    @JoinColumn(name = "admin_id", nullable = true)
     private Admin admin;
 
     @ManyToMany(fetch = FetchType.LAZY)

@@ -1,6 +1,7 @@
 package openair.dto;
 
 public class UserTokenState {
+
     private String access_token;
     private Long expires_in;
 
@@ -29,4 +30,5 @@ public class UserTokenState {
     public void setExpires_in(Long expires_in) {
         this.expires_in = expires_in;
     }
+
 }
