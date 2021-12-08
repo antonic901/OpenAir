@@ -7,6 +7,9 @@
     http://www.liquibase.org/xml/ns/dbchangelog-ext http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-ext.xsd">
     <changeSet author="admin" id="1">
         <createTable tableName="users">
+            <column name="dtype" type="VARCHAR(255)">
+                <constraints nullable="false"/>
+            </column>
             <column autoIncrement="true" name="id" type="BIGINT">
                 <constraints primaryKey="true"/>
             </column>

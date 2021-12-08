@@ -9,15 +9,8 @@ import org.springframework.stereotype.Service;
 @Service
 public class UserService implements IUserService {
 
-
     @Autowired
     private UserRepository userRepository;
-
-//    @Autowired
-//    public UserService(UserRepository userRepository){
-//        this.userRepository = userRepository;
-//    }
-
 
     @Override
     public User findByUsername(String username) {
@@ -28,4 +21,5 @@ public class UserService implements IUserService {
     public User addUser(User user) {
         return userRepository.save(user);
     }
+
 }

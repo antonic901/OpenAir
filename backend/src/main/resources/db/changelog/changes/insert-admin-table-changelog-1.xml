@@ -7,6 +7,7 @@
     http://www.liquibase.org/xml/ns/dbchangelog-ext http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-ext.xsd">
     <changeSet author="admin" id="2">
         <insert tableName="users">
+            <column name="dtype" value="Admin"/>
             <column name="id" valueNumeric="1"/>
             <column name="name" value="Andjela"/>
             <column name="surname" value="Paunovic"/>

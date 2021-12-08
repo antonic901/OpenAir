@@ -1,4 +1,4 @@
-package openair.security.auth;
+package openair.dto;
 
 public class JwtAuthenticationRequest {
     private String username;
@@ -28,4 +28,5 @@ public class JwtAuthenticationRequest {
     public void setPassword(String password) {
         this.password = password;
     }
+
 }

@@ -12,16 +12,6 @@ import org.springframework.web.servlet.config.annotation.WebMvcConfigurer;
 public class OpenairApplication {
 
 	@Bean
-	public WebMvcConfigurer corsConfigurer() {
-		return new WebMvcConfigurer() {
-			@Override
-			public void addCorsMappings(CorsRegistry registry) {
-				registry.addMapping("/**").allowedOrigins("http://localhost:8080");
-			}
-		};
-	}
-
-	@Bean
 	public PasswordEncoder passwordEncoder() {
 		return new BCryptPasswordEncoder();
 	}
@@ -29,6 +19,5 @@ public class OpenairApplication {
 	public static void main(String[] args) {
 		SpringApplication.run(OpenairApplication.class, args);
 	}
-
 
 }
