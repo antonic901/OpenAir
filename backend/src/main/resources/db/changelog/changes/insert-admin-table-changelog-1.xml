@@ -1,0 +1,21 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<databaseChangeLog
+        xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+        xmlns:ext="http://www.liquibase.org/xml/ns/dbchangelog-ext"
+        xmlns="http://www.liquibase.org/xml/ns/dbchangelog"
+        xsi:schemaLocation="http://www.liquibase.org/xml/ns/dbchangelog http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-3.1.xsd
+    http://www.liquibase.org/xml/ns/dbchangelog-ext http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-ext.xsd">
+    <changeSet author="admin" id="2">
+        <insert tableName="users">
+            <column name="dtype" value="Admin"/>
+            <column name="id" valueNumeric="1"/>
+            <column name="name" value="Andjela"/>
+            <column name="surname" value="Paunovic"/>
+            <column name="email" value="andjelapaunovic99@gmail.com"/>
+            <column name="username" value="andjela"/>
+            <column name="password" value="$2a$12$YUHEExGhPLiUzvkHKgsnn.Xwfc3jW5hT7jCQb6CyPYBv.ZHus.XCC"/>
+            <column name="phone" value="066666666"/>
+            <column name="usertype" value="ADMIN"/>
+        </insert>
+    </changeSet>
+</databaseChangeLog>
