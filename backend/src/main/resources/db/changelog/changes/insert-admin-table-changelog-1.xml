@@ -15,7 +15,7 @@
             <column name="username" value="andjela"/>
             <column name="password" value="$2a$12$YUHEExGhPLiUzvkHKgsnn.Xwfc3jW5hT7jCQb6CyPYBv.ZHus.XCC"/>
             <column name="phone" value="066666666"/>
-            <column name="usertype" value="ADMIN"/>
+            <column name="usertype" value="ROLE_ADMIN"/>
         </insert>
     </changeSet>
 </databaseChangeLog>
