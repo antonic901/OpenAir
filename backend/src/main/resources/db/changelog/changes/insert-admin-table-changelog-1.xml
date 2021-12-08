@@ -8,7 +8,7 @@
     <changeSet author="admin" id="2">
         <insert tableName="users">
             <column name="dtype" value="Admin"/>
-            <column name="id" valueNumeric="1"/>
+<!--            <column name="id" valueNumeric="1"/>-->
             <column name="name" value="Andjela"/>
             <column name="surname" value="Paunovic"/>
             <column name="email" value="andjelapaunovic99@gmail.com"/>

@@ -8,7 +8,7 @@
     <changeSet author="admin" id="2">
         <insert tableName="user_role">
             <column name="user_id" valueNumeric="1"/>
-            <column name="role_id" value="1"/>
+            <column name="role_id" valueNumeric="1"/>
         </insert>
 
     </changeSet>

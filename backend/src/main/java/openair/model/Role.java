@@ -22,6 +22,7 @@ public class Role implements GrantedAuthority {
     Long id;
 
     @Column
+    @Enumerated(EnumType.STRING)
     private UserType name;
 
     @Override
