@@ -1,5 +1,6 @@
 package openair.controller;
 
+import openair.dto.LoginDTO;
 import openair.dto.UserTokenState;
 import openair.model.Employee;
 import openair.model.User;
@@ -34,7 +35,7 @@ public class AuthenticationController {
     private UserService userService;
 
     @PostMapping("/login")
-    public ResponseEntity<UserTokenState> createAuthenticationToken(@RequestBody JwtAuthenticationRequest authenticationRequest,
+    public ResponseEntity<LoginDTO> createAuthenticationToken(@RequestBody JwtAuthenticationRequest authenticationRequest,
                                                                     HttpServletResponse response) {
 
         Authentication authentication = authenticationManager
@@ -42,12 +43,12 @@ public class AuthenticationController {
                         authenticationRequest.getPassword()));
 
         SecurityContextHolder.getContext().setAuthentication(authentication);
-
         User user = (User) authentication.getPrincipal();
         String jwt = tokenUtils.generateToken(user.getUsername());
         int expiresIn = tokenUtils.getExpiredIn();
+        UserTokenState userTokenState = new UserTokenState(jwt, expiresIn);
 
-        return ResponseEntity.ok(new UserTokenState(jwt, expiresIn));
+        return ResponseEntity.ok(new LoginDTO(userTokenState.getAccess_token(),userTokenState.getExpires_in(), user.getUserType()));
     }
 
     @GetMapping("/checkUsername/{username}")
