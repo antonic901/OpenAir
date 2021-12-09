@@ -58,7 +58,7 @@ public class TaskController {
     @GetMapping("/findById")
     public ResponseEntity<Project> findProjectById(@RequestBody Long projectId){
 
-        return new ResponseEntity<>(this.projectService.findProjectById(projectId), HttpStatus.OK);
+        return new ResponseEntity<Project>(this.projectService.findProjectById(projectId), HttpStatus.OK);
     }
     //projectId
     //taskId
