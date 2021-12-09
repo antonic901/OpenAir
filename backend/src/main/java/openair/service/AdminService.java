@@ -1,6 +1,7 @@
 package openair.service;
 
 import openair.dto.RegisterEmployeeDTO;
+import openair.model.Admin;
 import openair.model.Employee;
 import openair.model.enums.UserType;
 import openair.repository.AdminRepository;
@@ -14,7 +15,6 @@ public class AdminService implements IAdminService {
 
     private EmployeeService employeeService;
     private RoleService roleService;
-
     private AdminRepository adminRepository;
 
     @Autowired
@@ -42,5 +42,9 @@ public class AdminService implements IAdminService {
         employee.setSalary(registerEmployeeDTO.getSalary());
         employee.setAdmin(adminRepository.findById(registerEmployeeDTO.getAdminId()).get());
         return employeeService.add(employee);
+    }
+
+    public Admin findByUsername(String username) {
+        return adminRepository.findByUsername(username);
     }
 }
