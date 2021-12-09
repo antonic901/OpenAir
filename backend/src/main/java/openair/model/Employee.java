@@ -39,7 +39,8 @@ public class Employee extends User{
     )
     private List<Project> projects = new ArrayList<Project>();
 
-    @OneToMany(fetch = FetchType.LAZY, mappedBy="project", cascade = CascadeType.ALL)
+    @JsonIgnore
+    @OneToMany(fetch = FetchType.LAZY, mappedBy="employee", cascade = CascadeType.ALL)
     private List<Task> tasks = new ArrayList<Task>();
 
     @JsonIgnore

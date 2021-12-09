@@ -25,9 +25,10 @@ public class TaskController {
     private EmployeeService employeeService;
 
     @Autowired
-    public TaskController(TaskService taskService, ProjectService projectService) {
+    public TaskController(TaskService taskService, ProjectService projectService, EmployeeService employeeService) {
         this.taskService = taskService;
         this.projectService = projectService;
+        this.employeeService = employeeService;
     }
 
     @PostMapping("/addTask")
@@ -38,9 +39,10 @@ public class TaskController {
             throw new ResourceConflictException(existTask.getId(), "Task already exists");
 
         Project project = projectService.findProjectById(taskDTO.getProjectID());
-        Employee employee = employeeService.findEmployeeById(taskDTO.getEmplyeeID());
-        Task task = this.taskService.addTask(taskDTO, project, employee);
+        Employee employee = employeeService.findEmployeeById(taskDTO.getEmployeeID());
+        Task task = this.taskService.addTask(taskDTO.getName(), project, employee);
 
+        System.out.println("Odsada");
         return new ResponseEntity<Task>(task, HttpStatus.CREATED);
     }
 
@@ -62,13 +64,6 @@ public class TaskController {
     public ResponseEntity<Project> findProjectById(@RequestBody Long projectId){
 
         return new ResponseEntity<Project>(this.projectService.findProjectById(projectId), HttpStatus.OK);
-    }
-    //projectId
-    //taskId
-    @PostMapping("/addTaskToProject/{projectId}/{taskId}/{employeeId}")
-    @PreAuthorize("hasRole('ADMIN')")
-    public ResponseEntity<Task> addTaskToProject(@PathVariable Long taskId, @PathVariable Long projectId, @PathVariable Long employeeId) {
-        return new ResponseEntity<Task>(taskService.addTaskToProject(taskId,projectId, employeeId), HttpStatus.CREATED);
     }
 
 }

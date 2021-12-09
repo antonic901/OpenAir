@@ -35,11 +35,11 @@ public class TaskService implements ITaskService {
     }
 
     @Override
-    public Task addTask(TaskDTO taskDTO, Project project, Employee employee) {
+    public Task addTask(String name, Project project, Employee employee) {
         Task task = new Task();
         task.setProject(project);
         task.setEmployee(employee);
-        task.setName(taskDTO.getName());
+        task.setName(name);
 
         return taskRepository.save(task);
     }

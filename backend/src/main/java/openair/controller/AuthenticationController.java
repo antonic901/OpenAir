@@ -43,7 +43,6 @@ public class AuthenticationController {
                         authenticationRequest.getPassword()));
 
         SecurityContextHolder.getContext().setAuthentication(authentication);
-
         User user = (User) authentication.getPrincipal();
         String jwt = tokenUtils.generateToken(user.getUsername());
         int expiresIn = tokenUtils.getExpiredIn();
@@ -52,7 +51,7 @@ public class AuthenticationController {
         return ResponseEntity.ok(new LoginDTO(userTokenState.getAccess_token(),userTokenState.getExpires_in(),user.getUserType()));
     }
 
-    @PostMapping("/checkUsername/{username}")
+    @GetMapping("/checkUsername/{username}")
     public ResponseEntity<Boolean> checkIfUsernameIsAvailable(@PathVariable String username){
         //vraca false ako je zauzeto ime (vec postoji korisnik)
         return new ResponseEntity<>(userService.checkIfUsernameIsAvailable(username), HttpStatus.OK);

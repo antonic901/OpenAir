@@ -1,5 +1,6 @@
 package openair.model;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
@@ -24,6 +25,7 @@ public class Project {
     @Column
     private String name;
 
+    @JsonIgnore
     @OneToMany(fetch = FetchType.LAZY, mappedBy="project", cascade = CascadeType.ALL)
     private List<Task> tasks = new ArrayList<Task>();
 
@@ -31,6 +33,7 @@ public class Project {
     @JoinColumn(name = "admin_id", nullable = false)
     private Admin admin;
 
+    @JsonIgnore
     @ManyToMany(fetch = FetchType.LAZY)
     @JoinTable(
             name = "employee_project",
@@ -39,6 +42,7 @@ public class Project {
     )
     private List<Employee> employeeList = new ArrayList<Employee>();
 
+    @JsonIgnore
     @OneToMany(fetch = FetchType.LAZY, mappedBy="project", cascade = CascadeType.ALL)
     private List<ExpenseReport> expenseReports = new ArrayList<ExpenseReport>();
 
