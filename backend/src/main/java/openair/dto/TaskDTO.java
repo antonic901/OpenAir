@@ -9,8 +9,6 @@ import lombok.Setter;
 @AllArgsConstructor
 @Getter
 @Setter
-
-public class TaskAddDto {
+public class TaskDTO {
     private String name;
-    private Long projectID;
 }

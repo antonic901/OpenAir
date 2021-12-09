@@ -1,14 +1,15 @@
 package openair.service;
 
-import openair.dto.TaskAddDto;
+import openair.dto.TaskDTO;
 import openair.model.Project;
 import openair.model.Task;
-import openair.repository.EmployeeRepository;
 import openair.repository.TaskRepository;
 import openair.service.interfaces.ITaskService;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Service;
 
-public class TaskService implements ITaskService  {
+@Service
+public class TaskService implements ITaskService {
     private TaskRepository taskRepository;
 
     @Autowired
@@ -16,17 +17,18 @@ public class TaskService implements ITaskService  {
         this.taskRepository = taskRepository;
     }
 
+
     @Override
     public Task findTaskByName(String name) {
         return taskRepository.findTaskByName(name);
     }
 
     @Override
-    public Task addTask(TaskAddDto taskAddDto, Project project) {
+    public Task addTask(TaskDTO taskDTO, Project project) {
         Task task = new Task();
         task.setProject(project);
-        task.setName(taskAddDto.getName());
+        task.setName(taskDTO.getName());
 
-        return task;
+        return taskRepository.save(task);
     }
 }
