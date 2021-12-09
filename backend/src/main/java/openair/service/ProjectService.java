@@ -39,6 +39,7 @@ public class ProjectService implements IProjectService {
 
         return projectRepository.save(project);
     }
+
     @Override
     public Project findProjectById(Long projectId) {
         return projectRepository.findById(projectId).get();
@@ -54,5 +55,6 @@ public class ProjectService implements IProjectService {
         project.setEmployeeList(employeeList);
 
         return projectRepository.save(project);
-    }
+
+}
 }
