@@ -30,11 +30,12 @@ public class TaskController {
 
     @PostMapping("/addTask")
     @PreAuthorize("hasRole('ADMIN')")
-    public ResponseEntity<Task> addTask(@RequestBody TaskDTO taskDTO, Project project) {
+    public ResponseEntity<Task> addTask(@RequestBody TaskDTO taskDTO, Long projectID) {
         Task existTask = this.taskService.findTaskByName(taskDTO.getName());
         if(existTask != null)
             throw new ResourceConflictException(existTask.getId(), "Task already exists");
 
+        Project project = projectService.findProjectByID(projectID);
         Task task = this.taskService.addTask(taskDTO, project);
 
         return new ResponseEntity<Task>(task, HttpStatus.CREATED);
