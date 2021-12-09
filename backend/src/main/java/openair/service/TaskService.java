@@ -1,8 +1,10 @@
 package openair.service;
 
 import openair.dto.TaskDTO;
+import openair.model.Employee;
 import openair.model.Project;
 import openair.model.Task;
+import openair.repository.EmployeeRepository;
 import openair.repository.ProjectRepository;
 import openair.repository.TaskRepository;
 import openair.service.interfaces.ITaskService;
@@ -16,6 +18,7 @@ import java.util.List;
 public class TaskService implements ITaskService {
     private ProjectRepository projectRepository;
     private TaskRepository taskRepository;
+    private EmployeeRepository employeeRepository;
 
     @Autowired
     private ProjectService projectService;
@@ -32,9 +35,10 @@ public class TaskService implements ITaskService {
     }
 
     @Override
-    public Task addTask(TaskDTO taskDTO, Project project) {
+    public Task addTask(TaskDTO taskDTO, Project project, Employee employee) {
         Task task = new Task();
         task.setProject(project);
+        task.setEmployee(employee);
         task.setName(taskDTO.getName());
 
         return taskRepository.save(task);
@@ -47,8 +51,9 @@ public class TaskService implements ITaskService {
     }
 
     @Override
-    public Task addTaskToProject(Long taskId, Long projectId) {
+    public Task addTaskToProject(Long taskId, Long projectId, Long employeeId) {
         Project project = projectRepository.findById(projectId).get();
+        Employee employee = employeeRepository.findById(employeeId).get();
         Task task = taskRepository.findById(taskId).get();
 
         List<Task> taskList = project.getTasks();
@@ -56,8 +61,8 @@ public class TaskService implements ITaskService {
             taskList.add(task);
 
         project.setTasks(taskList);
+        employee.setTasks(taskList);
 
         return taskRepository.save(task);
-
     }
 }
