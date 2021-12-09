@@ -10,6 +10,8 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
+import java.util.List;
+
 @Service
 public class AdminService implements IAdminService {
 
@@ -46,5 +48,10 @@ public class AdminService implements IAdminService {
 
     public Admin findByUsername(String username) {
         return adminRepository.findByUsername(username);
+    }
+
+    @Override
+    public List<Employee> getEmployees(Long id) {
+        return adminRepository.findById(id).get().getEmployeeList();
     }
 }

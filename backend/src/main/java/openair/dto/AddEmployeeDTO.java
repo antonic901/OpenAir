@@ -9,8 +9,10 @@ import lombok.Setter;
 @AllArgsConstructor
 @Getter
 @Setter
-public class TaskDTO {
-    private String name;
-    private Long projectID;
-    private Long employeeID;
+public class AddEmployeeDTO {
+
+    private Long employeeId;
+
+    private Long projectId;
+
 }

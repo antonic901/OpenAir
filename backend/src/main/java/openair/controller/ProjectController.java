@@ -1,5 +1,6 @@
 package openair.controller;
 
+import openair.dto.AddEmployeeDTO;
 import openair.dto.ProjectDTO;
 import openair.exception.ResourceConflictException;
 import openair.model.Admin;
@@ -57,11 +58,11 @@ public class ProjectController {
         return new ResponseEntity<>(this.projectService.findProjectById(projectId), HttpStatus.OK);
     }
 
-    @PostMapping("/addEmployee/{employeeId}/{projectId}")
+    @PostMapping("/addEmployee")
     @PreAuthorize("hasRole('ADMIN')")
-    public ResponseEntity<Project> addEmployee(@PathVariable Long employeeId, @PathVariable Long projectId) {
+    public ResponseEntity<Project> addEmployee(@RequestBody AddEmployeeDTO addEmployeeDTO) {
 
-        return new ResponseEntity<>(projectService.addEmployeeToProject(employeeId,projectId), HttpStatus.CREATED);
+        return new ResponseEntity<>(projectService.addEmployeeToProject(addEmployeeDTO.getEmployeeId(),addEmployeeDTO.getProjectId()), HttpStatus.CREATED);
     }
 
     //vraca liste projekata i za admina i za employee-a
