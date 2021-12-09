@@ -51,22 +51,6 @@ public class AuthenticationController {
         return ResponseEntity.ok(new UserTokenState(jwt, expiresIn));
     }
 
-    @PostMapping("/signup")
-    @PreAuthorize("hasRole('ADMIN')")
-    public ResponseEntity<User> addUser(@RequestBody User userRequest, UriComponentsBuilder ucBuilder) {
-
-        User existUser = this.userService.findByUsername(userRequest.getUsername());
-        if (existUser != null) {
-            throw new ResourceConflictException(userRequest.getId(), "Username already exists");
-        }
-
-
-        User user = this.userService.addUser(userRequest);
-        HttpHeaders headers = new HttpHeaders();
-        headers.setLocation(ucBuilder.path("/api/user/{userId}").buildAndExpand(user.getId()).toUri());
-        return new ResponseEntity<>(user, HttpStatus.CREATED);
-    }
-
 //    // U slucaju isteka vazenja JWT tokena, endpoint koji se poziva da se token osvezi
 //    @PostMapping(value = "/refresh")
 //    public ResponseEntity<UserTokenState> refreshAuthenticationToken(HttpServletRequest request) {

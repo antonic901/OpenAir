@@ -2,6 +2,7 @@ package openair.service;
 
 import openair.model.User;
 import openair.repository.UserRepository;
+import openair.service.interfaces.IUserService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UserDetailsService;
@@ -9,7 +10,7 @@ import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.stereotype.Service;
 
 @Service
-public class CustomUserDetailsService implements UserDetailsService {
+public class CustomUserDetailsService implements IUserService, UserDetailsService {
 
     @Autowired
     private UserRepository userRepository;
@@ -22,6 +23,16 @@ public class CustomUserDetailsService implements UserDetailsService {
         } else {
             return user;
         }
+    }
+
+    @Override
+    public User findByUsername(String username) {
+        return userRepository.findByUsername(username);
+    }
+
+    @Override
+    public User addUser(User user) {
+        return userRepository.save(user);
     }
 
 }
