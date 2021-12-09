@@ -4,5 +4,5 @@ import openair.model.Employee;
 
 public interface IEmployeeService {
     Employee add(Employee employee);
-    Boolean checkIfUsernameIsAvailable(String username);
+
 }

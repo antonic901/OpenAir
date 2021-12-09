@@ -33,9 +33,6 @@ public class AuthenticationController {
     @Autowired
     private UserService userService;
 
-    @Autowired
-    private EmployeeService employeeService;
-
     @PostMapping("/login")
     public ResponseEntity<UserTokenState> createAuthenticationToken(@RequestBody JwtAuthenticationRequest authenticationRequest,
                                                                     HttpServletResponse response) {
@@ -53,12 +50,10 @@ public class AuthenticationController {
         return ResponseEntity.ok(new UserTokenState(jwt, expiresIn));
     }
 
-    @GetMapping
-    @PostMapping("/checkUsername")
-    @PreAuthorize("hasRole('ADMIN')")
+    @PostMapping("/checkUsername/{username}")
     public ResponseEntity<Boolean> checkIfUsernameIsAvailable(@PathVariable String username){
         //vraca false ako je zauzeto ime (vec postoji korisnik)
-        return new ResponseEntity<>(employeeService.checkIfUsernameIsAvailable(username), HttpStatus.OK);
+        return new ResponseEntity<>(userService.checkIfUsernameIsAvailable(username), HttpStatus.OK);
     }
 
 //    // U slucaju isteka vazenja JWT tokena, endpoint koji se poziva da se token osvezi
