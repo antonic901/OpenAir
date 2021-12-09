@@ -8,9 +8,14 @@ import openair.service.interfaces.ITaskService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import java.util.List;
+
 @Service
 public class TaskService implements ITaskService {
     private TaskRepository taskRepository;
+
+    @Autowired
+    private ProjectService projectService;
 
     @Autowired
     public TaskService(TaskRepository taskRepository) {
@@ -30,5 +35,11 @@ public class TaskService implements ITaskService {
         task.setName(taskDTO.getName());
 
         return taskRepository.save(task);
+    }
+
+    @Override
+    public List<Task> findAllByProjectId(Long projectId) {
+        Project project = projectService.findProjectById(projectId);
+        return project.getTasks();
     }
 }

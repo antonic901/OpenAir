@@ -2,6 +2,7 @@ package openair.controller;
 
 import openair.dto.TaskDTO;
 import openair.exception.ResourceConflictException;
+import openair.model.Employee;
 import openair.model.Project;
 import openair.model.Task;
 import openair.service.ProjectService;
@@ -11,10 +12,9 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
+
+import java.util.List;
 
 @RestController
 @RequestMapping(value = "/api/task")
@@ -39,6 +39,13 @@ public class TaskController {
         Task task = this.taskService.addTask(taskDTO, project);
 
         return new ResponseEntity<Task>(task, HttpStatus.CREATED);
+    }
+
+    @GetMapping("/findAllByProjectId/{projectId}")
+    @PreAuthorize("hasRole('ADMIN')")
+    public ResponseEntity<List<Task>> findAllByProjectId(@PathVariable Long projectId) {
+
+        return new ResponseEntity<>(taskService.findAllByProjectId(projectId), HttpStatus.OK);
     }
 
 }
