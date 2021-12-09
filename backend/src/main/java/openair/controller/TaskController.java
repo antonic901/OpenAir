@@ -49,11 +49,11 @@ public class TaskController {
 
         return new ResponseEntity<>(this.projectService.findProjectById(projectId), HttpStatus.OK);
     }
-
-    @PostMapping("/addEmployee/{employeeId}/{projectId}")
+    //projectId
+    //taskId
+    @PostMapping("/addEmployee/{projectId}/{taskId}")
     @PreAuthorize("hasRole('ADMIN')")
-    public ResponseEntity<Task> addEmployee(@PathVariable Long taskId, @PathVariable Long projectId) {
-
+    public ResponseEntity<Task> addTask(@PathVariable Long taskId, @PathVariable Long projectId) {
         return new ResponseEntity<Task>(taskService.addTaskToProject(taskId,projectId), HttpStatus.CREATED);
     }
 }
