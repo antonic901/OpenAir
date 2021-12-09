@@ -35,5 +35,8 @@ public class EmployeeService implements IEmployeeService {
         return project.getEmployeeList();
     }
 
-
+    @Override
+    public Employee findEmployeeById(Long employeeID) {
+        return employeeRepository.findById(employeeID).get();
+    }
 }

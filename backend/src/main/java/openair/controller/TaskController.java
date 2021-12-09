@@ -5,6 +5,7 @@ import openair.exception.ResourceConflictException;
 import openair.model.Employee;
 import openair.model.Project;
 import openair.model.Task;
+import openair.service.EmployeeService;
 import openair.service.ProjectService;
 import openair.service.TaskService;
 import org.apache.tomcat.util.http.parser.MediaType;
@@ -21,6 +22,7 @@ import java.util.List;
 public class TaskController {
     private TaskService taskService;
     private ProjectService projectService;
+    private EmployeeService employeeService;
 
     @Autowired
     public TaskController(TaskService taskService, ProjectService projectService) {
@@ -36,7 +38,8 @@ public class TaskController {
             throw new ResourceConflictException(existTask.getId(), "Task already exists");
 
         Project project = projectService.findProjectById(taskDTO.getProjectID());
-        Task task = this.taskService.addTask(taskDTO, project);
+        Employee employee = employeeService.findEmployeeById(taskDTO.getEmplyeeID());
+        Task task = this.taskService.addTask(taskDTO, project, employee);
 
         return new ResponseEntity<Task>(task, HttpStatus.CREATED);
     }
@@ -62,10 +65,10 @@ public class TaskController {
     }
     //projectId
     //taskId
-    @PostMapping("/addTaskToProject/{projectId}/{taskId}")
+    @PostMapping("/addTaskToProject/{projectId}/{taskId}/{employeeId}")
     @PreAuthorize("hasRole('ADMIN')")
-    public ResponseEntity<Task> addTaskToProject(@PathVariable Long taskId, @PathVariable Long projectId) {
-        return new ResponseEntity<Task>(taskService.addTaskToProject(taskId,projectId), HttpStatus.CREATED);
+    public ResponseEntity<Task> addTaskToProject(@PathVariable Long taskId, @PathVariable Long projectId, @PathVariable Long employeeId) {
+        return new ResponseEntity<Task>(taskService.addTaskToProject(taskId,projectId, employeeId), HttpStatus.CREATED);
     }
 
 }
