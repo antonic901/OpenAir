@@ -21,4 +21,15 @@ public class EmployeeService implements IEmployeeService {
     public Employee add(Employee employee) {
         return employeeRepository.save(employee);
     }
+
+    @Override
+    public Boolean checkIfUsernameIsAvailable(String username) {
+        Employee employee = employeeRepository.findByUsername(username);
+
+        if(employee.getUsername().equals(username)){
+            return false;
+        }
+
+        return true;
+    }
 }
