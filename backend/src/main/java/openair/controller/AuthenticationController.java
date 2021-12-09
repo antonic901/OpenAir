@@ -1,14 +1,11 @@
 package openair.controller;
 
 import openair.dto.UserTokenState;
-import openair.exception.ResourceConflictException;
 import openair.model.User;
 import openair.dto.JwtAuthenticationRequest;
 import openair.service.UserService;
 import openair.utils.TokenUtils;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.http.HttpHeaders;
-import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.authentication.AuthenticationManager;
@@ -16,7 +13,6 @@ import org.springframework.security.authentication.UsernamePasswordAuthenticatio
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.web.bind.annotation.*;
-import org.springframework.web.util.UriComponentsBuilder;
 
 import javax.servlet.http.HttpServletResponse;
 
@@ -48,21 +44,6 @@ public class AuthenticationController {
         int expiresIn = tokenUtils.getExpiredIn();
 
         return ResponseEntity.ok(new UserTokenState(jwt, expiresIn));
-    }
-
-    @PostMapping("/signup")
-    public ResponseEntity<User> addUser(@RequestBody User userRequest, UriComponentsBuilder ucBuilder) {
-
-        User existUser = this.userService.findByUsername(userRequest.getUsername());
-        if (existUser != null) {
-            throw new ResourceConflictException(userRequest.getId(), "Username already exists");
-        }
-
-
-        User user = this.userService.addUser(userRequest);
-        HttpHeaders headers = new HttpHeaders();
-        headers.setLocation(ucBuilder.path("/api/user/{userId}").buildAndExpand(user.getId()).toUri());
-        return new ResponseEntity<>(user, HttpStatus.CREATED);
     }
 
 //    // U slucaju isteka vazenja JWT tokena, endpoint koji se poziva da se token osvezi

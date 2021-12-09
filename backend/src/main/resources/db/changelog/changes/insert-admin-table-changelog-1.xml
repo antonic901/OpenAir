@@ -8,14 +8,14 @@
     <changeSet author="admin" id="2">
         <insert tableName="users">
             <column name="dtype" value="Admin"/>
-            <column name="id" valueNumeric="1"/>
+<!--            <column name="id" valueNumeric="1"/>-->
             <column name="name" value="Andjela"/>
             <column name="surname" value="Paunovic"/>
             <column name="email" value="andjelapaunovic99@gmail.com"/>
             <column name="username" value="andjela"/>
             <column name="password" value="$2a$12$YUHEExGhPLiUzvkHKgsnn.Xwfc3jW5hT7jCQb6CyPYBv.ZHus.XCC"/>
             <column name="phone" value="066666666"/>
-            <column name="usertype" value="ADMIN"/>
+            <column name="usertype" value="ROLE_ADMIN"/>
         </insert>
     </changeSet>
 </databaseChangeLog>

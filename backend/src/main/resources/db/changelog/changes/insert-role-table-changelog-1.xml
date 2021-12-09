@@ -7,12 +7,12 @@
     http://www.liquibase.org/xml/ns/dbchangelog-ext http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-ext.xsd">
     <changeSet author="admin" id="2">
         <insert tableName="roles">
-            <column name="id" valueNumeric="1"/>
-            <column name="name" value="ADMIN"/>
+<!--            <column name="id" valueNumeric="1"/>-->
+            <column name="name" value="ROLE_ADMIN"/>
         </insert>
         <insert tableName="roles">
-            <column name="id" valueNumeric="2"/>
-            <column name="name" value="EMPLOYEE"/>
+<!--            <column name="id" valueNumeric="2"/>-->
+            <column name="name" value="ROLE_EMPLOYEE"/>
         </insert>
     </changeSet>
 </databaseChangeLog>

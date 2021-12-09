@@ -1,6 +1,6 @@
 package openair.model.enums;
 
 public enum UserType {
-    EMPLOYEE,
-    ADMIN
+    ROLE_EMPLOYEE,
+    ROLE_ADMIN
 }

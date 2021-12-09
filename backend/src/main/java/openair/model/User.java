@@ -1,5 +1,6 @@
 package openair.model;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
@@ -9,6 +10,7 @@ import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
 
 import javax.persistence.*;
+import java.util.ArrayList;
 import java.util.Collection;
 import java.util.List;
 
@@ -36,6 +38,7 @@ public class User implements UserDetails {
     @Column
     private String username;
 
+    @JsonIgnore
     @Column
     private String password;
 
@@ -46,11 +49,11 @@ public class User implements UserDetails {
     @Enumerated(EnumType.STRING)
     private UserType userType;
 
-    @ManyToMany(fetch = FetchType.LAZY)
+    @ManyToMany(fetch = FetchType.EAGER)
     @JoinTable(name = "user_role",
             joinColumns = @JoinColumn(name = "user_id", referencedColumnName = "id"),
             inverseJoinColumns = @JoinColumn(name = "role_id", referencedColumnName = "id"))
-    private List<Role> roles;
+    private List<Role> roles = new ArrayList<Role>();
 
     @Override
     public Collection<? extends GrantedAuthority> getAuthorities() {
