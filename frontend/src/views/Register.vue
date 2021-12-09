@@ -191,8 +191,13 @@ export default {
           this.messageShow = false;
           var user = this.user;
           axios.post("http://localhost:8081/api/admin/register", user, {headers: {'Authorization': `Bearer ` + this.$store.getters.getJwt}})
-          alert("New employee is sucessfuly added.");
-          this.user.username = '';
+            .then(() => {
+              alert("New employee is sucessfuly added.");
+              this.user.username = '';
+            })
+            .catch(() => {
+              alert("Something went wrong.")
+            })
         }
     }
 }

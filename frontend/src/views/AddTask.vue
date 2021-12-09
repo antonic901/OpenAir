@@ -179,7 +179,7 @@ export default {
     },
     methods: {
         getEmployee() {
-            axios.get("http://localhost:8081/api/admin/getEmployees",{headers: {'Authorization': `Bearer ` + this.$store.getters.getJwt}})
+            axios.get("http://localhost:8081/api/employee/findAllByProjectId/" + this.selectedProject.id,{headers: {'Authorization': `Bearer ` + this.$store.getters.getJwt}})
                 .then(r => {
                     this.emploies = r.data;
                 })
