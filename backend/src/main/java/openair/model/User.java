@@ -1,5 +1,6 @@
 package openair.model;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
@@ -37,6 +38,7 @@ public class User implements UserDetails {
     @Column
     private String username;
 
+    @JsonIgnore
     @Column
     private String password;
 
