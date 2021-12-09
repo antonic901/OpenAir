@@ -2,6 +2,7 @@ package openair.controller;
 
 import openair.dto.RegisterEmployeeDTO;
 import openair.exception.ResourceConflictException;
+import openair.model.Admin;
 import openair.model.Employee;
 import openair.model.User;
 import openair.service.AdminService;
@@ -18,6 +19,8 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.util.UriComponentsBuilder;
 
+import java.security.Principal;
+
 @RestController
 @RequestMapping(value = "/api/admin", produces = MediaType.APPLICATION_JSON_VALUE)
 public class AdminController {
@@ -33,12 +36,15 @@ public class AdminController {
 
     @PostMapping("/register")
     @PreAuthorize("hasRole('ADMIN')")
-    public ResponseEntity<User> addUser(@RequestBody RegisterEmployeeDTO registerEmployeeDTO, UriComponentsBuilder ucBuilder) {
+    public ResponseEntity<User> addUser(@RequestBody RegisterEmployeeDTO registerEmployeeDTO, Principal loggedAdmin, UriComponentsBuilder ucBuilder) {
 
         User existUser = this.userService.findByUsername(registerEmployeeDTO.getUsername());
         if (existUser != null) {
             throw new ResourceConflictException(existUser.getId(), "Username already exists");
         }
+
+        Admin admin = adminService.findByUsername(loggedAdmin.getName());
+        registerEmployeeDTO.setAdminId(admin.getId());
 
         Employee employee = this.adminService.registerEmployee(registerEmployeeDTO);
         HttpHeaders headers = new HttpHeaders();
