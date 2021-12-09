@@ -35,7 +35,7 @@ public class TaskController {
         if(existTask != null)
             throw new ResourceConflictException(existTask.getId(), "Task already exists");
 
-        Project project = projectService.findProjectByID(taskDTO.getProjectID());
+        Project project = projectService.findProjectById(taskDTO.getProjectID());
         Task task = this.taskService.addTask(taskDTO, project);
 
         return new ResponseEntity<Task>(task, HttpStatus.CREATED);
