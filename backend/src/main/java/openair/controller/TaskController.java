@@ -51,9 +51,9 @@ public class TaskController {
     }
     //projectId
     //taskId
-    @PostMapping("/addEmployee/{projectId}/{taskId}")
+    @PostMapping("/addTaskToProject/{projectId}/{taskId}")
     @PreAuthorize("hasRole('ADMIN')")
-    public ResponseEntity<Task> addTask(@PathVariable Long taskId, @PathVariable Long projectId) {
+    public ResponseEntity<Task> addTaskToProject(@PathVariable Long taskId, @PathVariable Long projectId) {
         return new ResponseEntity<Task>(taskService.addTaskToProject(taskId,projectId), HttpStatus.CREATED);
     }
 }
