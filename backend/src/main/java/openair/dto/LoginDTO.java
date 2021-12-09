@@ -17,4 +17,6 @@ public class LoginDTO {
     private Long expires_in;
 
     private UserType userType;
+
 }
+

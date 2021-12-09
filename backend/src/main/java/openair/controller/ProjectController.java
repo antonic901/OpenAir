@@ -14,6 +14,7 @@ import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 
 import java.security.Principal;
+import java.util.List;
 
 @RestController
 @RequestMapping(value = "/api/project", produces = MediaType.APPLICATION_JSON_VALUE)
@@ -62,4 +63,13 @@ public class ProjectController {
 
         return new ResponseEntity<>(projectService.addEmployeeToProject(employeeId,projectId), HttpStatus.CREATED);
     }
+
+    //vraca liste projekata i za admina i za employee-a
+    @GetMapping("/findAllByUserId/{userId}")
+    @PreAuthorize("hasRole('ADMIN')")
+    public ResponseEntity<List<Project>> findAllByUserId(@PathVariable Long userId) {
+
+        return new ResponseEntity<>(projectService.findAllByUserId(userId), HttpStatus.OK);
+    }
+
 }

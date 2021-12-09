@@ -36,7 +36,7 @@ public class AuthenticationController {
 
     @PostMapping("/login")
     public ResponseEntity<LoginDTO> createAuthenticationToken(@RequestBody JwtAuthenticationRequest authenticationRequest,
-                                                                    HttpServletResponse response) {
+                                                              HttpServletResponse response) {
 
         Authentication authentication = authenticationManager
                 .authenticate(new UsernamePasswordAuthenticationToken(authenticationRequest.getUsername(),
@@ -46,9 +46,9 @@ public class AuthenticationController {
         User user = (User) authentication.getPrincipal();
         String jwt = tokenUtils.generateToken(user.getUsername());
         int expiresIn = tokenUtils.getExpiredIn();
-        UserTokenState userTokenState = new UserTokenState(jwt, expiresIn);
+        UserTokenState userTokenState = new UserTokenState(jwt,expiresIn);
 
-        return ResponseEntity.ok(new LoginDTO(userTokenState.getAccess_token(),userTokenState.getExpires_in(), user.getUserType()));
+        return ResponseEntity.ok(new LoginDTO(userTokenState.getAccess_token(),userTokenState.getExpires_in(),user.getUserType()));
     }
 
     @GetMapping("/checkUsername/{username}")
