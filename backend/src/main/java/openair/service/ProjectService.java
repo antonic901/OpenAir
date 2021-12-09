@@ -34,7 +34,7 @@ public class ProjectService implements IProjectService {
         return projectRepository.save(project);
     }
 
-    public Project findProjectByID(Long ID) {
-        return projectRepository.findByID(ID);
+    public Project findProjectByID(Long id) {
+        return projectRepository.findById(id).get();
     }
 }

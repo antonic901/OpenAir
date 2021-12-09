@@ -11,4 +11,5 @@ import lombok.Setter;
 @Setter
 public class TaskDTO {
     private String name;
+    private Long projectID;
 }
