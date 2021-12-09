@@ -1,13 +1,17 @@
 package openair.controller;
 
 import openair.dto.UserTokenState;
+import openair.model.Employee;
 import openair.model.User;
 import openair.dto.JwtAuthenticationRequest;
+import openair.service.EmployeeService;
 import openair.service.UserService;
 import openair.utils.TokenUtils;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.Authentication;
@@ -44,6 +48,12 @@ public class AuthenticationController {
         int expiresIn = tokenUtils.getExpiredIn();
 
         return ResponseEntity.ok(new UserTokenState(jwt, expiresIn));
+    }
+
+    @PostMapping("/checkUsername/{username}")
+    public ResponseEntity<Boolean> checkIfUsernameIsAvailable(@PathVariable String username){
+        //vraca false ako je zauzeto ime (vec postoji korisnik)
+        return new ResponseEntity<>(userService.checkIfUsernameIsAvailable(username), HttpStatus.OK);
     }
 
 //    // U slucaju isteka vazenja JWT tokena, endpoint koji se poziva da se token osvezi

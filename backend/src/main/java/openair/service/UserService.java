@@ -1,5 +1,6 @@
 package openair.service;
 
+import openair.model.Employee;
 import openair.model.User;
 import openair.repository.UserRepository;
 import openair.service.interfaces.IUserService;
@@ -35,4 +36,15 @@ public class UserService implements IUserService, UserDetailsService {
         return userRepository.save(user);
     }
 
+    @Override
+    public Boolean checkIfUsernameIsAvailable(String username) {
+        User user = userRepository.findByUsername(username);
+
+        //true when username available
+        if (user != null) {
+            return false;
+        }
+
+        return true;
+    }
 }
