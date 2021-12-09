@@ -31,4 +31,7 @@ public class Task {
     @OneToMany(fetch = FetchType.LAZY, mappedBy="task", cascade = CascadeType.ALL)
     private List<TimeSheetDay> timeSheetDays = new ArrayList<TimeSheetDay>();
 
+    @ManyToOne
+    @JoinColumn(name = "employee_id", nullable = false)
+    private Employee employee;
 }

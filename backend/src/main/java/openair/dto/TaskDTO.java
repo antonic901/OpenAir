@@ -12,4 +12,5 @@ import lombok.Setter;
 public class TaskDTO {
     private String name;
     private Long projectID;
+    private Long emplyeeID;
 }
