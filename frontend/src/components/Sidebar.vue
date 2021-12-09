@@ -1,0 +1,95 @@
+<template>
+    <v-navigation-drawer app color="light-blue lighten-2" permanent expand-on-hover clipped>
+        <div v-if="isUserLogged">
+            <v-list v-if="userType == 'ROLE_ADMIN'" shaped nav dense>
+                <router-link to="/register" style="text-decoration:none;">
+                    <v-list-item link>
+                        <v-list-item-icon >
+                            <v-icon color="white">mdi-account-multiple-plus</v-icon>
+                        </v-list-item-icon>
+                        <v-list-item-title style="color:white;">Register employee</v-list-item-title>
+                    </v-list-item>
+                </router-link>
+            </v-list>
+            <v-list v-if="userType == 'ROLE_ADMIN'" shaped nav dense>
+                <router-link  to="/addProject" style="text-decoration:none;">
+                    <v-list-item link>
+                        <v-list-item-icon >
+                            <v-icon color="white">mdi-plus</v-icon>
+                        </v-list-item-icon>
+                        <v-list-item-title style="color:white;">Create project</v-list-item-title>
+                    </v-list-item>
+                </router-link>
+            </v-list>
+            <v-list v-if="userType == 'ROLE_ADMIN'" shaped nav dense>
+                <router-link  to="/assignEmployeeToProject" style="text-decoration:none;">
+                    <v-list-item link>
+                        <v-list-item-icon >
+                            <v-icon color="white">mdi-account-plus</v-icon>
+                        </v-list-item-icon>
+                        <v-list-item-title style="color:white;">Assign employee to project</v-list-item-title>
+                    </v-list-item>
+                </router-link>
+            </v-list>
+            <v-list v-if="userType == 'ROLE_ADMIN'" shaped nav dense>
+                <router-link  to="/addTask" style="text-decoration:none;">
+                    <v-list-item link>
+                        <v-list-item-icon >
+                            <v-icon color="white">mdi-badge-account-outline</v-icon>
+                        </v-list-item-icon>
+                        <v-list-item-title style="color:white;">Add task to project</v-list-item-title>
+                    </v-list-item>
+                </router-link>
+            </v-list>
+        </div>
+        <template v-slot:append>
+            <v-list nav dense>
+                <v-list-item v-on:click="logout" v-if="isUserLogged" link>
+                    <v-list-item-icon>
+                    <v-icon color="white">mdi-export</v-icon>
+                    </v-list-item-icon>
+                    <v-list-item-title style="color:white;">Logout</v-list-item-title>
+                </v-list-item>
+                <router-link v-else to="/login" style="text-decoration:none;">
+                    <v-list-item link>
+                        <v-list-item-icon>
+                            <v-icon color="white">mdi-import</v-icon>
+                        </v-list-item-icon>
+                        <v-list-item-title style="color:white;">Login</v-list-item-title>
+                    </v-list-item>
+                </router-link>
+            </v-list>
+        </template>
+    </v-navigation-drawer>
+</template>
+
+<script>
+export default {
+    name: 'Sidebar',
+    computed: {
+        isUserLogged() {
+            return this.$store.getters.isUserLogged;
+        },
+        userType() {
+            return this.$store.getters.getUserType;
+        }
+    },
+    data() {
+        return {
+          
+        }
+    },
+    methods: {
+        logout() {
+            this.$router.push({name: 'Home'});
+            window.sessionStorage.clear();
+            this.$store.dispatch('updateJwt', null);
+            this.$store.dispatch('updateUserType', null);
+        }
+    }
+}
+</script>
+
+<style scoped>
+
+</style>
