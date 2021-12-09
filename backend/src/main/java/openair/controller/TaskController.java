@@ -11,10 +11,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 @RestController
 @RequestMapping(value = "/api/task")
@@ -41,4 +38,22 @@ public class TaskController {
         return new ResponseEntity<Task>(task, HttpStatus.CREATED);
     }
 
+    @GetMapping("/findByName")
+    public ResponseEntity<Project> findProjectByName(@RequestBody String name){
+
+        return new ResponseEntity<>(this.projectService.findProjectByName(name), HttpStatus.OK);
+    }
+
+    @GetMapping("/findById")
+    public ResponseEntity<Project> findProjectById(@RequestBody Long projectId){
+
+        return new ResponseEntity<>(this.projectService.findProjectById(projectId), HttpStatus.OK);
+    }
+    //projectId
+    //taskId
+    @PostMapping("/addTaskToProject/{projectId}/{taskId}")
+    @PreAuthorize("hasRole('ADMIN')")
+    public ResponseEntity<Task> addTaskToProject(@PathVariable Long taskId, @PathVariable Long projectId) {
+        return new ResponseEntity<Task>(taskService.addTaskToProject(taskId,projectId), HttpStatus.CREATED);
+    }
 }
