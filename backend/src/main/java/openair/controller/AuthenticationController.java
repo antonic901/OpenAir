@@ -50,7 +50,7 @@ public class AuthenticationController {
         return ResponseEntity.ok(new UserTokenState(jwt, expiresIn));
     }
 
-    @PostMapping("/checkUsername/{username}")
+    @GetMapping("/checkUsername/{username}")
     public ResponseEntity<Boolean> checkIfUsernameIsAvailable(@PathVariable String username){
         //vraca false ako je zauzeto ime (vec postoji korisnik)
         return new ResponseEntity<>(userService.checkIfUsernameIsAvailable(username), HttpStatus.OK);
