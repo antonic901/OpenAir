@@ -8,6 +8,7 @@ import lombok.Setter;
 import openair.model.enums.Department;
 
 import javax.persistence.*;
+import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -25,6 +26,13 @@ public class Employee extends User{
 
     @Column(nullable = true)
     private double salary;
+
+    @Column(nullable = true)
+    private Integer freeDays;
+
+    //datum zaposlednja
+    @Column(nullable = true)
+    private LocalDate dateOfHiring;
 
     @ManyToOne
     @JoinColumn(name = "admin_id", nullable = true)

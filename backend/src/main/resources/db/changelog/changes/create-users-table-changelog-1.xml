@@ -13,6 +13,12 @@
             <column autoIncrement="true" name="id" type="BIGINT">
                 <constraints primaryKey="true"/>
             </column>
+            <column name="free_days" type="INT">
+                <constraints nullable="true"/>
+            </column>
+            <column name="date_of_hiring" type="TIMESTAMP">
+                <constraints nullable="true"/>
+            </column>
             <column name="email" type="VARCHAR(255)">
                 <constraints nullable="false"/>
             </column>
