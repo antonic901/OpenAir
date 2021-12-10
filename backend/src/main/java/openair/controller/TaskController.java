@@ -54,6 +54,13 @@ public class TaskController {
         return new ResponseEntity<>(taskService.findAllByProjectId(projectId), HttpStatus.OK);
     }
 
+    @GetMapping("/findAllByEmployeeId/{projectId}")
+    @PreAuthorize("hasRole('ADMIN')")
+    public ResponseEntity<List<Task>> findAllByEmployeeId(@PathVariable Long employeeId) {
+
+        return new ResponseEntity<>(taskService.findAllByEmployeeId(employeeId), HttpStatus.OK);
+    }
+
     @GetMapping("/findByName")
     public ResponseEntity<Project> findProjectByName(@RequestBody String name){
 

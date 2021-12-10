@@ -44,4 +44,9 @@ public class EmployeeService implements IEmployeeService {
     public Employee findEmployeeById(Long employeeID) {
         return employeeRepository.findById(employeeID).get();
     }
+
+    @Override
+    public Employee findByUsername(String name) {
+        return employeeRepository.findByUsername(name);
+    }
 }

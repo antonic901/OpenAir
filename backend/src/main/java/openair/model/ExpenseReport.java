@@ -5,7 +5,6 @@ import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 import openair.model.enums.Status;
-
 import javax.persistence.*;
 import java.time.LocalDate;
 
