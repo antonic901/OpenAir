@@ -20,7 +20,8 @@ public class ExspenseReportDTO {
     private String trackingNumber;
     private String name;
     private double refund;
-    private LocalDate dateOfCreation;
+    //DATUM SE GENERISE U SERVISU PRILIKOM KREIRANJA
+    //private LocalDate dateOfCreation;
     private String description;
     private Status status;
     private Long projectId;

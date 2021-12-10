@@ -15,15 +15,12 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 import java.security.Principal;
 
 @RestController
-@RequestMapping(value = "/api/exspensereport", produces = MediaType.APPLICATION_JSON_VALUE)
+@RequestMapping(value = "/api/expensereport", produces = MediaType.APPLICATION_JSON_VALUE)
 public class ExpenseReportController {
 
     private ExpenseReportService expenseReportService;
@@ -47,5 +44,21 @@ public class ExpenseReportController {
 
         ExpenseReport expenseReport = this.expenseReportService.addReport(expenseReportDTO,employee,project);
         return new ResponseEntity<>(expenseReport, HttpStatus.CREATED);
+    }
+
+    @PostMapping("/approve/{reportId}")
+    @PreAuthorize("hasRole('ADMIN')")
+    public ResponseEntity<ExpenseReport> approveReport(@PathVariable Long reportId) {
+
+        ExpenseReport expenseReport = this.expenseReportService.approveReport(reportId);
+        return new ResponseEntity<>(expenseReport, HttpStatus.OK);
+    }
+
+    @PostMapping("/reject/{reportId}")
+    @PreAuthorize("hasRole('ADMIN')")
+    public ResponseEntity<ExpenseReport> rejectReport(@PathVariable Long reportId) {
+
+        ExpenseReport expenseReport = this.expenseReportService.rejectReport(reportId);
+        return new ResponseEntity<>(expenseReport, HttpStatus.OK);
     }
 }
