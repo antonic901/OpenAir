@@ -9,4 +9,5 @@ public interface IEmployeeService {
     Employee add(Employee employee);
     Employee findEmployeeById(Long employeeId);
     List<Employee> findAllByProjectId(Long projectId);
+    Employee findByUsername(String username);
 }
