@@ -13,6 +13,9 @@
             <column autoIncrement="true" name="id" type="BIGINT">
                 <constraints primaryKey="true"/>
             </column>
+            <column name="freeDays" type="INT">
+                <constraints nullable="true"/>
+            </column>
             <column name="email" type="VARCHAR(255)">
                 <constraints nullable="false"/>
             </column>

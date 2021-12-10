@@ -43,6 +43,8 @@ public class AdminService implements IAdminService {
         employee.setDepartment(registerEmployeeDTO.getDepartment());
         employee.setSalary(registerEmployeeDTO.getSalary());
         employee.setAdmin(adminRepository.findById(registerEmployeeDTO.getAdminId()).get());
+        //Osam slobodnih radnih dana pri registraciji
+        employee.setFreeDays(8);
         return employeeService.add(employee);
     }
 

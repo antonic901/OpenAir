@@ -26,6 +26,9 @@ public class Employee extends User{
     @Column(nullable = true)
     private double salary;
 
+    @Column(nullable = true)
+    private Integer freeDays;
+
     @ManyToOne
     @JoinColumn(name = "admin_id", nullable = true)
     private Admin admin;
