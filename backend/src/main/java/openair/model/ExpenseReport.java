@@ -5,7 +5,6 @@ import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 import openair.model.enums.Status;
-
 import javax.persistence.*;
 import java.time.LocalDate;
 
@@ -35,6 +34,9 @@ public class ExpenseReport {
 
     @Column
     private String description;
+
+    @Column
+    private String document;
 
     @Column
     @Enumerated(EnumType.STRING)

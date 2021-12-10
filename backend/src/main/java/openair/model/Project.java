@@ -5,6 +5,7 @@ import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
+import openair.model.enums.ProjectType;
 
 import javax.persistence.*;
 import java.util.ArrayList;
@@ -24,6 +25,10 @@ public class Project {
 
     @Column
     private String name;
+
+    @Column
+    @Enumerated(value = EnumType.STRING)
+    private ProjectType projectType;
 
     @JsonIgnore
     @OneToMany(fetch = FetchType.LAZY, mappedBy="project", cascade = CascadeType.ALL)
