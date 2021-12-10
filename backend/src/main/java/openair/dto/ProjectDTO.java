@@ -4,6 +4,7 @@ import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
+import openair.model.enums.ProjectType;
 
 @NoArgsConstructor
 @AllArgsConstructor
@@ -11,4 +12,5 @@ import lombok.Setter;
 @Setter
 public class ProjectDTO {
     private String name;
+    private ProjectType projectType;
 }

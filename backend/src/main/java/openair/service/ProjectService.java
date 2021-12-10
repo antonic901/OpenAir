@@ -46,6 +46,7 @@ public class ProjectService implements IProjectService {
 
         project.setAdmin(admin);
         project.setName(projectDTO.getName());
+        project.setProjectType(projectDTO.getProjectType());
 
         return projectRepository.save(project);
     }

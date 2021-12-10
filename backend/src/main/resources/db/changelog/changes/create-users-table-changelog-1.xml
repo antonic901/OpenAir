@@ -13,7 +13,7 @@
             <column autoIncrement="true" name="id" type="BIGINT">
                 <constraints primaryKey="true"/>
             </column>
-            <column name="freeDays" type="INT">
+            <column name="free_days" type="INT">
                 <constraints nullable="true"/>
             </column>
             <column name="email" type="VARCHAR(255)">

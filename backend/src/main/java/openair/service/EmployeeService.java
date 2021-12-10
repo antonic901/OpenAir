@@ -43,6 +43,7 @@ public class EmployeeService implements IEmployeeService {
     }
 
     //Svakog prvog u mesecu se poveca broj slobodnih dana za 2
+    //At 00:00:00am, on the 1st day, every month
     @Scheduled(cron = "0 0 0 1 * ?")
     public void increaseEmployeeFreeDays(){
         List<Employee> employeeList = employeeRepository.findAll();
