@@ -13,4 +13,5 @@ public interface ITaskService {
     List<Task> findAllByProjectId(Long projectId);
     Task addTaskToProject(Long taskId, Long projectId, Long employeeId);
     List<Task> findAllByEmployeeId(Long employeeId);
+    Task findById(Long taskId);
 }

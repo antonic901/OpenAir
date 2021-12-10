@@ -28,7 +28,6 @@ public class TaskService implements ITaskService {
         this.taskRepository = taskRepository;
     }
 
-
     @Override
     public Task findTaskByName(String name) {
         return taskRepository.findTaskByName(name);
@@ -55,6 +54,12 @@ public class TaskService implements ITaskService {
         Employee employee = employeeRepository.findById(employeeId).get();
 
         return employee.getTasks();
+    }
+
+    @Override
+    public Task findById(Long taskId) {
+        return taskRepository.findById(taskId).get();
+
     }
 
 
