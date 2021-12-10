@@ -40,6 +40,11 @@ public class EmployeeService implements IEmployeeService {
     }
 
     @Override
+    public Employee findByUsername(String name) {
+        return employeeRepository.findByUsername(name);
+    }
+
+    @Override
     public Employee findEmployeeById(Long employeeID) {
         return employeeRepository.findById(employeeID).get();
     }
@@ -47,23 +52,24 @@ public class EmployeeService implements IEmployeeService {
     //Svakog prvog u mesecu se poveca broj slobodnih dana za 2, +1 na svakih 5 godina zaposlenja
     //At 00:00:00am, on the 1st day, every month
     @Scheduled(cron = "0 0 0 1 * ?")
-    public void increaseEmployeeFreeDays(){
+    public void increaseEmployeeFreeDays() {
         List<Employee> employeeList = employeeRepository.findAll();
 
         long numOfYearsInCompany = 0;
         long increaseBy = 2;
 
-        for(int i=0; i< employeeList.size(); i++){
+        for (int i = 0; i < employeeList.size(); i++) {
             //koliko je godina u firmi
-            numOfYearsInCompany = java.time.temporal.ChronoUnit.YEARS.between( employeeList.get(i).getDateOfHiring() , LocalDate.now());
+            numOfYearsInCompany = java.time.temporal.ChronoUnit.YEARS.between(employeeList.get(i).getDateOfHiring(), LocalDate.now());
 
             //ako je tu 5,10,15... godina vec dobija dodatne dane na svakih 5 godina jedan vise
-            if(numOfYearsInCompany%5 == 0){
-                increaseBy += numOfYearsInCompany/5;
+            if (numOfYearsInCompany % 5 == 0) {
+                increaseBy += numOfYearsInCompany / 5;
             }
-            employeeList.get(i).setFreeDays((int) (employeeList.get(i).getFreeDays()+ increaseBy));
+            employeeList.get(i).setFreeDays((int) (employeeList.get(i).getFreeDays() + increaseBy));
         }
 
         employeeRepository.saveAll(employeeList);
+
     }
 }
