@@ -1,6 +1,5 @@
 package openair.controller;
 
-import liquibase.pro.packaged.H;
 import openair.dto.RequestAbsenceDTO;
 import openair.model.Absence;
 import openair.model.Admin;

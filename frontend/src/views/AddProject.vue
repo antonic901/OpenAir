@@ -18,6 +18,20 @@
                         required
                         style="margin-left:10px;margin-right:10px;"
                     ></v-text-field>
+                    <v-radio-group
+                    v-model="projectType"
+                    row
+                    :rules="projectTypeRules"
+                    >
+                        <v-radio
+                            label="Intern"
+                            value="INTERN"
+                        ></v-radio>
+                        <v-radio
+                            label="Commercial"
+                            value="COMMERCIAL"
+                        ></v-radio>
+                    </v-radio-group>
                     <label v-if="messageShow" style="color:red;margin-left:20px"><b>{{message}}</b></label>
                 </v-form>
                 <v-btn
@@ -47,6 +61,10 @@ export default {
             nameRules: [
               v => !!v || 'Name is required'
             ],
+            projectType: null,
+            projectTypeRules: [
+                v => !!v || 'Project type is required'
+            ],
             message: '',
             messageShow: false
         }
@@ -58,7 +76,7 @@ export default {
             }
         },
         create() {
-          axios.post("http://localhost:8081/api/project/add", {name: this.name}, {headers: {'Authorization': `Bearer ` + this.$store.getters.getJwt}})
+          axios.post("http://localhost:8081/api/project/add", {name: this.name, projectType: this.projectType}, {headers: {'Authorization': `Bearer ` + this.$store.getters.getJwt}})
             .then(() => {
                 alert("New project is sucessfuly added.");
                 this.message = '';
