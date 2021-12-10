@@ -26,9 +26,6 @@ public class TimeSheetDay {
     @Column
     private double workTime;
 
-    @Column
-    private Boolean approved;
-
     @ManyToOne
     @JoinColumn(name = "employee_id", nullable = false)
     private Employee employee;
