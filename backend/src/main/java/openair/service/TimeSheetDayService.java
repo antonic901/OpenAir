@@ -32,6 +32,7 @@ public class TimeSheetDayService implements ITimeSheetDay {
         timeSheetDay.setTask(task);
         timeSheetDay.setDate(timeSheetDayDTO.getDate());
         timeSheetDay.setWorkTime(timeSheetDayDTO.getWorkTime());
+        timeSheetDay.setApproved(false);
 
         return timeSheetDayRepository.save(timeSheetDay);
     }

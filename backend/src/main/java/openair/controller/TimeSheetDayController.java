@@ -13,10 +13,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 import java.security.Principal;
 
@@ -33,12 +30,23 @@ public class TimeSheetDayController {
         this.timeSheetDayService = timeSheetDayService;
     }
 
-    @PostMapping("/add")
+    @PostMapping("/addByEmployee")
     @PreAuthorize("hasRole('EMPLOYEE')")
     public ResponseEntity<TimeSheetDay> addDay(@RequestBody TimeSheetDayDTO timeSheetDayDTO, Principal loggedEmployee) {
 
         //nadjem zaposlenog po username-u
         Employee employee = employeeService.findByUsername(loggedEmployee.getName());
+
+        TimeSheetDay timeSheetDay = this.timeSheetDayService.addTimeSheetDay(timeSheetDayDTO,employee);
+        return new ResponseEntity<>(timeSheetDay, HttpStatus.CREATED);
+    }
+
+    @PostMapping("/addByAdmin/{employeeId}")
+    @PreAuthorize("hasRole('ADMIN')")
+    public ResponseEntity<TimeSheetDay> addDay(@RequestBody TimeSheetDayDTO timeSheetDayDTO, @PathVariable Long employeeId) {
+
+        //nadjem zaposlenog po id-ju
+        Employee employee = employeeService.findEmployeeById(employeeId);
 
         TimeSheetDay timeSheetDay = this.timeSheetDayService.addTimeSheetDay(timeSheetDayDTO,employee);
         return new ResponseEntity<>(timeSheetDay, HttpStatus.CREATED);

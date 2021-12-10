@@ -6,4 +6,5 @@ import openair.model.TimeSheetDay;
 
 public interface ITimeSheetDay {
     TimeSheetDay addTimeSheetDay(TimeSheetDayDTO timeSheetDayDTO, Employee employee);
+
 }
