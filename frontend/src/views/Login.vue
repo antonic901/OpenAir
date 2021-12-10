@@ -83,6 +83,7 @@ export default {
             this.messageShow = false;
             this.$store.dispatch('updateJwt',r.data.access_token)
             this.$store.dispatch('updateUserType',r.data.userType)
+            this.$store.dispatch('updateUserId',r.data.userId)
             this.$router.push({name: 'Home'});
           })
           .catch(() => {

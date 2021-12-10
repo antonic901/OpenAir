@@ -67,7 +67,7 @@ public class ProjectController {
 
     //vraca liste projekata i za admina i za employee-a
     @GetMapping("/findAllByUserId/{userId}")
-    @PreAuthorize("hasRole('ADMIN', 'EMPLOYEE')")
+    @PreAuthorize("hasRole('ADMIN') || hasRole('EMPLOYEE')")
     public ResponseEntity<List<Project>> findAllByUserId(@PathVariable Long userId) {
 
         return new ResponseEntity<>(projectService.findAllByUserId(userId), HttpStatus.OK);

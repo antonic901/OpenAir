@@ -8,7 +8,8 @@ export default new Vuex.Store({
   strict: true,
   state: {
     jwt: null,
-    userType: null
+    userType: null,
+    userId: null
   },
   getters: {
     isUserLogged(state) {
@@ -20,6 +21,9 @@ export default new Vuex.Store({
     },
     getUserType(state) {
       return state.userType;
+    },
+    getUserId(state) {
+      return state.userId;
     }
   },
   mutations: {
@@ -28,6 +32,9 @@ export default new Vuex.Store({
     },
     updateUserType(state, userType) {
       state.userType = userType
+    },
+    updateUserId(state, userId) {
+      state.userId = userId;
     }
   },
   actions: {
@@ -36,6 +43,9 @@ export default new Vuex.Store({
     },
     updateUserType(context, userType) {
       context.commit('updateUserType', userType)
+    },
+    updateUserId(context, userId) {
+      context.commit('updateUserId', userId);
     }
   },
   plugins: [createPersistedState()],

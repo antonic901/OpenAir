@@ -11,6 +11,7 @@ import openair.service.interfaces.IAbsenceService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import java.time.LocalDateTime;
 import java.util.List;
 import java.util.Optional;
 
@@ -52,6 +53,15 @@ public class AbsenceService implements IAbsenceService {
     @Override
     public Absence add(RequestAbsenceDTO requestAbsenceDTO, Long id) {
         Employee employee = employeeRepository.findById(id).get();
+
+        if(requestAbsenceDTO.getStartTime().isAfter(requestAbsenceDTO.getEndTime())) {
+            throw new RuntimeException("Period is not valid.");
+        }
+
+        else if(checkIsAbsenceConflicting(employee, requestAbsenceDTO.getStartTime(), requestAbsenceDTO.getEndTime())) {
+            throw new RuntimeException("Period is in conflict. ");
+        }
+
         Period period = new Period(requestAbsenceDTO.getStartTime(),requestAbsenceDTO.getEndTime());
         Absence absence = new Absence();
         absence.setPeriod(period);
@@ -59,6 +69,38 @@ public class AbsenceService implements IAbsenceService {
         absence.setAdmin(employee.getAdmin());
         absence.setStatus(Status.INPROCESS);
         return absenceRepository.save(absence);
+    }
+
+    boolean checkIsAbsenceConflicting(Employee employee, LocalDateTime startTime, LocalDateTime endTime) {
+        for(Absence absence : employee.getAbsences()) {
+            if(absence.getPeriod().getStartTime().isEqual(startTime) && absence.getPeriod().getEndTime().isEqual(endTime)) {
+                return  true;
+            }
+            if(absence.getStatus() == Status.INPROCESS) {
+                if(checkConflict(absence, startTime, endTime)) {
+                    return true;
+                }
+            }
+            if(absence.getStatus() == Status.APPROVED && absence.getPeriod().getStartTime().isAfter(LocalDateTime.now())) {
+                if(checkConflict(absence, startTime, endTime)) {
+                    return true;
+                }
+            }
+        }
+        return false;
+    }
+
+    boolean checkConflict(Absence absence, LocalDateTime startTime, LocalDateTime endTime) {
+        if(startTime.isBefore(absence.getPeriod().getEndTime()) && endTime.isAfter(absence.getPeriod().getEndTime())) {
+            return  true;
+        }
+        if(startTime.isBefore(absence.getPeriod().getStartTime()) && endTime.isAfter(absence.getPeriod().getStartTime())) {
+            return  true;
+        }
+        else if(absence.getPeriod().getStartTime().isBefore(startTime) && absence.getPeriod().getEndTime().isAfter(endTime)) {
+            return true;
+        }
+        else return false;
     }
 
     @Override

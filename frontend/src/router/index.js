@@ -9,6 +9,8 @@ import Register from '../views/Register.vue'
 import AddProject from '../views/AddProject.vue'
 import AssignEmployeeToProject from '../views/AssignEmployeeToProject.vue'
 import AddTask from '../views/AddTask.vue'
+import RequestAbsence from '../views/RequestAbsence.vue'
+import ApproveAbsence from '../views/ApproveAbsence.vue'
 
 const routes = [
   {
@@ -40,6 +42,16 @@ const routes = [
     path: "/addTask",
     name: "AddTask",
     component: AddTask
+  },
+  {
+    path: "/requestAbsence",
+    name: "RequestAbsence",
+    component: RequestAbsence
+  },
+  {
+    path: "/approveAbsence",
+    name: "ApproveAbsence",
+    component: ApproveAbsence
   }
 ]
 

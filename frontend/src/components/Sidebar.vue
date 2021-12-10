@@ -41,6 +41,26 @@
                     </v-list-item>
                 </router-link>
             </v-list>
+            <v-list v-if="userType == 'ROLE_EMPLOYEE'" shaped nav dense>
+                <router-link  to="/requestAbsence" style="text-decoration:none;">
+                    <v-list-item link>
+                        <v-list-item-icon >
+                            <v-icon color="white">mdi-bed-empty</v-icon>
+                        </v-list-item-icon>
+                        <v-list-item-title style="color:white;">Request absence</v-list-item-title>
+                    </v-list-item>
+                </router-link>
+            </v-list>
+            <v-list v-if="userType == 'ROLE_ADMIN'" shaped nav dense>
+                <router-link  to="/approveAbsence" style="text-decoration:none;">
+                    <v-list-item link>
+                        <v-list-item-icon >
+                            <v-icon color="white">mdi-bed-empty</v-icon>
+                        </v-list-item-icon>
+                        <v-list-item-title style="color:white;">Approve absence</v-list-item-title>
+                    </v-list-item>
+                </router-link>
+            </v-list>
         </div>
         <template v-slot:append>
             <v-list nav dense>
@@ -85,6 +105,7 @@ export default {
             window.sessionStorage.clear();
             this.$store.dispatch('updateJwt', null);
             this.$store.dispatch('updateUserType', null);
+            this.$store.dispatch('updateUserId', null);
         }
     }
 }

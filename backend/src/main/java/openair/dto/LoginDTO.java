@@ -18,5 +18,7 @@ public class LoginDTO {
 
     private UserType userType;
 
+    private Long userId;
+
 }
 
