@@ -6,6 +6,10 @@ public class ResourceConflictException extends RuntimeException {
 
     private Long resourceId;
 
+    public ResourceConflictException(String message) {
+        super(message);
+    }
+
     public ResourceConflictException(Long resourceId, String message) {
         super(message);
         this.setResourceId(resourceId);

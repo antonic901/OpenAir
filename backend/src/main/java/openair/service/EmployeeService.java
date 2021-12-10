@@ -25,6 +25,11 @@ public class EmployeeService implements IEmployeeService {
     }
 
     @Override
+    public Employee findByUsername(String username) {
+        return employeeRepository.findByUsername(username);
+    }
+
+    @Override
     public Employee add(Employee employee) {
         return employeeRepository.save(employee);
     }
