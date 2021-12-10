@@ -48,10 +48,17 @@ public class TaskController {
 
 
     @GetMapping("/findAllByProjectId/{projectId}")
-    @PreAuthorize("hasRole('ADMIN')")
+    @PreAuthorize("hasRole('ADMIN') || hasRole('EMPLOYEE')")
     public ResponseEntity<List<Task>> findAllByProjectId(@PathVariable Long projectId) {
 
         return new ResponseEntity<>(taskService.findAllByProjectId(projectId), HttpStatus.OK);
+    }
+
+    @GetMapping("/findAllNotLoggedBy/{projectId}")
+    @PreAuthorize("hasRole('ADMIN') || hasRole('EMPLOYEE')")
+    public ResponseEntity<List<Task>> findAllNotLoggedBy(@PathVariable Long projectId) {
+
+        return new ResponseEntity<>(taskService.findAllNotLoggedTasksByProjectId(projectId), HttpStatus.OK);
     }
 
     @GetMapping("/findAllByEmployeeId/{projectId}")

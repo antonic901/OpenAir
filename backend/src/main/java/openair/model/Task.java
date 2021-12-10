@@ -1,5 +1,6 @@
 package openair.model;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
@@ -28,6 +29,7 @@ public class Task {
     @JoinColumn(name = "project_id", nullable = false)
     private Project project;
 
+    @JsonIgnore
     @OneToMany(fetch = FetchType.LAZY, mappedBy="task", cascade = CascadeType.ALL)
     private List<TimeSheetDay> timeSheetDays = new ArrayList<TimeSheetDay>();
 

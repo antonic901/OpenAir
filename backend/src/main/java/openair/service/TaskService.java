@@ -4,28 +4,40 @@ import openair.dto.TaskDTO;
 import openair.model.Employee;
 import openair.model.Project;
 import openair.model.Task;
+import openair.model.TimeSheetDay;
 import openair.repository.EmployeeRepository;
 import openair.repository.ProjectRepository;
 import openair.repository.TaskRepository;
+import openair.repository.TimeSheetDayRepository;
 import openair.service.interfaces.ITaskService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+
+import java.time.LocalDate;
+import java.util.ArrayList;
 import java.util.List;
 
 import java.util.List;
 
 @Service
 public class TaskService implements ITaskService {
-    private ProjectRepository projectRepository;
-    private TaskRepository taskRepository;
-    private EmployeeRepository employeeRepository;
 
-    @Autowired
+    private TaskRepository taskRepository;
+    private ProjectRepository projectRepository;
+    private EmployeeRepository employeeRepository;
+    private TimeSheetDayRepository timeSheetDayRepository;
+
     private ProjectService projectService;
 
     @Autowired
-    public TaskService(TaskRepository taskRepository) {
+    public TaskService(TaskRepository taskRepository, ProjectRepository projectRepository,
+                       EmployeeRepository employeeRepository, TimeSheetDayRepository timeSheetDayRepository,
+                       ProjectService projectService) {
         this.taskRepository = taskRepository;
+        this.projectRepository = projectRepository;
+        this.employeeRepository = employeeRepository;
+        this.timeSheetDayRepository = timeSheetDayRepository;
+        this.projectService = projectService;
     }
 
     @Override
@@ -47,6 +59,27 @@ public class TaskService implements ITaskService {
     public List<Task> findAllByProjectId(Long projectId) {
         Project project = projectService.findProjectById(projectId);
         return project.getTasks();
+    }
+
+    @Override
+    public List<Task> findAllNotLoggedTasksByProjectId(Long projectId) {
+        List<Task> tasks = new ArrayList<Task>();
+        Project project = projectService.findProjectById(projectId);
+        for(Task task : taskRepository.findAll()) {
+            if(!checkIsTaskLogged(task)) {
+                tasks.add(task);
+            }
+        }
+        return tasks;
+    }
+
+    private boolean checkIsTaskLogged(Task task) {
+        for(TimeSheetDay timeSheetDay : timeSheetDayRepository.findAll()) {
+            if(timeSheetDay.getDate().isEqual(LocalDate.now()) && timeSheetDay.getTask().getId().equals(task.getId())) {
+                return true;
+            }
+        }
+        return false;
     }
 
     @Override
