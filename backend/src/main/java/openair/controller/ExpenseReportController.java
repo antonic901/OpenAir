@@ -7,6 +7,7 @@ import openair.model.Admin;
 import openair.model.Employee;
 import openair.model.ExpenseReport;
 import openair.model.Project;
+import openair.model.enums.Status;
 import openair.service.EmployeeService;
 import openair.service.ExpenseReportService;
 import openair.service.ProjectService;
@@ -46,19 +47,12 @@ public class ExpenseReportController {
         return new ResponseEntity<>(expenseReport, HttpStatus.CREATED);
     }
 
-    @PostMapping("/approve/{reportId}")
+    @PostMapping("/review/{reportId}")
     @PreAuthorize("hasRole('ADMIN')")
-    public ResponseEntity<ExpenseReport> approveReport(@PathVariable Long reportId) {
+    public ResponseEntity<ExpenseReport> approveReport(@PathVariable Long reportId, @PathVariable Status status) {
 
-        ExpenseReport expenseReport = this.expenseReportService.approveReport(reportId);
+        ExpenseReport expenseReport = this.expenseReportService.reviewReport(reportId, status);
         return new ResponseEntity<>(expenseReport, HttpStatus.OK);
     }
 
-    @PostMapping("/reject/{reportId}")
-    @PreAuthorize("hasRole('ADMIN')")
-    public ResponseEntity<ExpenseReport> rejectReport(@PathVariable Long reportId) {
-
-        ExpenseReport expenseReport = this.expenseReportService.rejectReport(reportId);
-        return new ResponseEntity<>(expenseReport, HttpStatus.OK);
-    }
 }

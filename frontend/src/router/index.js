@@ -12,6 +12,8 @@ import AddTask from '../views/AddTask.vue'
 import RequestAbsence from '../views/RequestAbsence.vue'
 import ApproveAbsence from '../views/ApproveAbsence.vue'
 import LogTask from '../views/LogTask.vue'
+import AddExpenseReport from '../views/AddExpenseReport.vue'
+import ReviewExpenseReport from '../views/AddExpenseReport.vue'
 
 const routes = [
   {
@@ -58,6 +60,16 @@ const routes = [
     path: "/logTask",
     name: "LogTask",
     component: LogTask
+  },
+  {
+    path: "/addExpenseReport",
+    name: "AddExpenseReport",
+    component: AddExpenseReport
+  },
+  {
+    path: "/reviewExpenseReport",
+    name: "ReviewExpenseReport",
+    component: ReviewExpenseReport
   }
 ]
 
