@@ -31,7 +31,7 @@ public class Employee extends User{
     private Integer freeDays;
 
     //datum zaposlednja
-    @Column(nullable = false)
+    @Column(nullable = true)
     private LocalDate dateOfHiring;
 
     @ManyToOne

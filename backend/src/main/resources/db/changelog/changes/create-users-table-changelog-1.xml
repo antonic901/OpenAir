@@ -17,7 +17,7 @@
                 <constraints nullable="true"/>
             </column>
             <column name="date_of_hiring" type="TIMESTAMP">
-                <constraints nullable="false"/>
+                <constraints nullable="true"/>
             </column>
             <column name="email" type="VARCHAR(255)">
                 <constraints nullable="false"/>
