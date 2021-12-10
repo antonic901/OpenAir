@@ -10,6 +10,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
+import java.time.LocalDate;
 import java.util.List;
 
 @Service
@@ -45,6 +46,7 @@ public class AdminService implements IAdminService {
         employee.setAdmin(adminRepository.findById(registerEmployeeDTO.getAdminId()).get());
         //Osam slobodnih radnih dana pri registraciji
         employee.setFreeDays(8);
+        employee.setDateOfHiring(LocalDate.now());
         return employeeService.add(employee);
     }
 
