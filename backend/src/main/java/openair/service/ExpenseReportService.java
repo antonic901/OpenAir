@@ -37,6 +37,7 @@ public class ExpenseReportService implements IExpenseReportService {
         expenseReport.setProject(project);
         expenseReport.setStatus(Status.INPROCESS);
         expenseReport.setTrackingNumber(expenseReportDTO.getTrackingNumber());
+        expenseReport.setDocument(expenseReportDTO.getDocument());
 
         return expenseReportRepository.save(expenseReport);
     }

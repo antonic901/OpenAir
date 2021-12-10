@@ -22,6 +22,7 @@ public class ExspenseReportDTO {
     private double refund;
     //DATUM SE GENERISE U SERVISU PRILIKOM KREIRANJA
     //private LocalDate dateOfCreation;
+    private String document;
     private String description;
     private Status status;
     private Long projectId;

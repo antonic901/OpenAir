@@ -37,6 +37,9 @@ public class ExpenseReport {
     private String description;
 
     @Column
+    private String document;
+
+    @Column
     @Enumerated(EnumType.STRING)
     private Status status;
 
