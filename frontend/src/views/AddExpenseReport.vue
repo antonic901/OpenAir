@@ -149,7 +149,7 @@
             <v-stepper-content step="3">
                 <v-btn
                 color="success"
-                @click="e1 = 1"
+                @click="remove"
                 >
                 Create new report
                 </v-btn>
@@ -234,10 +234,16 @@ export default {
                 .then(() => {
                     this.e1 = 3
                 })
+        },
+        remove() {
+            this.e1 = 1;
+            this.projects = this.projects.filter(p => {
+                if(p.id != this.project.id) return p;
+            })
         }
     },
     mounted() {
-        axios.get("http://localhost:8081/api/project/findAllByUserId/" + this.$store.getters.getUserId, {headers: {'Authorization': `Bearer ` + this.$store.getters.getJwt}})
+        axios.get("http://localhost:8081/api/project/find-all-not-refunded/" + this.$store.getters.getUserId, {headers: {'Authorization': `Bearer ` + this.$store.getters.getJwt}})
             .then(r => {
                 this.projects = r.data;
             })

@@ -13,7 +13,7 @@ import RequestAbsence from '../views/RequestAbsence.vue'
 import ApproveAbsence from '../views/ApproveAbsence.vue'
 import LogTask from '../views/LogTask.vue'
 import AddExpenseReport from '../views/AddExpenseReport.vue'
-import ReviewExpenseReport from '../views/AddExpenseReport.vue'
+import ReviewExpenseReport from '../views/ReviewExpenseReport.vue'
 
 const routes = [
   {

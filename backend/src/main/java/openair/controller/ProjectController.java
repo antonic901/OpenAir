@@ -73,4 +73,11 @@ public class ProjectController {
         return new ResponseEntity<>(projectService.findAllByUserId(userId), HttpStatus.OK);
     }
 
+    @GetMapping("/find-all-not-refunded/{userId}")
+    @PreAuthorize("hasRole('EMPLOYEE')")
+    public ResponseEntity<List<Project>> findAllNotRefunded(@PathVariable Long userId) {
+
+        return new ResponseEntity<>(projectService.findAllNotRefundedByEmployeeId(userId), HttpStatus.OK);
+    }
+
 }
