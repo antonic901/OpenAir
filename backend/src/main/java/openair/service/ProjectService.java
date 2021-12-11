@@ -2,14 +2,9 @@ package openair.service;
 
 import liquibase.pro.packaged.P;
 import openair.dto.ProjectDTO;
-import openair.model.Admin;
-import openair.model.Employee;
-import openair.model.Project;
-import openair.model.User;
-import openair.repository.AdminRepository;
-import openair.repository.EmployeeRepository;
-import openair.repository.ProjectRepository;
-import openair.repository.UserRepository;
+import openair.model.*;
+import openair.model.enums.Status;
+import openair.repository.*;
 import openair.service.interfaces.IProjectService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -25,14 +20,16 @@ public class ProjectService implements IProjectService {
     private EmployeeRepository employeeRepository;
     private UserRepository userRepository;
     private AdminRepository adminRepository;
+    private ExpenseReportRepository expenseReportRepository;
 
     @Autowired
     public ProjectService(ProjectRepository projectRepository, EmployeeRepository employeeRepository,
-                          UserRepository userRepository, AdminRepository adminRepository){
+                          UserRepository userRepository, AdminRepository adminRepository, ExpenseReportRepository expenseReportRepository){
         this.projectRepository = projectRepository;
         this.employeeRepository = employeeRepository;
         this.userRepository = userRepository;
         this.adminRepository = adminRepository;
+        this.expenseReportRepository = expenseReportRepository;
     }
 
     @Override
@@ -87,5 +84,29 @@ public class ProjectService implements IProjectService {
             return null;
     }
 
+    @Override
+    public List<Project> findAllNotRefundedByEmployeeId(Long id) {
+        Employee employee = employeeRepository.findById(id).get();
+        List<Project> projects = new ArrayList<Project>();
+        for(Project project : employee.getProjects()) {
+            if(!checkIsRefunded(project.getId(), employee.getId())) {
+                projects.add(project);
+            }
+        }
+        return projects;
+    }
+
+    private boolean checkIsRefunded(Long projectId, Long employeeId) {
+        for(ExpenseReport expenseReport : expenseReportRepository.findAll()) {
+            if(expenseReport.getEmployee().getId().equals(employeeId)) {
+                if(expenseReport.getProject().getId().equals(projectId)) {
+                    if(expenseReport.getStatus() == Status.APPROVED || expenseReport.getStatus() == Status.INPROCESS) {
+                        return true;
+                    }
+                }
+            }
+        }
+        return false;
+    }
 
 }

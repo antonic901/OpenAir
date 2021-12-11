@@ -5,6 +5,7 @@ import openair.model.Employee;
 import openair.model.ExpenseReport;
 import openair.model.Project;
 import openair.model.enums.Status;
+import openair.repository.AdminRepository;
 import openair.repository.EmployeeRepository;
 import openair.repository.ExpenseReportRepository;
 import openair.service.interfaces.IExpenseReportService;
@@ -12,17 +13,32 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.time.LocalDate;
+import java.util.ArrayList;
+import java.util.List;
 
 @Service
 public class ExpenseReportService implements IExpenseReportService {
 
     private ExpenseReportRepository expenseReportRepository;
     private EmployeeRepository employeeRepository;
+    private AdminRepository adminRepository;
 
     @Autowired
-    public ExpenseReportService(ExpenseReportRepository expenseReportRepository, EmployeeRepository employeeRepository){
+    public ExpenseReportService(ExpenseReportRepository expenseReportRepository, EmployeeRepository employeeRepository, AdminRepository adminRepository){
         this.expenseReportRepository = expenseReportRepository;
-        this.employeeRepository =employeeRepository;
+        this.employeeRepository = employeeRepository;
+        this.adminRepository = adminRepository;
+    }
+
+    @Override
+    public List<ExpenseReport> getAllByAdminId(Long id) {
+        List<ExpenseReport>  expenseReports = new ArrayList<ExpenseReport>();
+        for(ExpenseReport expenseReport : expenseReportRepository.findAll()) {
+            if(expenseReport.getEmployee().getAdmin().getId().equals(id)) {
+                expenseReports.add(expenseReport);
+            }
+        }
+        return expenseReports;
     }
 
     @Override
@@ -43,28 +59,21 @@ public class ExpenseReportService implements IExpenseReportService {
     }
 
     @Override
-    public ExpenseReport approveReport(Long reportId) {
+    public ExpenseReport reviewReport(Long reportId, Status status) {
         ExpenseReport expenseReport = expenseReportRepository.findById(reportId).get();
 
         //odobrim zahtev
-        expenseReport.setStatus(Status.APPROVED);
+        expenseReport.setStatus(status);
 
         //pronadjem radnika da bi mu uvecala platu za onliko koliko je navedeno u reportu
-        Employee employee = expenseReport.getEmployee();
-        employee.setSalary(employee.getSalary()+expenseReport.getRefund());
-        employeeRepository.save(employee);
+        if(status == Status.APPROVED) {
+            Employee employee = expenseReport.getEmployee();
+            employee.setSalary(employee.getSalary() + expenseReport.getRefund());
+            employeeRepository.save(employee);
+        }
 
         return expenseReportRepository.save(expenseReport);
 
     }
 
-    @Override
-    public ExpenseReport rejectReport(Long reportId) {
-        ExpenseReport expenseReport = expenseReportRepository.findById(reportId).get();
-
-        //odbijem zahtev
-        expenseReport.setStatus(Status.REJECTED);
-
-        return expenseReportRepository.save(expenseReport);
-    }
 }

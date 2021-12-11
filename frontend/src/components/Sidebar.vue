@@ -51,6 +51,16 @@
                     </v-list-item>
                 </router-link>
             </v-list>
+            <v-list v-if="userType == 'ROLE_ADMIN'" shaped nav dense>
+                <router-link  to="/reviewExpenseReport" style="text-decoration:none;">
+                    <v-list-item link>
+                        <v-list-item-icon >
+                            <v-icon color="white">mdi-currency-eur</v-icon>
+                        </v-list-item-icon>
+                        <v-list-item-title style="color:white;">Review expense report</v-list-item-title>
+                    </v-list-item>
+                </router-link>
+            </v-list>
             <v-list v-if="userType == 'ROLE_EMPLOYEE'" shaped nav dense>
                 <router-link  to="/requestAbsence" style="text-decoration:none;">
                     <v-list-item link>
@@ -68,6 +78,16 @@
                             <v-icon color="white">mdi-equalizer</v-icon>
                         </v-list-item-icon>
                         <v-list-item-title style="color:white;">Log task</v-list-item-title>
+                    </v-list-item>
+                </router-link>
+            </v-list>
+            <v-list v-if="userType == 'ROLE_EMPLOYEE'" shaped nav dense>
+                <router-link  to="/addExpenseReport" style="text-decoration:none;">
+                    <v-list-item link>
+                        <v-list-item-icon >
+                            <v-icon color="white">mdi-currency-eur</v-icon>
+                        </v-list-item-icon>
+                        <v-list-item-title style="color:white;">Add expense report</v-list-item-title>
                     </v-list-item>
                 </router-link>
             </v-list>
