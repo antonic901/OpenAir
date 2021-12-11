@@ -61,7 +61,7 @@ public class ExpenseReportController {
         return new ResponseEntity<List<ExpenseReport>>(expenseReports, HttpStatus.OK);
     }
 
-    @PostMapping("/review/{reportId}")
+    @PostMapping("/review/{reportId}/{status}")
     @PreAuthorize("hasRole('ADMIN')")
     public ResponseEntity<ExpenseReport> reviewReport(@PathVariable Long reportId, @PathVariable Status status) {
 

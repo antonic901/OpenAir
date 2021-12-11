@@ -35,7 +35,7 @@
                 </v-data-table>
             </v-col>
         </v-row>
-        <DocumentDialog v-model="showDialog" :document=selectedReport.document ></DocumentDialog>
+        <DocumentDialog v-model="showDialog" :document=selectedReport ></DocumentDialog>
     </v-container>
 </template>
 
@@ -78,7 +78,10 @@ export default {
     },
     methods: {
         review(item, status) {
-
+            axios.post("http://localhost:8081/api/expensereport/review/" + item.id + "/" + status, null,{headers: {'Content-Type': 'application/json', 'Authorization': `Bearer ` + this.$store.getters.getJwt}})
+                .then(() => {
+                    item.status = status;
+                })
         },
         open(item) {
 

@@ -1,8 +1,8 @@
 <template>
-    <v-dialog v-model="show">
+    <v-dialog v-model="show" v-if="document != null">
         <v-card>
             <v-card-title>Document:</v-card-title>
-            <v-img :src="document"></v-img>
+            <v-img :src="document.document"></v-img>
         </v-card>
     </v-dialog>
 </template>
