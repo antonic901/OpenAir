@@ -33,7 +33,7 @@ public class AbsenceController {
         this.adminService = adminService;
     }
 
-    @GetMapping("/getAbsences/{id}")
+    @GetMapping("/get-absences/{id}")
     @PreAuthorize("hasRole('ADMIN')")
     public ResponseEntity<List<Absence>> checkIfUsernameIsAvailable(@PathVariable Long id){
         return new ResponseEntity<List<Absence>>(absenceService.getAllByUserId(id), HttpStatus.OK);

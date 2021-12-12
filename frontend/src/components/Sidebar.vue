@@ -131,11 +131,13 @@ export default {
     },
     methods: {
         logout() {
-            this.$router.push({name: 'Home'});
+            this.$router.push({name: 'Login'});
             window.sessionStorage.clear();
+            localStorage.clear();
             this.$store.dispatch('updateJwt', null);
             this.$store.dispatch('updateUserType', null);
             this.$store.dispatch('updateUserId', null);
+
         }
     }
 }

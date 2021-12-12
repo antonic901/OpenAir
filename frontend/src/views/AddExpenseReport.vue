@@ -160,9 +160,6 @@
 </template>
 
 <script>
-
-import axios from 'axios'
-
 export default {
     name: 'AddExpenseReport',
     computed: {
@@ -218,7 +215,7 @@ export default {
             imageName = date + '-image-' + this.$store.getters.getUserId + ".jpg";
             fileToUpload.append('file', this.image, imageName);
             var imageUrl = "https://nistagramstorage.s3.eu-central-1.amazonaws.com/" + imageName;
-            axios.post("http://localhost:8081/api/upload/upload-file", fileToUpload, {headers: {'Authorization': `Bearer ` + this.$store.getters.getJwt}})
+            this.axios.post("/api/upload/upload-file", fileToUpload, {headers: {'Authorization': `Bearer ` + this.$store.getters.getJwt}})
                 .catch(e => {
                     alert("Failed to upload to Amazon S3 storage.")
                 })
@@ -230,7 +227,7 @@ export default {
                 document: imageUrl,
                 projectId: this.project.id
             }
-            axios.post("http://localhost:8081/api/expensereport/add", create, {headers: {'Authorization': `Bearer ` + this.$store.getters.getJwt}})
+            this.axios.post("/api/expensereport/add", create, {headers: {'Authorization': `Bearer ` + this.$store.getters.getJwt}})
                 .then(() => {
                     this.e1 = 3
                 })
@@ -243,7 +240,7 @@ export default {
         }
     },
     mounted() {
-        axios.get("http://localhost:8081/api/project/find-all-not-refunded/" + this.$store.getters.getUserId, {headers: {'Authorization': `Bearer ` + this.$store.getters.getJwt}})
+        this.axios.get("/api/project/find-all-not-refunded/" + this.$store.getters.getUserId, {headers: {'Authorization': `Bearer ` + this.$store.getters.getJwt}})
             .then(r => {
                 this.projects = r.data;
             })

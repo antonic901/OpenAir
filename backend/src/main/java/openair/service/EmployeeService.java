@@ -20,12 +20,12 @@ public class EmployeeService implements IEmployeeService {
 
     private EmployeeRepository employeeRepository;
 
-    @Autowired
     private ProjectService projectService;
 
     @Autowired
-    public EmployeeService(EmployeeRepository employeeRepository) {
+    public EmployeeService(EmployeeRepository employeeRepository, ProjectService projectService) {
         this.employeeRepository = employeeRepository;
+        this.projectService = projectService;
     }
 
     @Override

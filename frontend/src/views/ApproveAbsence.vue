@@ -37,8 +37,6 @@
 
 <script>
 
-import axios from 'axios'
-
 export default {
     name:'ApproveAbsence',
     computed: {
@@ -65,14 +63,14 @@ export default {
     },
     methods: {
         review(item, status) {
-            axios.post("http://localhost:8081/api/absence/approve/" + item.id + "/" + status, null,{headers: {'Content-Type': 'application/json', 'Authorization': `Bearer ` + this.$store.getters.getJwt}})
+            this.axios.post("/api/absence/approve/" + item.id + "/" + status, null,{headers: {'Content-Type': 'application/json', 'Authorization': `Bearer ` + this.$store.getters.getJwt}})
                 .then(() => {
                     item.status = status;
                 })
         }
     },
     mounted() {
-        axios.get("http://localhost:8081/api/absence/getAbsences/" + this.$store.getters.getUserId, {headers: {'Authorization': `Bearer ` + this.$store.getters.getJwt}})
+        this.axios.get("/api/absence/get-absences/" + this.$store.getters.getUserId, {headers: {'Authorization': `Bearer ` + this.$store.getters.getJwt}})
             .then(r => {
                 this.absences = r.data
             })

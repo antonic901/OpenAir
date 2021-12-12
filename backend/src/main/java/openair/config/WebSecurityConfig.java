@@ -7,7 +7,6 @@ import openair.utils.TokenUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
-import org.springframework.http.HttpMethod;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.config.annotation.authentication.builders.AuthenticationManagerBuilder;
 import org.springframework.security.config.annotation.method.configuration.EnableGlobalMethodSecurity;
@@ -22,14 +21,21 @@ import org.springframework.security.web.authentication.www.BasicAuthenticationFi
 @EnableGlobalMethodSecurity(prePostEnabled = true)
 public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
 
-    @Autowired
     private PasswordEncoder passwordEncoder;
 
-    @Autowired
-    private UserService customUserDetailsService;
+    private UserService userService;
+
+    private RestAuthenticationEntryPoint restAuthenticationEntryPoint;
+
+    private TokenUtils tokenUtils;
 
     @Autowired
-    private RestAuthenticationEntryPoint restAuthenticationEntryPoint;
+    public WebSecurityConfig(PasswordEncoder passwordEncoder, UserService userService, RestAuthenticationEntryPoint restAuthenticationEntryPoint, TokenUtils tokenUtils) {
+        this.passwordEncoder = passwordEncoder;
+        this.userService = userService;
+        this.restAuthenticationEntryPoint = restAuthenticationEntryPoint;
+        this.tokenUtils = tokenUtils;
+    }
 
     @Bean
     @Override
@@ -39,11 +45,8 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
 
     @Autowired
     public void configureGlobal(AuthenticationManagerBuilder auth) throws Exception {
-        auth.userDetailsService(customUserDetailsService).passwordEncoder(passwordEncoder);
+        auth.userDetailsService(userService).passwordEncoder(passwordEncoder);
     }
-
-    @Autowired
-    private TokenUtils tokenUtils;
 
     @Override
     protected void configure(HttpSecurity http) throws Exception{
@@ -52,12 +55,13 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
                 .exceptionHandling().authenticationEntryPoint(restAuthenticationEntryPoint).and()
                 .authorizeRequests()
                 .antMatchers("/auth/login").permitAll()
-                .antMatchers("/auth/checkUsername/**").permitAll()
+                .antMatchers("/auth/check-username/**").permitAll()
                 .antMatchers("/api/upload").permitAll()
                 .antMatchers("/api/email/send-mail").permitAll()
+                .antMatchers("/auth/get-basic-informations").permitAll()
                 .anyRequest().authenticated().and()
                 .cors().and()
-                .addFilterBefore(new TokenAuthenticationFilter(tokenUtils, customUserDetailsService), BasicAuthenticationFilter.class);
+                .addFilterBefore(new TokenAuthenticationFilter(tokenUtils, userService), BasicAuthenticationFilter.class);
         http.csrf().disable();
     }
 

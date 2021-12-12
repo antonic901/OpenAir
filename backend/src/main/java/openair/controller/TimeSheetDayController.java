@@ -30,7 +30,7 @@ public class TimeSheetDayController {
         this.timeSheetDayService = timeSheetDayService;
     }
 
-    @PostMapping("/addByEmployee")
+    @PostMapping("/add-by-employee")
     @PreAuthorize("hasRole('EMPLOYEE')")
     public ResponseEntity<TimeSheetDay> addDay(@RequestBody TimeSheetDayDTO timeSheetDayDTO, Principal loggedEmployee) {
 
@@ -41,7 +41,7 @@ public class TimeSheetDayController {
         return new ResponseEntity<>(timeSheetDay, HttpStatus.CREATED);
     }
 
-    @PostMapping("/addByAdmin/{employeeId}")
+    @PostMapping("/add-by-admin/{employeeId}")
     @PreAuthorize("hasRole('ADMIN')")
     public ResponseEntity<TimeSheetDay> addDay(@RequestBody TimeSheetDayDTO timeSheetDayDTO, @PathVariable Long employeeId) {
 
