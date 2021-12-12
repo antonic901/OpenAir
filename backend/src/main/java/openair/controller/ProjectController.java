@@ -46,19 +46,19 @@ public class ProjectController {
         return new ResponseEntity<>(project, HttpStatus.CREATED);
     }
 
-    @GetMapping("/findByName")
+    @GetMapping("/find-by-name")
     public ResponseEntity<Project> findProjectByName(@RequestBody String name){
 
         return new ResponseEntity<>(this.projectService.findProjectByName(name), HttpStatus.OK);
     }
 
-    @GetMapping("/findById")
+    @GetMapping("/find-by-id")
     public ResponseEntity<Project> findProjectById(@RequestBody Long projectId){
 
         return new ResponseEntity<>(this.projectService.findProjectById(projectId), HttpStatus.OK);
     }
 
-    @PostMapping("/addEmployee")
+    @PostMapping("/add-employee")
     @PreAuthorize("hasRole('ADMIN')")
     public ResponseEntity<Project> addEmployee(@RequestBody AddEmployeeDTO addEmployeeDTO) {
 
@@ -66,7 +66,7 @@ public class ProjectController {
     }
 
     //vraca liste projekata i za admina i za employee-a
-    @GetMapping("/findAllByUserId/{userId}")
+    @GetMapping("/find-all-by-user-id/{userId}")
     @PreAuthorize("hasRole('ADMIN') || hasRole('EMPLOYEE')")
     public ResponseEntity<List<Project>> findAllByUserId(@PathVariable Long userId) {
 

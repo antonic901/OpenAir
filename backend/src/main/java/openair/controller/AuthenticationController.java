@@ -25,14 +25,18 @@ import javax.servlet.http.HttpServletResponse;
 @RequestMapping(value = "/auth", produces = MediaType.APPLICATION_JSON_VALUE)
 public class AuthenticationController {
 
-    @Autowired
     private TokenUtils tokenUtils;
 
-    @Autowired
     private AuthenticationManager authenticationManager;
 
-    @Autowired
     private UserService userService;
+
+    @Autowired
+    public AuthenticationController(TokenUtils tokenUtils, AuthenticationManager authenticationManager, UserService userService) {
+        this.tokenUtils = tokenUtils;
+        this.authenticationManager = authenticationManager;
+        this.userService = userService;
+    }
 
     @PostMapping("/login")
     public ResponseEntity<LoginDTO> createAuthenticationToken(@RequestBody JwtAuthenticationRequest authenticationRequest,
@@ -51,7 +55,7 @@ public class AuthenticationController {
         return ResponseEntity.ok(new LoginDTO(userTokenState.getAccess_token(),userTokenState.getExpires_in(),user.getUserType(), user.getId()));
     }
 
-    @GetMapping("/checkUsername/{username}")
+    @GetMapping("/check-username/{username}")
     public ResponseEntity<Boolean> checkIfUsernameIsAvailable(@PathVariable String username){
         //vraca false ako je zauzeto ime (vec postoji korisnik)
         return new ResponseEntity<>(userService.checkIfUsernameIsAvailable(username), HttpStatus.OK);

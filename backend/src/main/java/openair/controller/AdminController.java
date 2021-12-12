@@ -50,7 +50,7 @@ public class AdminController {
         return new ResponseEntity<>(employee, HttpStatus.CREATED);
     }
 
-    @GetMapping("/getEmployees")
+    @GetMapping("/get-employees")
     @PreAuthorize("hasRole('ADMIN')")
     public ResponseEntity<List<Employee>> addUser(Principal loggedAdmin) {
 

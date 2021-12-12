@@ -47,9 +47,6 @@
 </template>
 
 <script>
-
-import axios from 'axios';
-
 export default {
     name: 'Login',
     data() {
@@ -78,7 +75,7 @@ export default {
           username: this.username,
           password: this.password
         }
-        axios.post("http://localhost:8081/auth/login", login)
+        this.axios.post("/auth/login", login)
           .then(r => {
             this.messageShow = false;
             this.$store.dispatch('updateJwt',r.data.access_token)
