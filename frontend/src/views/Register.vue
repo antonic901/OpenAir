@@ -106,8 +106,6 @@
 
 <script>
 
-import axios from 'axios'
-
 export default {
     name: 'Registration',
     data() {
@@ -175,7 +173,7 @@ export default {
         },
         checkIsUsernameValid() {
           if(this.user.username == '') return;
-          axios.get("http://localhost:8081/auth/checkUsername/" + this.user.username)
+          this.axios.get("/auth/check-username/" + this.user.username)
             .then(r => {
               if(!r.data) {
                 this.validUsername = false
@@ -190,7 +188,7 @@ export default {
         register() {
           this.messageShow = false;
           var user = this.user;
-          axios.post("http://localhost:8081/api/admin/register", user, {headers: {'Authorization': `Bearer ` + this.$store.getters.getJwt}})
+          this.axios.post("/api/admin/register", user, {headers: {'Authorization': `Bearer ` + this.$store.getters.getJwt}})
             .then(() => {
               alert("New employee is sucessfuly added.");
               this.user.username = '';

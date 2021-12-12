@@ -163,8 +163,6 @@
 
 <script>
 
-import axios from 'axios'
-
 export default {
     name: 'AddTask',
     data() {
@@ -179,7 +177,7 @@ export default {
     },
     methods: {
         getEmployee() {
-            axios.get("http://localhost:8081/api/employee/findAllByProjectId/" + this.selectedProject.id,{headers: {'Authorization': `Bearer ` + this.$store.getters.getJwt}})
+            this.axios.get("/api/employee/find-all-by-project-id/" + this.selectedProject.id,{headers: {'Authorization': `Bearer ` + this.$store.getters.getJwt}})
                 .then(r => {
                     this.emploies = r.data;
                 })
@@ -199,7 +197,7 @@ export default {
                 employeeID: this.selectedEmployee.id,
                 projectID: this.selectedProject.id
             }
-            axios.post("http://localhost:8081/api/task/addTask", add ,{headers: {'Authorization': `Bearer ` + this.$store.getters.getJwt}})
+            this.axios.post("/api/task/add-task", add ,{headers: {'Authorization': `Bearer ` + this.$store.getters.getJwt}})
                 .then(() => {
                     this.e1 = 5;
                     this.name = '';
@@ -215,7 +213,7 @@ export default {
         }
     },
     mounted() {
-        axios.get("http://localhost:8081/api/project/findAllByUserId/1",{headers: {'Authorization': `Bearer ` + this.$store.getters.getJwt}})
+        this.axios.get("/api/project/find-all-by-user-id/" + this.$store.getters.getUserId,{headers: {'Authorization': `Bearer ` + this.$store.getters.getJwt}})
             .then(r => {
                 this.projects = r.data;
             })

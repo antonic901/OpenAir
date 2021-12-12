@@ -50,8 +50,6 @@
 
 <script>
 
-import axios from 'axios'
-
 export default {
     name: 'AddProject',
     data() {
@@ -76,7 +74,7 @@ export default {
             }
         },
         create() {
-          axios.post("http://localhost:8081/api/project/add", {name: this.name, projectType: this.projectType}, {headers: {'Authorization': `Bearer ` + this.$store.getters.getJwt}})
+          this.axios.post("/api/project/add", {name: this.name, projectType: this.projectType}, {headers: {'Authorization': `Bearer ` + this.$store.getters.getJwt}})
             .then(() => {
                 alert("New project is sucessfuly added.");
                 this.message = '';

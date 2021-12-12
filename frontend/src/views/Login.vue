@@ -78,6 +78,7 @@ export default {
         this.axios.post("/auth/login", login)
           .then(r => {
             this.messageShow = false;
+            localStorage.jws = r.data;
             this.$store.dispatch('updateJwt',r.data.access_token)
             this.$store.dispatch('updateUserType',r.data.userType)
             this.$store.dispatch('updateUserId',r.data.userId)
