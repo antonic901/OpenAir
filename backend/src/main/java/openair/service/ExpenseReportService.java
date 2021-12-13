@@ -5,6 +5,7 @@ import openair.model.Employee;
 import openair.model.ExpenseReport;
 import openair.model.Money;
 import openair.model.Project;
+import openair.model.enums.Currency;
 import openair.model.enums.Status;
 import openair.repository.AdminRepository;
 import openair.repository.EmployeeRepository;
@@ -14,6 +15,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.time.LocalDate;
+import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -24,11 +26,14 @@ public class ExpenseReportService implements IExpenseReportService {
     private EmployeeRepository employeeRepository;
     private AdminRepository adminRepository;
 
+    private MoneyService moneyService;
+
     @Autowired
-    public ExpenseReportService(ExpenseReportRepository expenseReportRepository, EmployeeRepository employeeRepository, AdminRepository adminRepository){
+    public ExpenseReportService(ExpenseReportRepository expenseReportRepository, EmployeeRepository employeeRepository, AdminRepository adminRepository, MoneyService moneyService){
         this.expenseReportRepository = expenseReportRepository;
         this.employeeRepository = employeeRepository;
         this.adminRepository = adminRepository;
+        this.moneyService = moneyService;
     }
 
     @Override
@@ -76,7 +81,16 @@ public class ExpenseReportService implements IExpenseReportService {
         if(status == Status.APPROVED) {
             Employee employee = expenseReport.getEmployee();
             //TODO treba podrzati konverziju ukoliko su valute ralicite
-            employee.setSalary(employee.getSalary() + expenseReport.getRefund().getQuantity());
+
+            if(expenseReport.getRefund().getCurrency() == Currency.RSD) {
+                //ako je u RSD konvertujemo u EUR i tek onda dodajemo na platu
+                double converted = moneyService.convert(DateTimeFormatter.ofPattern("yyyy-MM-dd").format(expenseReport.getDateOfCreation()), Currency.RSD.toString(), Currency.EUR.toString(), expenseReport.getRefund().getQuantity());
+                employee.setSalary(employee.getSalary() + converted);
+            }
+            else {
+                employee.setSalary(employee.getSalary() + expenseReport.getRefund().getQuantity());
+            }
+
             employeeRepository.save(employee);
         }
 

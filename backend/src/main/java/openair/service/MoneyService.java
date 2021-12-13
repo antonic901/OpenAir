@@ -25,14 +25,16 @@ public class MoneyService implements IMoneyService {
     @Override
     public double convert(String date, String fromCurrency, String toCurrency, double quantity) {
 
-//      Promena base valute nije moguca na bespatnoj pretplati
+//      Promena base valute nije moguca na besplatnoj pretplati
 //        ResponseEntity<String> responseEntity = restTemplate.getForEntity("http://api.exchangeratesapi.io/v1/" + date + "?access_key=" + API_KEY + "&base=" + fromCurrency + "&symbols=" + toCurrency, String.class);
 
-        ResponseEntity<String> responseEntity = restTemplate.getForEntity("http://api.exchangeratesapi.io/v1/" + date + "?access_key=" + API_KEY + "&symbols=RSD", String.class);
+        //otkomentarisati prve dve linije i zakomenatriasti trecu. API omogucava samo 1000 zahteva po mesecu.
 
-//        String response = "{\"success\":true,\"timestamp\":1607558399,\"historical\":true,\"base\":\"EUR\",\"date\":\"2020-12-09\",\"rates\":{\"RSD\":117.579248}}";
+//        ResponseEntity<String> responseEntity = restTemplate.getForEntity("http://api.exchangeratesapi.io/v1/" + date + "?access_key=" + API_KEY + "&symbols=RSD", String.class);
+//        String response = responseEntity.getBody();
+        String response = "{\"success\":true,\"timestamp\":1607558399,\"historical\":true,\"base\":\"EUR\",\"date\":\"2020-12-09\",\"rates\":{\"RSD\":117.579248}}";
 
-        double rate = extractRateAndConvertToDouble(responseEntity.getBody());
+        double rate = extractRateAndConvertToDouble(response);
 
         if(fromCurrency.equals("EUR")) return quantity * rate;
         else return  quantity / rate;
