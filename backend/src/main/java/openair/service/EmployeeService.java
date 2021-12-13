@@ -83,15 +83,57 @@ public class EmployeeService implements IEmployeeService {
     }
 
     //Every month on the last weekday, at noon
-    @Scheduled(cron = "0 0 12 LW * ?")
+    @Scheduled(cron = "0 0/1 * * * ?")
     public void sendReminder() {
-        Mail mail = new Mail();
-        mail.setMailFrom("ursaminor1777@gmail.com");
-        mail.setContentType("REMINDER");
-        mail.setMailSubject("Monthly reminder to log your working hours");
 
         //pronadjem sve radne dane u mesecu
         List<LocalDate> workDayList = new ArrayList<>();
+        workDayList = findWorkDaysOfMonth();
+
+        //lista svih radnika
+        List<Employee> employeeList = employeeRepository.findAll();
+
+        for (int i = 0; i < employeeList.size(); i++) {
+
+            //za svakog radnika pronadjem listu timeSheetDays
+            List<TimeSheetDay> timeSheetDays = employeeList.get(i).getTimeSheetDays();
+
+            //povadim datume za koje je kreirao timeSheetDays
+            List<LocalDate> filledDates = new ArrayList<>();
+
+//            for(TimeSheetDay td: timeSheetDays){
+//                filledDates.add(td.getDate());
+//            }
+
+//            for(int k = 0; k < timeSheetDays; k++){
+//                //System.out.println("Usla u for petlju");
+//                filledDates.add(timeSheetDays.get(k).getDate());
+//               // System.out.println("Zaglavila se");
+//            }
+            //System.out.println("Pronasao popunjene datume");
+
+            //proverim da li za svaki radni dan u mesecu ima kreiran timeSheetDay
+            for(int j=0; j < workDayList.size(); j++){
+                if(!filledDates.contains(workDayList.get(j))){
+                    //ako nema salje se mejl
+//                    Mail mail = new Mail();
+//                    mail.setMailFrom("ursaminor1777@gmail.com");
+//                    mail.setContentType("REMINDER");
+//                    mail.setMailSubject("Monthly reminder to log your working hours");
+//                    mail.setMailContent("Dear, you forgot to fill in your working hours for " + workDayList.get(j).toString() +
+//                            ". Please do it before end of the month.");
+//                    mail.setMailTo(employeeList.get(i).getEmail());
+//                    mailService.sendMail(mail);
+                    System.out.println("Odradio slanje mejla");
+                }
+
+            }
+        }
+    }
+
+    public List<LocalDate> findWorkDaysOfMonth(){
+        List<LocalDate> workDayList = new ArrayList<>();
+
         LocalDate currentDate = LocalDate.now();
         Month month = currentDate.getMonth();
         int year = currentDate.getYear();
@@ -105,19 +147,6 @@ public class EmployeeService implements IEmployeeService {
                         date.getDayOfWeek() == DayOfWeek.FRIDAY)
                 .forEach(date -> workDayList.add(date));
 
-        //ako zaposleni nije popunio timesheet poslati mu podsetnik
-        List<Employee> employeeList = employeeRepository.findAll();
-        for (int i = 0; i < employeeList.size(); i++) {
-            List<TimeSheetDay> timeSheetDays = employeeList.get(i).getTimeSheetDays();
-            for(int j=0; j < workDayList.size(); j++){
-                //ako neki radni dan fali
-                if(!timeSheetDays.contains(workDayList.get(j))){
-                    mail.setMailContent("Dear, you forgot to fill in your working hours for " + workDayList.get(j).toString() +
-                            ". Please do it before end of the month.");
-                    mail.setMailTo(employeeList.get(i).getEmail());
-                    mailService.sendMail(mail);
-                }
-            }
-        }
+        return workDayList;
     }
 }
