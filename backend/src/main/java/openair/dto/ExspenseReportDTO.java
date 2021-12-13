@@ -5,6 +5,7 @@ import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 import openair.model.Employee;
+import openair.model.Money;
 import openair.model.Project;
 import openair.model.enums.Status;
 
@@ -19,7 +20,7 @@ public class ExspenseReportDTO {
 
     private String trackingNumber;
     private String name;
-    private double refund;
+    private Money refund;
     //DATUM SE GENERISE U SERVISU PRILIKOM KREIRANJA
     //private LocalDate dateOfCreation;
     private String document;

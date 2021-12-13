@@ -165,7 +165,7 @@ export default {
     computed: {
         currencySymbol() {
             if(this.currency == 'EUR') return '€';
-            else return '$'
+            else return 'din'
         }
     },
     data() {
@@ -174,7 +174,7 @@ export default {
             projects: [],
             project: null,
             currency: 'EUR',
-            currencies: ['EUR', 'USD'],
+            currencies: ['EUR', 'RSD'],
             valid:true,
             message: '',
             showMessage: false,
@@ -222,7 +222,10 @@ export default {
             var create = {
                 trackingNumber: 'PX' + Date.now().toString() + '-' + this.$store.getters.getUserId + 'RS',
                 name: this.name,
-                refund: this.price,
+                refund: {
+                    quantity: this.price,
+                    currency: this.currency
+                },
                 description: this.description,
                 document: imageUrl,
                 projectId: this.project.id

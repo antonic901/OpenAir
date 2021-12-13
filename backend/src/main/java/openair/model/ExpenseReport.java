@@ -26,8 +26,9 @@ public class ExpenseReport {
     @Column
     private String name;
 
-    @Column
-    private double refund;
+    @OneToOne(cascade = CascadeType.ALL)
+    @JoinColumn(name = "money_id", referencedColumnName = "id")
+    private Money refund;
 
     @Column
     private LocalDate dateOfCreation;
