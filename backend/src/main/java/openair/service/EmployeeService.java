@@ -135,8 +135,10 @@ public class EmployeeService implements IEmployeeService {
         List<LocalDate> filledDates = new ArrayList<>();
 
         //treba proci kroz listu timeSheetDays i povaditi datume u filledDates
-        for (TimeSheetDay ts: timeSheetDays
-             ) {
+
+
+        for(TimeSheetDay timeSheetDay : timeSheetDays) {
+            filledDates.add(timeSheetDay.getDate());
 
         }
 
