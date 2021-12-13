@@ -8,6 +8,7 @@ import openair.model.TimeSheetDay;
 import openair.repository.EmployeeRepository;
 import openair.service.interfaces.IEmployeeService;
 import org.apache.tomcat.jni.Local;
+import org.apache.tomcat.jni.Time;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.stereotype.Service;
@@ -87,8 +88,7 @@ public class EmployeeService implements IEmployeeService {
     public void sendReminder() {
 
         //pronadjem sve radne dane u mesecu
-        List<LocalDate> workDayList = new ArrayList<>();
-        workDayList = findWorkDaysOfMonth();
+        List<LocalDate> workDayList = findWorkDaysOfMonth();
 
         //lista svih radnika
         List<Employee> employeeList = employeeRepository.findAll();
@@ -99,31 +99,13 @@ public class EmployeeService implements IEmployeeService {
             List<TimeSheetDay> timeSheetDays = employeeList.get(i).getTimeSheetDays();
 
             //povadim datume za koje je kreirao timeSheetDays
-            List<LocalDate> filledDates = new ArrayList<>();
-
-//            for(TimeSheetDay td: timeSheetDays){
-//                filledDates.add(td.getDate());
-//            }
-
-//            for(int k = 0; k < timeSheetDays; k++){
-//                //System.out.println("Usla u for petlju");
-//                filledDates.add(timeSheetDays.get(k).getDate());
-//               // System.out.println("Zaglavila se");
-//            }
-            //System.out.println("Pronasao popunjene datume");
+            List<LocalDate> filledDates = findFilledDates(timeSheetDays);
 
             //proverim da li za svaki radni dan u mesecu ima kreiran timeSheetDay
             for(int j=0; j < workDayList.size(); j++){
                 if(!filledDates.contains(workDayList.get(j))){
                     //ako nema salje se mejl
-//                    Mail mail = new Mail();
-//                    mail.setMailFrom("ursaminor1777@gmail.com");
-//                    mail.setContentType("REMINDER");
-//                    mail.setMailSubject("Monthly reminder to log your working hours");
-//                    mail.setMailContent("Dear, you forgot to fill in your working hours for " + workDayList.get(j).toString() +
-//                            ". Please do it before end of the month.");
-//                    mail.setMailTo(employeeList.get(i).getEmail());
-//                    mailService.sendMail(mail);
+                    sendMail(employeeList.get(i).getEmail(),workDayList.get(j));
                     System.out.println("Odradio slanje mejla");
                 }
 
@@ -148,5 +130,25 @@ public class EmployeeService implements IEmployeeService {
                 .forEach(date -> workDayList.add(date));
 
         return workDayList;
+    }
+    public List<LocalDate> findFilledDates(List<TimeSheetDay> timeSheetDays){
+        List<LocalDate> filledDates = new ArrayList<>();
+
+        //treba proci kroz listu timeSheetDays i povaditi datume u filledDates
+
+
+        return filledDates;
+    }
+
+    public void sendMail(String emailAddress, LocalDate date){
+//        Mail mail = new Mail();
+//        mail.setMailFrom("ursaminor1777@gmail.com");
+//        mail.setContentType("REMINDER");
+//        mail.setMailSubject("Monthly reminder to log your working hours");
+//        mail.setMailContent("Dear, you forgot to fill in your working hours for " + date.toString() +
+//                ". Please do it before end of the month.");
+//        mail.setMailTo(emailAddress);
+//        mailService.sendMail(mail);
+        System.out.println("Odradio slanje mejla.");
     }
 }
