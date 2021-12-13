@@ -67,14 +67,14 @@ public class PdfExporter {
                for(Task task : taskList) {
                    TimeSheetDay timeSheetDay = timeSheetDayService.getByTaskIdEmployeeId(task.getId(), employee.getId());
                    workTime += timeSheetDay.getWorkTime();
-
-                   table.addCell(employee.getName());
-                   table.addCell(project.getName());
-                   table.addCell(String.valueOf(workTime));
-                   String strProject = project.getProjectType().toString();
-                   table.addCell(strProject);
                }
+               table.addCell(employee.getName());
+               table.addCell(project.getName());
+               table.addCell(String.valueOf(workTime));
+               String strProject = project.getProjectType().toString();
+               table.addCell(strProject);
            }
+
        }
     }
 
