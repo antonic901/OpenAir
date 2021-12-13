@@ -38,7 +38,6 @@ public class Employee extends User{
     @JoinColumn(name = "admin_id", nullable = true)
     private Admin admin;
 
-    @JsonIgnore
     @ManyToMany(fetch = FetchType.LAZY)
     @JoinTable(
             name = "employee_project",
