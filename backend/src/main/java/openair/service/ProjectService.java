@@ -2,10 +2,12 @@ package openair.service;
 
 import openair.dto.ProjectDTO;
 import openair.model.*;
+import openair.model.enums.ProjectType;
 import openair.model.enums.Status;
 import openair.repository.*;
 import openair.service.interfaces.IProjectService;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
 
 import java.util.ArrayList;
@@ -93,6 +95,10 @@ public class ProjectService implements IProjectService {
             }
         }
         return projects;
+    }
+
+    public List<Project> listAll() {
+        return projectRepository.findAll(Sort.by("projectType"));
     }
 
     private boolean checkIsRefunded(Long projectId, Long employeeId) {

@@ -1,5 +1,6 @@
 package openair.service;
 
+import liquibase.pro.packaged.T;
 import openair.dto.TimeSheetDayDTO;
 import openair.model.Employee;
 import openair.model.Task;
@@ -8,6 +9,9 @@ import openair.repository.TimeSheetDayRepository;
 import openair.service.interfaces.ITimeSheetDay;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+
+import java.util.ArrayList;
+import java.util.List;
 
 @Service
 public class TimeSheetDayService implements ITimeSheetDay {
@@ -34,5 +38,15 @@ public class TimeSheetDayService implements ITimeSheetDay {
         timeSheetDay.setWorkTime(timeSheetDayDTO.getWorkTime());
 
         return timeSheetDayRepository.save(timeSheetDay);
+    }
+
+    @Override
+    public TimeSheetDay getByTaskIdEmployeeId(Long taskId, Long employeeId) {
+        for(TimeSheetDay timeSheetDay : timeSheetDayRepository.findAll()) {
+            if(timeSheetDay.getTask().getId() == taskId && timeSheetDay.getEmployee().getId() == employeeId)
+                return timeSheetDay;
+        }
+
+        return null;
     }
 }
