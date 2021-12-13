@@ -14,12 +14,12 @@ public class TimeSheetDayService implements ITimeSheetDay {
 
     private TimeSheetDayRepository timeSheetDayRepository;
 
-    @Autowired
     private TaskService taskService;
 
     @Autowired
-    public TimeSheetDayService(TimeSheetDayRepository timeSheetDayRepository){
+    public TimeSheetDayService(TimeSheetDayRepository timeSheetDayRepository, TaskService taskService){
         this.timeSheetDayRepository = timeSheetDayRepository;
+        this.taskService = taskService;
     }
 
     @Override

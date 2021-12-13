@@ -33,8 +33,6 @@
 
 <script>
 
-import axios from 'axios'
-
 export default {
     name:'RequestAbsence',
     computed: {
@@ -57,7 +55,7 @@ export default {
                 startTime: this.getDateTimeFromString(this.dates[0], "00:00").getTime(),
                 endTime: this.getDateTimeFromString(this.dates[1], "00:00").getTime()
             }
-            axios.post("http://localhost:8081/api/absence/add", period, {headers: {'Authorization': `Bearer ` + this.$store.getters.getJwt}})
+            this.axios.post("/api/absence/add", period, {headers: {'Authorization': `Bearer ` + this.$store.getters.getJwt}})
                 .then(() => {
                     alert("Succesfully requested.");
                     this.dates = [];

@@ -160,15 +160,12 @@
 </template>
 
 <script>
-
-import axios from 'axios'
-
 export default {
     name: 'AddExpenseReport',
     computed: {
         currencySymbol() {
             if(this.currency == 'EUR') return '€';
-            else return '$'
+            else return 'din'
         }
     },
     data() {
@@ -177,7 +174,7 @@ export default {
             projects: [],
             project: null,
             currency: 'EUR',
-            currencies: ['EUR', 'USD'],
+            currencies: ['EUR', 'RSD'],
             valid:true,
             message: '',
             showMessage: false,
@@ -218,19 +215,22 @@ export default {
             imageName = date + '-image-' + this.$store.getters.getUserId + ".jpg";
             fileToUpload.append('file', this.image, imageName);
             var imageUrl = "https://nistagramstorage.s3.eu-central-1.amazonaws.com/" + imageName;
-            axios.post("http://localhost:8081/api/upload/upload-file", fileToUpload, {headers: {'Authorization': `Bearer ` + this.$store.getters.getJwt}})
+            this.axios.post("/api/upload/upload-file", fileToUpload, {headers: {'Authorization': `Bearer ` + this.$store.getters.getJwt}})
                 .catch(e => {
                     alert("Failed to upload to Amazon S3 storage.")
                 })
             var create = {
                 trackingNumber: 'PX' + Date.now().toString() + '-' + this.$store.getters.getUserId + 'RS',
                 name: this.name,
-                refund: this.price,
+                refund: {
+                    quantity: this.price,
+                    currency: this.currency
+                },
                 description: this.description,
                 document: imageUrl,
                 projectId: this.project.id
             }
-            axios.post("http://localhost:8081/api/expensereport/add", create, {headers: {'Authorization': `Bearer ` + this.$store.getters.getJwt}})
+            this.axios.post("/api/expensereport/add", create, {headers: {'Authorization': `Bearer ` + this.$store.getters.getJwt}})
                 .then(() => {
                     this.e1 = 3
                 })
@@ -243,7 +243,7 @@ export default {
         }
     },
     mounted() {
-        axios.get("http://localhost:8081/api/project/find-all-not-refunded/" + this.$store.getters.getUserId, {headers: {'Authorization': `Bearer ` + this.$store.getters.getJwt}})
+        this.axios.get("/api/project/find-all-not-refunded/" + this.$store.getters.getUserId, {headers: {'Authorization': `Bearer ` + this.$store.getters.getJwt}})
             .then(r => {
                 this.projects = r.data;
             })

@@ -133,8 +133,6 @@
 
 <script>
 
-import axios from 'axios'
-
 export default {
     name: 'AssignEmloyeeToProject',
     data() {
@@ -148,7 +146,7 @@ export default {
     },
     methods: {
         getEmployee() {
-            axios.get("http://localhost:8081/api/admin/getEmployees",{headers: {'Authorization': `Bearer ` + this.$store.getters.getJwt}})
+            this.axios.get("/api/admin/get-employees",{headers: {'Authorization': `Bearer ` + this.$store.getters.getJwt}})
                 .then(r => {
                     this.emploies = r.data;
                 })
@@ -168,11 +166,11 @@ export default {
                 employeeId: this.selectedEmployee.id,
                 projectId: this.selectedProject.id
             }
-            axios.post("http://localhost:8081/api/project/addEmployee", add ,{headers: {'Authorization': `Bearer ` + this.$store.getters.getJwt}})
+            this.axios.post("/api/project/add-employee", add ,{headers: {'Authorization': `Bearer ` + this.$store.getters.getJwt}})
         }
     },
     mounted() {
-        axios.get("http://localhost:8081/api/project/findAllByUserId/1",{headers: {'Authorization': `Bearer ` + this.$store.getters.getJwt}})
+        this.axios.get("/api/project/find-all-by-user-id/" + this.$store.getters.getUserId,{headers: {'Authorization': `Bearer ` + this.$store.getters.getJwt}})
             .then(r => {
                 this.projects = r.data;
             })

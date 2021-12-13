@@ -19,8 +19,8 @@
             <column name="name" type="VARCHAR(255)">
                 <constraints nullable="false"/>
             </column>
-            <column name="refund" type="FLOAT">
-                <constraints nullable="false"/>
+            <column name="money_id" type="BIGINT">
+                <constraints nullable="false" foreignKeyName="fk_report_money" references="money(id)"/>
             </column>
             <column name="status" type="VARCHAR(255)">
                 <constraints nullable="false"/>

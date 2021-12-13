@@ -158,8 +158,6 @@
 
 <script>
 
-import axios from 'axios'
-
 export default {
     name: 'LogTask',
     data() {
@@ -175,7 +173,7 @@ export default {
     methods: {
         getTasks() {
             this.e1 = 2;
-            axios.get("http://localhost:8081/api/task/findAllNotLoggedBy/" + this.project.id, {headers: {'Authorization': `Bearer ` + this.$store.getters.getJwt}})
+            this.axios.get("/api/task/find-all-not-logged-by/" + this.project.id, {headers: {'Authorization': `Bearer ` + this.$store.getters.getJwt}})
                 .then(r => {
                     this.tasks = r.data;
                 })
@@ -183,7 +181,7 @@ export default {
         },
         log() {
             var currentTime = this.getDateTimeFromString(this.getCurrentDateTime(), "00:00").getTime();
-            axios.post("http://localhost:8081/api/timesheetday/addByEmployee", {date: currentTime, workTime: this.hours, taskId:this.task.id}, {headers: {'Authorization': `Bearer ` + this.$store.getters.getJwt}})
+            this.axios.post("/api/timesheetday/add-by-employee", {date: currentTime, workTime: this.hours, taskId:this.task.id}, {headers: {'Authorization': `Bearer ` + this.$store.getters.getJwt}})
                 .then(() => {
                     this.e1 = 4;
                 })
@@ -207,7 +205,7 @@ export default {
         }
     },
     mounted() {
-        axios.get("http://localhost:8081/api/project/findAllByUserId/" + this.$store.getters.getUserId, {headers: {'Authorization': `Bearer ` + this.$store.getters.getJwt}})
+        this.axios.get("/api/project/find-all-by-user-id/" + this.$store.getters.getUserId, {headers: {'Authorization': `Bearer ` + this.$store.getters.getJwt}})
             .then(r => {
                 this.projects = r.data;
             })

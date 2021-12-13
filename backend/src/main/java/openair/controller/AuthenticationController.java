@@ -1,7 +1,10 @@
 package openair.controller;
 
 import openair.dto.LoginDTO;
+import openair.dto.RegisterEmployeeDTO;
 import openair.dto.UserTokenState;
+import openair.exception.ResourceConflictException;
+import openair.model.Admin;
 import openair.model.Employee;
 import openair.model.User;
 import openair.dto.JwtAuthenticationRequest;
@@ -9,6 +12,7 @@ import openair.service.EmployeeService;
 import openair.service.UserService;
 import openair.utils.TokenUtils;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
@@ -18,21 +22,27 @@ import org.springframework.security.authentication.UsernamePasswordAuthenticatio
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.util.UriComponentsBuilder;
 
 import javax.servlet.http.HttpServletResponse;
+import java.security.Principal;
 
 @RestController
 @RequestMapping(value = "/auth", produces = MediaType.APPLICATION_JSON_VALUE)
 public class AuthenticationController {
 
-    @Autowired
     private TokenUtils tokenUtils;
 
-    @Autowired
     private AuthenticationManager authenticationManager;
 
-    @Autowired
     private UserService userService;
+
+    @Autowired
+    public AuthenticationController(TokenUtils tokenUtils, AuthenticationManager authenticationManager, UserService userService) {
+        this.tokenUtils = tokenUtils;
+        this.authenticationManager = authenticationManager;
+        this.userService = userService;
+    }
 
     @PostMapping("/login")
     public ResponseEntity<LoginDTO> createAuthenticationToken(@RequestBody JwtAuthenticationRequest authenticationRequest,
@@ -51,10 +61,20 @@ public class AuthenticationController {
         return ResponseEntity.ok(new LoginDTO(userTokenState.getAccess_token(),userTokenState.getExpires_in(),user.getUserType(), user.getId()));
     }
 
-    @GetMapping("/checkUsername/{username}")
+    @GetMapping("/check-username/{username}")
     public ResponseEntity<Boolean> checkIfUsernameIsAvailable(@PathVariable String username){
         //vraca false ako je zauzeto ime (vec postoji korisnik)
         return new ResponseEntity<>(userService.checkIfUsernameIsAvailable(username), HttpStatus.OK);
+    }
+
+    @GetMapping("/get-basic-informations")
+    public ResponseEntity<User> getBasicInformations(Principal loggedUser) {
+        User user = null;
+        if(loggedUser != null) {
+           user = userService.findByUsername(loggedUser.getName());
+        }
+        return new ResponseEntity<User>(user, HttpStatus.OK);
+
     }
 
 //    // U slucaju isteka vazenja JWT tokena, endpoint koji se poziva da se token osvezi

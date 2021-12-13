@@ -16,18 +16,19 @@ import java.util.List;
 @Service
 public class AdminService implements IAdminService {
 
-    private EmployeeService employeeService;
-    private RoleService roleService;
     private AdminRepository adminRepository;
 
-    @Autowired
+    private EmployeeService employeeService;
+    private RoleService roleService;
+
     private PasswordEncoder passwordEncoder;
 
     @Autowired
-    public AdminService(EmployeeService employeeService, RoleService roleService, AdminRepository adminRepository) {
+    public AdminService(EmployeeService employeeService, RoleService roleService, AdminRepository adminRepository, PasswordEncoder passwordEncoder) {
         this.employeeService = employeeService;
         this.roleService = roleService;
         this.adminRepository = adminRepository;
+        this.passwordEncoder = passwordEncoder;
     }
 
     @Override

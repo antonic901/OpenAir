@@ -20,6 +20,7 @@ import java.util.List;
 @RestController
 @RequestMapping(value = "/api/task")
 public class TaskController {
+
     private TaskService taskService;
     private ProjectService projectService;
     private EmployeeService employeeService;
@@ -31,7 +32,7 @@ public class TaskController {
         this.employeeService = employeeService;
     }
 
-    @PostMapping("/addTask")
+    @PostMapping("/add-task")
     @PreAuthorize("hasRole('ADMIN')")
     public ResponseEntity<Task> addTask(@RequestBody TaskDTO taskDTO) {
         Task existTask = this.taskService.findTaskByName(taskDTO.getName());
@@ -47,34 +48,34 @@ public class TaskController {
     }
 
 
-    @GetMapping("/findAllByProjectId/{projectId}")
+    @GetMapping("/find-all-by-project-id/{projectId}")
     @PreAuthorize("hasRole('ADMIN') || hasRole('EMPLOYEE')")
     public ResponseEntity<List<Task>> findAllByProjectId(@PathVariable Long projectId) {
 
         return new ResponseEntity<>(taskService.findAllByProjectId(projectId), HttpStatus.OK);
     }
 
-    @GetMapping("/findAllNotLoggedBy/{projectId}")
+    @GetMapping("/find-all-not-logged-by/{projectId}")
     @PreAuthorize("hasRole('ADMIN') || hasRole('EMPLOYEE')")
     public ResponseEntity<List<Task>> findAllNotLoggedBy(@PathVariable Long projectId) {
 
         return new ResponseEntity<>(taskService.findAllNotLoggedTasksByProjectId(projectId), HttpStatus.OK);
     }
 
-    @GetMapping("/findAllByEmployeeId/{projectId}")
+    @GetMapping("/find-all-by-employee-id/{projectId}")
     @PreAuthorize("hasRole('ADMIN')")
     public ResponseEntity<List<Task>> findAllByEmployeeId(@PathVariable Long employeeId) {
 
         return new ResponseEntity<>(taskService.findAllByEmployeeId(employeeId), HttpStatus.OK);
     }
 
-    @GetMapping("/findByName")
+    @GetMapping("/find-by-name")
     public ResponseEntity<Project> findProjectByName(@RequestBody String name){
 
         return new ResponseEntity<>(this.projectService.findProjectByName(name), HttpStatus.OK);
     }
 
-    @GetMapping("/findById")
+    @GetMapping("/find-by-id")
     public ResponseEntity<Project> findProjectById(@RequestBody Long projectId){
 
         return new ResponseEntity<Project>(this.projectService.findProjectById(projectId), HttpStatus.OK);
