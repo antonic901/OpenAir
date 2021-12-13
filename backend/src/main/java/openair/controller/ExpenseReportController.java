@@ -19,6 +19,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 
+import javax.servlet.http.HttpServletResponse;
 import java.security.Principal;
 import java.util.List;
 
@@ -33,7 +34,7 @@ public class ExpenseReportController {
 
     @Autowired
     public ExpenseReportController(ExpenseReportService expenseReportService, EmployeeService employeeService,
-        ProjectService projectService, AdminService adminService){
+                                   ProjectService projectService, AdminService adminService) {
         this.expenseReportService = expenseReportService;
         this.employeeService = employeeService;
         this.projectService = projectService;
@@ -47,7 +48,7 @@ public class ExpenseReportController {
         Employee employee = employeeService.findByUsername(loggedEmployee.getName());
         Project project = projectService.findProjectById(expenseReportDTO.getProjectId());
 
-        ExpenseReport expenseReport = this.expenseReportService.addReport(expenseReportDTO,employee,project);
+        ExpenseReport expenseReport = this.expenseReportService.addReport(expenseReportDTO, employee, project);
         return new ResponseEntity<>(expenseReport, HttpStatus.CREATED);
     }
 
@@ -68,5 +69,4 @@ public class ExpenseReportController {
         ExpenseReport expenseReport = this.expenseReportService.reviewReport(reportId, status);
         return new ResponseEntity<>(expenseReport, HttpStatus.OK);
     }
-
 }
