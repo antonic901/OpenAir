@@ -3,6 +3,7 @@ package openair.service;
 import openair.dto.ExspenseReportDTO;
 import openair.model.Employee;
 import openair.model.ExpenseReport;
+import openair.model.Money;
 import openair.model.Project;
 import openair.model.enums.Status;
 import openair.repository.AdminRepository;
@@ -45,9 +46,15 @@ public class ExpenseReportService implements IExpenseReportService {
     public ExpenseReport addReport(ExspenseReportDTO expenseReportDTO, Employee employee, Project project) {
         ExpenseReport expenseReport = new ExpenseReport();
 
+        Money money = new Money();
+        money.setCurrency(expenseReportDTO.getRefund().getCurrency());
+        money.setDate(LocalDate.now());
+        money.setQuantity(expenseReportDTO.getRefund().getQuantity());
+
+
         expenseReport.setDescription(expenseReportDTO.getDescription());
         expenseReport.setEmployee(employee);
-        expenseReport.setRefund(expenseReportDTO.getRefund());
+        expenseReport.setRefund(money);
         expenseReport.setName(expenseReportDTO.getName());
         expenseReport.setDateOfCreation(LocalDate.now());
         expenseReport.setProject(project);

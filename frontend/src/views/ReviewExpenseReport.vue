@@ -61,7 +61,7 @@ export default {
                 { text: 'User', value: 'employee.username' },
                 { text: 'Tracking number', value: 'trackingNumber' },
                 { text: 'Name',  value: 'name' },
-                { text: 'Price', value: 'refund' },
+                { text: 'Price', value: 'refund.quantity' },
                 { text: 'Date of creation', value: 'dateOfCreation' },
                 { text: 'Description', value: 'description' },
                 { text: 'Document', align:'center', filterable: false, sortable:false, value: 'open_document'},
