@@ -1,15 +1,25 @@
 package openair.service;
 
+import openair.email.model.Mail;
+import openair.email.service.MailService;
 import openair.model.Employee;
 import openair.model.Project;
+import openair.model.TimeSheetDay;
 import openair.repository.EmployeeRepository;
 import openair.service.interfaces.IEmployeeService;
+import org.apache.tomcat.jni.Local;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.stereotype.Service;
 
+import java.time.DayOfWeek;
 import java.time.LocalDate;
+import java.time.Month;
+import java.time.YearMonth;
+import java.util.ArrayList;
+import java.util.Calendar;
 import java.util.List;
+import java.util.stream.IntStream;
 
 @Service
 public class EmployeeService implements IEmployeeService {
@@ -18,10 +28,13 @@ public class EmployeeService implements IEmployeeService {
 
     private ProjectService projectService;
 
+    private MailService mailService;
+
     @Autowired
-    public EmployeeService(EmployeeRepository employeeRepository, ProjectService projectService) {
+    public EmployeeService(EmployeeRepository employeeRepository, ProjectService projectService, MailService mailService) {
         this.employeeRepository = employeeRepository;
         this.projectService = projectService;
+        this.mailService = mailService;
     }
 
     @Override
@@ -67,5 +80,44 @@ public class EmployeeService implements IEmployeeService {
 
         employeeRepository.saveAll(employeeList);
 
+    }
+
+    //Every month on the last weekday, at noon
+    @Scheduled(cron = "0 0 12 LW * ?")
+    public void sendReminder() {
+        Mail mail = new Mail();
+        mail.setMailFrom("ursaminor1777@gmail.com");
+        mail.setContentType("REMINDER");
+        mail.setMailSubject("Monthly reminder to log your working hours");
+
+        //pronadjem sve radne dane u mesecu
+        List<LocalDate> workDayList = new ArrayList<>();
+        LocalDate currentDate = LocalDate.now();
+        Month month = currentDate.getMonth();
+        int year = currentDate.getYear();
+
+        IntStream.rangeClosed(1, YearMonth.of(year, month).lengthOfMonth())
+                .mapToObj(day -> LocalDate.of(year, month, day))
+                .filter(date -> date.getDayOfWeek() == DayOfWeek.MONDAY ||
+                        date.getDayOfWeek() == DayOfWeek.TUESDAY ||
+                        date.getDayOfWeek() == DayOfWeek.WEDNESDAY ||
+                        date.getDayOfWeek() == DayOfWeek.THURSDAY ||
+                        date.getDayOfWeek() == DayOfWeek.FRIDAY)
+                .forEach(date -> workDayList.add(date));
+
+        //ako zaposleni nije popunio timesheet poslati mu podsetnik
+        List<Employee> employeeList = employeeRepository.findAll();
+        for (int i = 0; i < employeeList.size(); i++) {
+            List<TimeSheetDay> timeSheetDays = employeeList.get(i).getTimeSheetDays();
+            for(int j=0; j < workDayList.size(); j++){
+                //ako neki radni dan fali
+                if(!timeSheetDays.contains(workDayList.get(j))){
+                    mail.setMailContent("Dear, you forgot to fill in your working hours for " + workDayList.get(j).toString() +
+                            ". Please do it before end of the month.");
+                    mail.setMailTo(employeeList.get(i).getEmail());
+                    mailService.sendMail(mail);
+                }
+            }
+        }
     }
 }
