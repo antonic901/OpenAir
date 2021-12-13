@@ -68,7 +68,8 @@ public class ExpenseReportService implements IExpenseReportService {
         //pronadjem radnika da bi mu uvecala platu za onliko koliko je navedeno u reportu
         if(status == Status.APPROVED) {
             Employee employee = expenseReport.getEmployee();
-            employee.setSalary(employee.getSalary() + expenseReport.getRefund());
+            //TODO treba podrzati konverziju ukoliko su valute ralicite
+            employee.setSalary(employee.getSalary() + expenseReport.getRefund().getQuantity());
             employeeRepository.save(employee);
         }
 

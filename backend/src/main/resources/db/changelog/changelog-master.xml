@@ -10,6 +10,7 @@
     <include file="/db/changelog/changes/create-tasks-table-changelog-1.xml"/>
     <include file="/db/changelog/changes/create-time_sheet_day-table-changelog-1.xml"/>
     <include file="/db/changelog/changes/create-absences-table-changelog-1.xml"/>
+    <include file="/db/changelog/changes/create-money-table-changelog-1.xml"/>
     <include file="/db/changelog/changes/create-expense_report-table-changelog-1.xml"/>
     <include file="/db/changelog/changes/create-employee_project-table-changelog-1.xml"/>
     <include file="/db/changelog/changes/create-role-table-changelog-1.xml"/>
