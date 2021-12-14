@@ -59,6 +59,7 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
                 .antMatchers("/api/upload").permitAll()
                 .antMatchers("/api/email/send-mail").permitAll()
                 .antMatchers("/auth/get-basic-informations").permitAll()
+                .antMatchers("/api/money/convert/{date}/{fromCurrency}/{toCurrency}/{quantity}").permitAll()
                 .anyRequest().authenticated().and()
                 .cors().and()
                 .addFilterBefore(new TokenAuthenticationFilter(tokenUtils, userService), BasicAuthenticationFilter.class);

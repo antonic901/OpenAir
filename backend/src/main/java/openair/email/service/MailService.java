@@ -17,7 +17,7 @@ public class MailService implements IMailService {
 
     private final JavaMailSender javaMailSender;
     private static final Logger logger = LoggerFactory.getLogger(MailService.class);
-    private static final String MAIL_FROM = "ursaminor1777@gmail.com";
+    private static final String MAIL_FROM = "pcserviskac@gmail.com";
     @Value("${custom.addr}")
     private String ADDR;
     @Value("${custom.fport}")
