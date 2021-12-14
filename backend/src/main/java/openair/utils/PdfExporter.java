@@ -1,4 +1,7 @@
 package openair.utils;
+import java.io.File;
+import java.io.FileOutputStream;
+import java.io.FileWriter;
 import java.io.IOException;
 import java.util.List;
 
@@ -21,7 +24,6 @@ import com.lowagie.text.*;
 import com.lowagie.text.pdf.*;
 import openair.model.TimeSheetDay;
 import openair.service.TimeSheetDayService;
-
 import javax.servlet.http.HttpServletResponse;
 
 
@@ -80,7 +82,11 @@ public class PdfExporter {
 
     public void export(HttpServletResponse response) throws DocumentException, IOException {
         Document document = new Document(PageSize.A4);
-        PdfWriter.getInstance(document, response.getOutputStream());
+
+        File file = new File("newFileName.pdf");
+        file.createNewFile();
+        FileOutputStream fos = new FileOutputStream(file);
+        PdfWriter.getInstance(document, fos);
 
         document.open();
         document.add(new Paragraph("List of projects, employees and work hours"));
