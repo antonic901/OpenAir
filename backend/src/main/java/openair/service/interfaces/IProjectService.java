@@ -3,6 +3,7 @@ package openair.service.interfaces;
 import openair.dto.ProjectDTO;
 import openair.model.Admin;
 import openair.model.Project;
+import openair.model.enums.ProjectType;
 
 import java.util.List;
 

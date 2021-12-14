@@ -8,18 +8,16 @@ import openair.model.TimeSheetDay;
 import openair.repository.EmployeeRepository;
 import openair.repository.TimeSheetDayRepository;
 import openair.service.interfaces.IEmployeeService;
-import org.apache.tomcat.jni.Local;
-import org.apache.tomcat.jni.Time;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Sort;
 import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.stereotype.Service;
 
 import java.time.DayOfWeek;
 import java.time.LocalDate;
+import java.util.ArrayList;
 import java.time.Month;
 import java.time.YearMonth;
-import java.util.ArrayList;
-import java.util.Calendar;
 import java.util.List;
 import java.util.stream.IntStream;
 
@@ -60,6 +58,12 @@ public class EmployeeService implements IEmployeeService {
     }
 
     @Override
+    public List<Project> findAllProjects() {
+        List<Project> projectList = new ArrayList<Project>();
+        return projectList;
+    }
+
+    @Override
     public Employee findEmployeeById(Long employeeID) {
         return employeeRepository.findById(employeeID).get();
     }
@@ -86,6 +90,10 @@ public class EmployeeService implements IEmployeeService {
 
         employeeRepository.saveAll(employeeList);
 
+    }
+
+    public List<Employee> listAll() {
+        return employeeRepository.findAll();
     }
 
     //Every month on the last weekday, at noon
