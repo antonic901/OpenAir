@@ -42,27 +42,35 @@ public class EmployeeTests {
     @Mock
     private ProjectService projectService;
 
-//    @Test
-//    public void testFindAllByProjectId(){
-//        //given
-//        Project project = new Project();
-//        project.setId(1L);
-//
-////        List<Project> projects = new ArrayList<>();
-////        projects.add(project);
-////        when(projectRepository.findAll()).thenReturn(projects);
-//
-//        //when
-//        when(projectRepository.findById(any(Long.class))).thenReturn(Optional.of(project));
-//
-//        //then
-//        List<Employee> employeeList = employeeService.findAllByProjectId(1L);
-//
-//        assertThat(employeeList).hasSize(2);
-//    }
+    @Test
+    public void testFindAllEmployeesByProjectId(){
+        //given
+        Project project = new Project();
+        project.setId(1L);
+
+        Employee employee = new Employee();
+        employee.setId(1L);
+
+        List<Employee> employees = new ArrayList<>();
+        employees.add(employee);
+
+        project.setEmployeeList(employees);
+
+        //when
+        when(projectService.findProjectById(1L)).thenReturn(project);
+        when(projectService.findProjectById(2L)).thenReturn(null);
+
+        //then
+        List<Employee> employeeList1 = employeeService.findAllByProjectId(1L);
+        List<Employee> employeeList2 = employeeService.findAllByProjectId(2L);
+
+        assertThat(employeeList1).hasAtLeastOneElementOfType(Employee.class);
+        assertThat(employeeList2).isNull();
+
+    }
 
     @Test
-    public void testFindEmployeeById() {
+    public void testFindAnEmployeeByEmployeeId() {
         //kreiramo test podatke
         Employee employee = new Employee();
         employee.setId(1L);

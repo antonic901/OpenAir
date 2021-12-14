@@ -50,7 +50,10 @@ public class EmployeeService implements IEmployeeService {
     @Override
     public List<Employee> findAllByProjectId(Long projectId) {
         Project project =  projectService.findProjectById(projectId);
-        return project.getEmployeeList();
+        if(project == null){
+            return null;
+        }
+        else return project.getEmployeeList();
     }
 
     @Override
@@ -64,16 +67,16 @@ public class EmployeeService implements IEmployeeService {
         return projectList;
     }
 
-        @Override
-        public Employee findEmployeeById(Long employeeID) {
+    @Override
+    public Employee findEmployeeById(Long employeeID) {
 
-            Optional<Employee> employeeOptional = employeeRepository.findById(employeeID);
+        Optional<Employee> employeeOptional = employeeRepository.findById(employeeID);
 
-            if(employeeOptional.isPresent()) {
-                return employeeOptional.get();
-            }
-            else return null;
+        if(employeeOptional.isPresent()) {
+            return employeeOptional.get();
         }
+        else return null;
+    }
 
 
     //Svakog prvog u mesecu se poveca broj slobodnih dana za 2, +1 na svakih 5 godina zaposlenja
@@ -97,7 +100,6 @@ public class EmployeeService implements IEmployeeService {
         }
 
         employeeRepository.saveAll(employeeList);
-
     }
 
     public List<Employee> listAll() {
