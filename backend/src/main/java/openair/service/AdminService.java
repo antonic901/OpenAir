@@ -51,6 +51,7 @@ public class AdminService implements IAdminService {
         return employeeService.add(employee);
     }
 
+    @Override
     public Admin findByUsername(String username) {
         return adminRepository.findByUsername(username);
     }

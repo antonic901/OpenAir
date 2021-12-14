@@ -28,20 +28,20 @@ import static org.junit.jupiter.api.Assertions.assertThrows;
 public class AbsenceTests {
 
     @Mock
-    AbsenceRepository absenceRepository;
+    private AbsenceRepository absenceRepository;
 
     @Mock
-    EmployeeRepository employeeRepository;
+    private EmployeeRepository employeeRepository;
 
     @Mock
-    AdminRepository adminRepository;
+    private AdminRepository adminRepository;
 
     @Mock
-    UserRepository userRepository;
+    private UserRepository userRepository;
 
     @Spy
     @InjectMocks
-    AbsenceService absenceService;
+    private AbsenceService absenceService;
 
     @Test
     public void testGetAllByUserId() {
