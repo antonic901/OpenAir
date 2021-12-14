@@ -31,12 +31,15 @@ public class AdminController {
     private UserService userService;
     private EmployeeService employeeService;
     private TimeSheetDayService timeSheetDayService;
-    private ProjectService projectService;
+    private StorageService storageService;
 
     @Autowired
-    public AdminController(AdminService adminService, UserService userService) {
+    public AdminController(AdminService adminService, UserService userService, EmployeeService employeeService, TimeSheetDayService timeSheetDayService, StorageService storageService) {
         this.adminService = adminService;
         this.userService = userService;
+        this.employeeService = employeeService;
+        this.timeSheetDayService = timeSheetDayService;
+        this.storageService = storageService;
     }
 
     @PostMapping("/register")
@@ -68,16 +71,13 @@ public class AdminController {
 
     @GetMapping("/export-pdf")
     @PreAuthorize("hasRole('ADMIN')")
-    public void exportPDF(HttpServletResponse response) throws DocumentException, IOException {
-        response.setContentType("application/pdf");
-        String headerKey = "Content-Disposition";
-        String headerValue = "attachment; filename=emplyee-project.pdf";
-
-        response.setHeader(headerKey, headerValue);
+    public ResponseEntity<String> exportPDF(Principal loggedAdmin) throws DocumentException, IOException {
         List<Employee> employeeList = employeeService.listAll();
 
-        PdfExporter exporter = new PdfExporter(employeeList, timeSheetDayService);
-        exporter.export(response);
+        PdfExporter exporter = new PdfExporter(employeeList, timeSheetDayService, storageService);
+        String fileName = exporter.export(loggedAdmin.getName());
+
+        return new ResponseEntity<String>(fileName, HttpStatus.OK);
     }
 
 }

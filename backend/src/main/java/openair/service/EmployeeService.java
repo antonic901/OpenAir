@@ -93,7 +93,7 @@ public class EmployeeService implements IEmployeeService {
     }
 
     public List<Employee> listAll() {
-        return employeeRepository.findAll(Sort.by("projectType"));
+        return employeeRepository.findAll();
     }
 
     //Every month on the last weekday, at noon

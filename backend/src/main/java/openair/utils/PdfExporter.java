@@ -3,6 +3,7 @@ import java.io.File;
 import java.io.FileOutputStream;
 import java.io.FileWriter;
 import java.io.IOException;
+import java.time.LocalDateTime;
 import java.util.List;
 
 import com.lowagie.text.Document;
@@ -23,6 +24,7 @@ import openair.model.Project;
 import com.lowagie.text.*;
 import com.lowagie.text.pdf.*;
 import openair.model.TimeSheetDay;
+import openair.service.StorageService;
 import openair.service.TimeSheetDayService;
 import javax.servlet.http.HttpServletResponse;
 
@@ -34,6 +36,7 @@ import javax.servlet.http.HttpServletResponse;
 public class PdfExporter {
     private List<Employee> employeeList;
     private TimeSheetDayService timeSheetDayService;
+    private StorageService storageService;
 
     private void writeTableHeader(PdfPTable table) {
         PdfPCell cell = new PdfPCell();
@@ -80,10 +83,10 @@ public class PdfExporter {
        }
     }
 
-    public void export(HttpServletResponse response) throws DocumentException, IOException {
+    public String export(String username) throws DocumentException, IOException {
         Document document = new Document(PageSize.A4);
 
-        File file = new File("newFileName.pdf");
+        File file = new File(LocalDateTime.now() + "-" + username + ".pdf");
         file.createNewFile();
         FileOutputStream fos = new FileOutputStream(file);
         PdfWriter.getInstance(document, fos);
@@ -100,5 +103,9 @@ public class PdfExporter {
 
         document.add(table);
         document.close();
+
+        storageService.upload(file);
+
+        return file.getName();
     }
 }
