@@ -1,10 +1,7 @@
 package openair.task;
 
-import liquibase.pro.packaged.T;
 import openair.model.Task;
-import openair.repository.EmployeeRepository;
 import openair.repository.TaskRepository;
-import openair.service.EmployeeService;
 import openair.service.TaskService;
 import org.junit.jupiter.api.Test;
 import org.mockito.InjectMocks;
@@ -14,9 +11,8 @@ import org.springframework.boot.test.context.SpringBootTest;
 
 import java.util.Optional;
 
-import static org.mockito.Mockito.*;
 import static org.assertj.core.api.Assertions.assertThat;
-import static org.mockito.Mockito.times;
+import static org.mockito.Mockito.when;
 
 @SpringBootTest
 public class TaskTests {
@@ -24,16 +20,9 @@ public class TaskTests {
     @Mock
     private TaskRepository taskRepository;
 
-    @Mock
-    private EmployeeRepository employeeRepository;
-
     @Spy
     @InjectMocks
     private TaskService taskService;
-
-    @Mock
-    private EmployeeService employeeService;
-
 
     @Test
     public void testFindTaskById() {
