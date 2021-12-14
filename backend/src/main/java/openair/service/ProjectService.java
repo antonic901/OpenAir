@@ -2,7 +2,6 @@ package openair.service;
 
 import openair.dto.ProjectDTO;
 import openair.model.*;
-import openair.model.enums.ProjectType;
 import openair.model.enums.Status;
 import openair.repository.*;
 import openair.service.interfaces.IProjectService;
