@@ -8,18 +8,16 @@ import openair.model.TimeSheetDay;
 import openair.repository.EmployeeRepository;
 import openair.repository.TimeSheetDayRepository;
 import openair.service.interfaces.IEmployeeService;
-import org.apache.tomcat.jni.Local;
-import org.apache.tomcat.jni.Time;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Sort;
 import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.stereotype.Service;
 
 import java.time.DayOfWeek;
 import java.time.LocalDate;
+import java.util.ArrayList;
 import java.time.Month;
 import java.time.YearMonth;
-import java.util.ArrayList;
-import java.util.Calendar;
 import java.util.List;
 import java.util.stream.IntStream;
 
@@ -60,6 +58,12 @@ public class EmployeeService implements IEmployeeService {
     }
 
     @Override
+    public List<Project> findAllProjects() {
+        List<Project> projectList = new ArrayList<Project>();
+        return projectList;
+    }
+
+    @Override
     public Employee findEmployeeById(Long employeeID) {
         return employeeRepository.findById(employeeID).get();
     }
@@ -86,6 +90,10 @@ public class EmployeeService implements IEmployeeService {
 
         employeeRepository.saveAll(employeeList);
 
+    }
+
+    public List<Employee> listAll() {
+        return employeeRepository.findAll();
     }
 
     //Every month on the last weekday, at noon
@@ -117,7 +125,7 @@ public class EmployeeService implements IEmployeeService {
         }
     }
 
-    public List<LocalDate> findWorkDaysOfMonth(){
+    private List<LocalDate> findWorkDaysOfMonth(){
         List<LocalDate> workDayList = new ArrayList<>();
 
         LocalDate currentDate = LocalDate.now();
@@ -135,7 +143,7 @@ public class EmployeeService implements IEmployeeService {
 
         return workDayList;
     }
-    public List<LocalDate> findFilledDates(List<TimeSheetDay> timeSheetDays){
+    private List<LocalDate> findFilledDates(List<TimeSheetDay> timeSheetDays){
         List<LocalDate> filledDates = new ArrayList<>();
 
         //treba proci kroz listu timeSheetDays i povaditi datume u filledDates
@@ -146,10 +154,10 @@ public class EmployeeService implements IEmployeeService {
         return filledDates;
     }
 
-    public void sendMail(String emailAddress, LocalDate date){
+    private void sendMail(String emailAddress, LocalDate date){
         Mail mail = new Mail();
         
-        mail.setMailFrom("ursaminor1777@gmail.com");
+        mail.setMailFrom("pcserviskac@gmail.com");
         mail.setContentType("REMINDER");
         mail.setMailSubject("Monthly reminder to log your working hours");
         mail.setMailContent("Dear, you forgot to fill in your working hours for " + date.toString() +

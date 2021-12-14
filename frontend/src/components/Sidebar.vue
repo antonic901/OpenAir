@@ -94,6 +94,7 @@
         </div>
         <template v-slot:append>
             <v-list nav dense>
+                <v-btn v-if="userType == 'ROLE_ADMIN'" v-on:click="generatePdf">Generate pdf</v-btn>
                 <v-list-item v-on:click="logout" v-if="isUserLogged" link>
                     <v-list-item-icon>
                     <v-icon color="white">mdi-export</v-icon>
@@ -126,7 +127,7 @@ export default {
     },
     data() {
         return {
-          
+            pdfLink: ''
         }
     },
     methods: {
@@ -137,7 +138,17 @@ export default {
             this.$store.dispatch('updateJwt', null);
             this.$store.dispatch('updateUserType', null);
             this.$store.dispatch('updateUserId', null);
-
+        },
+        generatePdf() {
+            this.axios.get("/api/admin/export-pdf", {headers: {'Authorization': `Bearer ` + this.$store.getters.getJwt}})
+                .then(r => {
+                    var imageUrl = "https://nistagramstorage.s3.eu-central-1.amazonaws.com/" + r.data;
+                    this.pdfLink = imageUrl;
+                    window.open(imageUrl);
+                })
+                .catch(e => {
+                    alert("Something went wrong. Pdf could not be generated.");
+                })
         }
     }
 }

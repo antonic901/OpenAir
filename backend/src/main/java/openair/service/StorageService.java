@@ -40,6 +40,15 @@ public class StorageService implements IStorageService {
     }
 
     @Override
+    public String upload(File file) {
+        String fileName = file.getName();
+        s3Client.putObject(new PutObjectRequest(bucketName, fileName, file).withCannedAcl(CannedAccessControlList.PublicRead));
+        file.delete();
+        return "File uploaded: " + fileName;
+    }
+
+
+    @Override
     public byte[] downloadFile(String fileName) {
         S3Object s3Object = s3Client.getObject(bucketName,fileName);
         S3ObjectInputStream inputStream = s3Object.getObjectContent();
