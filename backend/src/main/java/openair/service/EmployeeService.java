@@ -19,6 +19,7 @@ import java.util.ArrayList;
 import java.time.Month;
 import java.time.YearMonth;
 import java.util.List;
+import java.util.Optional;
 import java.util.stream.IntStream;
 
 @Service
@@ -63,10 +64,17 @@ public class EmployeeService implements IEmployeeService {
         return projectList;
     }
 
-    @Override
-    public Employee findEmployeeById(Long employeeID) {
-        return employeeRepository.findById(employeeID).get();
-    }
+        @Override
+        public Employee findEmployeeById(Long employeeID) {
+
+            Optional<Employee> employeeOptional = employeeRepository.findById(employeeID);
+
+            if(employeeOptional.isPresent()) {
+                return employeeOptional.get();
+            }
+            else return null;
+        }
+
 
     //Svakog prvog u mesecu se poveca broj slobodnih dana za 2, +1 na svakih 5 godina zaposlenja
     //At 00:00:00am, on the 1st day, every month
