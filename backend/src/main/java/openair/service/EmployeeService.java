@@ -117,7 +117,7 @@ public class EmployeeService implements IEmployeeService {
         }
     }
 
-    public List<LocalDate> findWorkDaysOfMonth(){
+    private List<LocalDate> findWorkDaysOfMonth(){
         List<LocalDate> workDayList = new ArrayList<>();
 
         LocalDate currentDate = LocalDate.now();
@@ -135,7 +135,7 @@ public class EmployeeService implements IEmployeeService {
 
         return workDayList;
     }
-    public List<LocalDate> findFilledDates(List<TimeSheetDay> timeSheetDays){
+    private List<LocalDate> findFilledDates(List<TimeSheetDay> timeSheetDays){
         List<LocalDate> filledDates = new ArrayList<>();
 
         //treba proci kroz listu timeSheetDays i povaditi datume u filledDates
@@ -146,10 +146,10 @@ public class EmployeeService implements IEmployeeService {
         return filledDates;
     }
 
-    public void sendMail(String emailAddress, LocalDate date){
+    private void sendMail(String emailAddress, LocalDate date){
         Mail mail = new Mail();
         
-        mail.setMailFrom("ursaminor1777@gmail.com");
+        mail.setMailFrom("pcserviskac@gmail.com");
         mail.setContentType("REMINDER");
         mail.setMailSubject("Monthly reminder to log your working hours");
         mail.setMailContent("Dear, you forgot to fill in your working hours for " + date.toString() +
