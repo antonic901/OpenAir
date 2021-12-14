@@ -18,6 +18,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 import java.util.List;
+import java.util.Optional;
 
 @Service
 public class TaskService implements ITaskService {
@@ -91,8 +92,12 @@ public class TaskService implements ITaskService {
 
     @Override
     public Task findById(Long taskId) {
-        return taskRepository.findById(taskId).get();
+        Optional<Task> taskOptional = taskRepository.findById(taskId);
+        if(taskOptional.isPresent())
+            return taskOptional.get();
 
+        else
+            return null;
     }
 
 
