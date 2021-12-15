@@ -45,23 +45,23 @@ public class AdminTests {
 
     @Test
     public void testRegisterEmployee() {
-        Admin admin = TestData.createAdmin();
+        Admin admin = TestDataAdmin.createAdmin();
 
         when(passwordEncoder.encode(any(String.class))).thenReturn("##?A4@!");
         when(roleRepository.findByName(UserType.ROLE_EMPLOYEE)).thenReturn(new Role(1L, UserType.ROLE_EMPLOYEE));
         when(roleRepository.findByName(UserType.ROLE_ADMIN)).thenReturn(new Role(1L, UserType.ROLE_ADMIN));
         when(adminRepository.findById(1L)).thenReturn(Optional.of(admin));
-        when(employeeRepository.save(any(Employee.class))).thenReturn(TestData.createEmployee());
+        when(employeeRepository.save(any(Employee.class))).thenReturn(TestDataAdmin.createEmployee());
 
-        assertThat(adminService.registerEmployee(TestData.createRegisterEmployeeDTO1())).isExactlyInstanceOf(Employee.class);
-        assertThrows(NotFoundException.class, () -> adminService.registerEmployee(TestData.createRegisterEmployeeDTO2()), "Admin not found");
+        assertThat(adminService.registerEmployee(TestDataAdmin.createRegisterEmployeeDTO1())).isExactlyInstanceOf(Employee.class);
+        assertThrows(NotFoundException.class, () -> adminService.registerEmployee(TestDataAdmin.createRegisterEmployeeDTO2()), "Admin not found");
 
-        assertThrows(NotFoundException.class, () -> adminService.registerEmployee(TestData.createRegisterEmployeeDTO3()), "Role not found");
+        assertThrows(NotFoundException.class, () -> adminService.registerEmployee(TestDataAdmin.createRegisterEmployeeDTO3()), "Role not found");
     }
 
     @Test
     public void testFindByUsername() {
-        Admin admin = TestData.createAdmin();
+        Admin admin = TestDataAdmin.createAdmin();
 
         when(adminRepository.findByUsername("admin")).thenReturn(admin);
 
@@ -71,7 +71,7 @@ public class AdminTests {
 
     @Test
     public void testGetEmployees() {
-        Admin admin = TestData.createAdmin();
+        Admin admin = TestDataAdmin.createAdmin();
 
         when(adminRepository.findById(1L)).thenReturn(Optional.of((admin)));
 

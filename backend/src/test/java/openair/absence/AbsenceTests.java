@@ -48,11 +48,11 @@ public class AbsenceTests {
     @Test
     public void testGetAllByUserId() {
 
-        Admin admin = TestData.createAdmin();
+        Admin admin = TestDataAbsence.createAdmin();
 
-        Employee employee = TestData.createEmployee();
+        Employee employee = TestDataAbsence.createEmployee();
 
-        List<Absence> absences = TestData.createAbsences();
+        List<Absence> absences = TestDataAbsence.createAbsences();
 
         when(userRepository.findById(1L)).thenReturn(Optional.of((User) admin));
         when(userRepository.findById(2L)).thenReturn(Optional.of((User) employee));
@@ -68,8 +68,8 @@ public class AbsenceTests {
 
     @Test
     public void testAdd() {
-        Employee employee = TestData.createEmployee();
-        List<Absence> absences = TestData.createAbsences();
+        Employee employee = TestDataAbsence.createEmployee();
+        List<Absence> absences = TestDataAbsence.createAbsences();
 
         when(employeeRepository.findById(2L)).thenReturn(Optional.of(employee));
         when(absenceRepository.findAllByEmployeeId(2L)).thenReturn(absences);
@@ -93,7 +93,7 @@ public class AbsenceTests {
     }
 
     public void review() {
-        Absence absence = TestData.createAbsences().get(0);
+        Absence absence = TestDataAbsence.createAbsences().get(0);
 
         when(absenceRepository.findById(1L)).thenReturn(Optional.of(absence));
         when(absenceRepository.save(any(Absence.class))).thenReturn(absence);

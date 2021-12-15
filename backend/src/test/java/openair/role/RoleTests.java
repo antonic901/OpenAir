@@ -31,7 +31,7 @@ public class RoleTests {
 
     @Test
     public void testFindById() {
-        Role role = TestData.createRole();
+        Role role = TestDataRole.createRole();
 
         when(roleRepository.findById(1L)).thenReturn(Optional.of(role));
 
@@ -41,7 +41,7 @@ public class RoleTests {
 
     @Test
     public void testFindByName() {
-        Role role = TestData.createRole();
+        Role role = TestDataRole.createRole();
 
         when(roleRepository.findByName(UserType.ROLE_EMPLOYEE)).thenReturn(role);
 

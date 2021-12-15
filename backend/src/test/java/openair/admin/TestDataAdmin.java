@@ -11,7 +11,7 @@ import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
 
-public class TestData {
+public class TestDataAdmin {
 
     public static Admin createAdmin() {
         Admin admin = new Admin();
