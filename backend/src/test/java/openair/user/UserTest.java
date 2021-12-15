@@ -1,5 +1,6 @@
 package openair.user;
 
+import openair.model.Task;
 import openair.repository.UserRepository;
 import openair.service.UserService;
 import openair.model.User;
@@ -26,33 +27,34 @@ public class UserTest {
     //  Nesto se cudno desava sa User klasom
     //      problem: kaze da je this.userReporsitory null ????
 
-//    @Test
-//    public void testAddUser() {
-//        User user = TestDataUser.createUser();
-//
-//        when(userRepository.save(any(User.class))).thenReturn(new User());
-//
-//        assertThat(userService.addUser(user)).isNotNull();
-//    }
+    @Test
+    public void testAddUser() {
+        User user = TestDataUser.createUser();
+
+        when(userRepository.save(any(User.class))).thenReturn(new User());
+
+        assertThat(userService.addUser(user)).isNotNull();
+    }
 
 
-//    @Test
-//    public void testFindByUsername() {
-//        //  given
-//        User user = new User();
-//        String username1 = "strahinja";
-//        String username2 = "nesto";
-//        user.setUsername(username1);
-//
-//        //  when
-//        when(userRepository.findByUsername(username1)).thenReturn(Optional.of(user));
-//        when(userRepository.findByUsername(username2)).thenReturn(Optional.empty());
-//
-//        //then
-//        User notNull = userService.findByUsername(username1);
-//        User isNull = userService.findByUsername(username2);
-//
-//        assertThat(notNull).isNotNull();
-//        assertThat(isNull).isNull();
-//    }
+    @Test
+    public void testFindByUsername() {
+        //  given
+        User user = new User();
+        String username1 = "strahinja";
+        String username2 = "nesto";
+        user.setUsername(username1);
+
+        //  when
+        when(userRepository.findByUsername(username1)).thenReturn(user);
+        when(userRepository.findByUsername(username2)).thenReturn(null);
+
+        //  then
+        User userIsNotNull = userService.findByUsername(username1);
+        User userIsNull = userService.findByUsername(username2);
+
+        assertThat(userIsNotNull).isNotNull();
+        assertThat(userIsNull).isNull();
+    }
+    
 }
