@@ -46,12 +46,25 @@ public class TestDataTask {
     public static List<Task> createTaskList() {
         List<Task> taskList = new ArrayList<Task>();
 
+        Project project = new Project();
+        project.setId(1L);
+        Employee employee = new Employee();
+        employee.setId(1L);
+
         Task t1 = new Task();
         t1.setId(1L);
+        t1.setProject(project);
+        t1.setEmployee(employee);
+
         Task t2 = new Task();
         t2.setId(2L);
+        t2.setProject(project);
+        t2.setEmployee(employee);
+
         Task t3 = new Task();
         t3.setId(3L);
+        t3.setProject(project);
+        t3.setEmployee(employee);
 
         taskList.add(t1);
         taskList.add(t2);

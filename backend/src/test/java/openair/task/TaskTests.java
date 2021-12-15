@@ -16,6 +16,7 @@ import org.mockito.Spy;
 import org.springframework.boot.test.context.SpringBootTest;
 import static org.mockito.ArgumentMatchers.any;
 
+import java.util.ArrayList;
 import java.util.Optional;
 import java.util.List;
 import static org.assertj.core.api.Assertions.assertThat;
@@ -109,5 +110,41 @@ public class TaskTests {
 
         assertThat(taskService.addTaskToProject(1L, 1L, 2L)).isExactlyInstanceOf(Task.class);
         assertThrows(NotFoundException.class, () -> taskService.addTaskToProject(5L, 1L, 2L), "Task is not found.");
+    }
+
+    /*
+     @Override
+    public List<Task> findAllByProjectId(Long projectId) {
+        return taskRepository.findAllByProjectId(projectId);
+    }
+
+    @Override
+    public List<Task> findAllByEmployeeId(Long employeeId) {
+        return taskRepository.findAllByEmployeeId(employeeId);
+    }
+    * */
+
+    @Test
+    public void testFindAllByProjectId() {
+        List<Task> taskList = TestDataTask.createTaskList();
+        List<Task> novaLista = new ArrayList<Task>();
+        novaLista.add(taskList.get(1));
+
+        when(taskRepository.findAllByProjectId(1L)).thenReturn(novaLista);
+
+        assertThat(taskService.findAllByProjectId(1L)).hasSize(1);
+        assertThat(taskService.findAllByProjectId(10L)).hasSize(0);
+    }
+
+    @Test
+    public void testFindAllByEmployeeId() {
+        List<Task> taskList = TestDataTask.createTaskList();
+        List<Task> novaLista = new ArrayList<Task>();
+        novaLista.add(taskList.get(1));
+
+        when(taskRepository.findAllByEmployeeId(1L)).thenReturn(novaLista);
+
+        assertThat(taskService.findAllByEmployeeId(1L)).hasSize(1);
+        assertThat(taskService.findAllByEmployeeId(10L)).hasSize(0);
     }
 }
