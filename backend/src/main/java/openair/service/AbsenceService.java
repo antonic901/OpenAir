@@ -40,19 +40,25 @@ public class AbsenceService implements IAbsenceService {
         }
         else return null;
         if(user.getUserType().name().equals("ROLE_ADMIN")){
-            Admin admin = adminRepository.findById(id).get();
-            return admin.getAbsences();
+            return absenceRepository.findAllByAdminId(id);
         }
         else if (user.getUserType().name().equals("ROLE_EMPLOYEE")){
-            Employee employee = employeeRepository.findById(id).get();
-            return employee.getAbsences();
+            return absenceRepository.findAllByEmployeeId(id);
         }
         else return null;
     }
 
     @Override
     public Absence add(RequestAbsenceDTO requestAbsenceDTO, Long id) {
-        Employee employee = employeeRepository.findById(id).get();
+
+        Optional<Employee> employeeOptional = employeeRepository.findById(id);
+        Employee employee;
+        if(employeeOptional.isPresent()) {
+            employee = employeeOptional.get();
+        }
+        else {
+            throw new RuntimeException("User with ID: " + id + " doesn't exist.");
+        }
 
         if(requestAbsenceDTO.getStartTime().isAfter(requestAbsenceDTO.getEndTime())) {
             throw new RuntimeException("Period is not valid.");
@@ -72,7 +78,8 @@ public class AbsenceService implements IAbsenceService {
     }
 
     boolean checkIsAbsenceConflicting(Employee employee, LocalDateTime startTime, LocalDateTime endTime) {
-        for(Absence absence : employee.getAbsences()) {
+        List<Absence> absences = absenceRepository.findAllByEmployeeId(employee.getId());
+        for(Absence absence : absences) {
             if(absence.getPeriod().getStartTime().isEqual(startTime) && absence.getPeriod().getEndTime().isEqual(endTime)) {
                 return  true;
             }
@@ -105,7 +112,14 @@ public class AbsenceService implements IAbsenceService {
 
     @Override
     public Absence review(Long id, Status status) {
-        Absence absence = absenceRepository.findById(id).get();
+        Optional<Absence> optionalAbsence = absenceRepository.findById(id);
+        Absence absence;
+        if(optionalAbsence.isPresent()) {
+            absence = optionalAbsence.get();
+        }
+        else {
+            throw new RuntimeException("Absence with ID: " + id + " doesn't exist.");
+        }
         absence.setStatus(status);
         return absenceRepository.save(absence);
     }
