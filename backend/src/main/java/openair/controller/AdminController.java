@@ -2,6 +2,7 @@ package openair.controller;
 
 import com.lowagie.text.DocumentException;
 import openair.dto.RegisterEmployeeDTO;
+import openair.exception.NotFoundException;
 import openair.exception.ResourceConflictException;
 import openair.model.Admin;
 import openair.model.Employee;
@@ -44,7 +45,7 @@ public class AdminController {
 
     @PostMapping("/register")
     @PreAuthorize("hasRole('ADMIN')")
-    public ResponseEntity<User> addUser(@RequestBody RegisterEmployeeDTO registerEmployeeDTO, Principal loggedAdmin, UriComponentsBuilder ucBuilder) {
+    public ResponseEntity<User> addUser(@RequestBody RegisterEmployeeDTO registerEmployeeDTO, Principal loggedAdmin, UriComponentsBuilder ucBuilder) throws ResourceConflictException, NotFoundException {
 
         User existUser = this.userService.findByUsername(registerEmployeeDTO.getUsername());
 

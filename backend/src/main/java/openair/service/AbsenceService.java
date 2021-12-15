@@ -1,6 +1,8 @@
 package openair.service;
 
 import openair.dto.RequestAbsenceDTO;
+import openair.exception.PeriodConflictException;
+import openair.exception.NotFoundException;
 import openair.model.*;
 import openair.model.enums.Status;
 import openair.repository.AbsenceRepository;
@@ -38,28 +40,38 @@ public class AbsenceService implements IAbsenceService {
         if(userOptional.isPresent()) {
             user = userOptional.get();
         }
-        else return null;
+        else {
+            throw new NotFoundException(id, "User with ID: " + id + " is not found.");
+        };
         if(user.getUserType().name().equals("ROLE_ADMIN")){
-            Admin admin = adminRepository.findById(id).get();
-            return admin.getAbsences();
+            return absenceRepository.findAllByAdminId(id);
         }
         else if (user.getUserType().name().equals("ROLE_EMPLOYEE")){
-            Employee employee = employeeRepository.findById(id).get();
-            return employee.getAbsences();
+            return absenceRepository.findAllByEmployeeId(id);
         }
-        else return null;
+        else {
+            throw new NotFoundException(id, "User with UserType: " + user.getUserType() + " is not found.");
+        }
     }
 
     @Override
     public Absence add(RequestAbsenceDTO requestAbsenceDTO, Long id) {
-        Employee employee = employeeRepository.findById(id).get();
+
+        Optional<Employee> employeeOptional = employeeRepository.findById(id);
+        Employee employee;
+        if(employeeOptional.isPresent()) {
+            employee = employeeOptional.get();
+        }
+        else {
+            throw new NotFoundException(id, "User with ID: " + id + " is not found.");
+        }
 
         if(requestAbsenceDTO.getStartTime().isAfter(requestAbsenceDTO.getEndTime())) {
-            throw new RuntimeException("Period is not valid.");
+            throw new PeriodConflictException(id, "User with ID: " + id + " have selected wrong period (start after end))");
         }
 
         else if(checkIsAbsenceConflicting(employee, requestAbsenceDTO.getStartTime(), requestAbsenceDTO.getEndTime())) {
-            throw new RuntimeException("Period is in conflict. ");
+            throw new PeriodConflictException(id, "User with ID: " + id + " have requested absence which is in conflict with other absence");
         }
 
         Period period = new Period(requestAbsenceDTO.getStartTime(),requestAbsenceDTO.getEndTime());
@@ -72,7 +84,8 @@ public class AbsenceService implements IAbsenceService {
     }
 
     boolean checkIsAbsenceConflicting(Employee employee, LocalDateTime startTime, LocalDateTime endTime) {
-        for(Absence absence : employee.getAbsences()) {
+        List<Absence> absences = absenceRepository.findAllByEmployeeId(employee.getId());
+        for(Absence absence : absences) {
             if(absence.getPeriod().getStartTime().isEqual(startTime) && absence.getPeriod().getEndTime().isEqual(endTime)) {
                 return  true;
             }
@@ -105,7 +118,14 @@ public class AbsenceService implements IAbsenceService {
 
     @Override
     public Absence review(Long id, Status status) {
-        Absence absence = absenceRepository.findById(id).get();
+        Optional<Absence> optionalAbsence = absenceRepository.findById(id);
+        Absence absence;
+        if(optionalAbsence.isPresent()) {
+            absence = optionalAbsence.get();
+        }
+        else {
+            throw new NotFoundException(id, "Absence with ID: " + id + " is not found.");
+        }
         absence.setStatus(status);
         return absenceRepository.save(absence);
     }

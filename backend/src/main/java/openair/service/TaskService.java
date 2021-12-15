@@ -1,6 +1,7 @@
 package openair.service;
 
 import openair.dto.TaskDTO;
+import openair.exception.NotFoundException;
 import openair.model.Employee;
 import openair.model.Project;
 import openair.model.Task;
@@ -18,6 +19,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 import java.util.List;
+import java.util.Optional;
 
 @Service
 public class TaskService implements ITaskService {
@@ -57,8 +59,7 @@ public class TaskService implements ITaskService {
 
     @Override
     public List<Task> findAllByProjectId(Long projectId) {
-        Project project = projectService.findProjectById(projectId);
-        return project.getTasks();
+        return taskRepository.findAllByProjectId(projectId);
     }
 
     @Override
@@ -84,23 +85,39 @@ public class TaskService implements ITaskService {
 
     @Override
     public List<Task> findAllByEmployeeId(Long employeeId) {
-        Employee employee = employeeRepository.findById(employeeId).get();
-
-        return employee.getTasks();
+        return taskRepository.findAllByEmployeeId(employeeId);
     }
 
     @Override
     public Task findById(Long taskId) {
-        return taskRepository.findById(taskId).get();
+        Optional<Task> taskOptional = taskRepository.findById(taskId);
+        if(taskOptional.isPresent())
+            return taskOptional.get();
 
+        else
+            return null;
     }
 
 
     @Override
     public Task addTaskToProject(Long taskId, Long projectId, Long employeeId) {
-        Project project = projectRepository.findById(projectId).get();
-        Employee employee = employeeRepository.findById(employeeId).get();
-        Task task = taskRepository.findById(taskId).get();
+        Optional<Project> optionalProject = projectRepository.findById(projectId);
+        if(!optionalProject.isPresent()) {
+            throw new NotFoundException(projectId, "Project with ID: " + projectId + " not found.");
+        }
+        Project project = optionalProject.get();
+
+        Optional<Employee> optionalEmployee = employeeRepository.findById(employeeId);
+        if(!optionalEmployee.isPresent()) {
+            throw new NotFoundException(employeeId, "Employee with ID: " + employeeId + " not found.");
+        }
+        Employee employee = optionalEmployee.get();
+
+        Optional<Task> optionalTask = taskRepository.findById(taskId);
+        if(!optionalTask.isPresent()) {
+            throw  new NotFoundException(taskId, "Task with ID: " + taskId + " not found.");
+        }
+        Task task = optionalTask.get();
 
         List<Task> taskList = project.getTasks();
         if(!taskList.contains(task))
@@ -111,6 +128,4 @@ public class TaskService implements ITaskService {
 
         return taskRepository.save(task);
     }
-
-
 }

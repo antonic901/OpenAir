@@ -1,10 +1,14 @@
 package openair.service;
 
 import openair.dto.RegisterEmployeeDTO;
+import openair.exception.NotFoundException;
 import openair.model.Admin;
 import openair.model.Employee;
+import openair.model.Role;
 import openair.model.enums.UserType;
 import openair.repository.AdminRepository;
+import openair.repository.EmployeeRepository;
+import openair.repository.RoleRepository;
 import openair.service.interfaces.IAdminService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.crypto.password.PasswordEncoder;
@@ -12,21 +16,22 @@ import org.springframework.stereotype.Service;
 
 import java.time.LocalDate;
 import java.util.List;
+import java.util.Optional;
 
 @Service
 public class AdminService implements IAdminService {
 
     private AdminRepository adminRepository;
 
-    private EmployeeService employeeService;
-    private RoleService roleService;
+    private EmployeeRepository employeeRepository;
+    private RoleRepository roleRepository;
 
     private PasswordEncoder passwordEncoder;
 
     @Autowired
-    public AdminService(EmployeeService employeeService, RoleService roleService, AdminRepository adminRepository, PasswordEncoder passwordEncoder) {
-        this.employeeService = employeeService;
-        this.roleService = roleService;
+    public AdminService(EmployeeRepository employeeRepository, RoleRepository roleRepository, AdminRepository adminRepository, PasswordEncoder passwordEncoder) {
+        this.employeeRepository = employeeRepository;
+        this.roleRepository = roleRepository;
         this.adminRepository = adminRepository;
         this.passwordEncoder = passwordEncoder;
     }
@@ -41,22 +46,41 @@ public class AdminService implements IAdminService {
         employee.setPassword(passwordEncoder.encode(registerEmployeeDTO.getPassword()));
         employee.setPhone(registerEmployeeDTO.getPhone());
         employee.setUserType(registerEmployeeDTO.getUserType());
-        employee.getRoles().add(roleService.findByName(registerEmployeeDTO.getUserType()));
+
+        Role role = roleRepository.findByName(registerEmployeeDTO.getUserType());
+        if(role == null) {
+            throw new NotFoundException("Role with UserType: " + registerEmployeeDTO.getUserType() + " doesn't exist.");
+        }
+        employee.getRoles().add(role);
+
         employee.setDepartment(registerEmployeeDTO.getDepartment());
         employee.setSalary(registerEmployeeDTO.getSalary());
-        employee.setAdmin(adminRepository.findById(registerEmployeeDTO.getAdminId()).get());
+
+        Optional<Admin> optionalAdmin = adminRepository.findById(registerEmployeeDTO.getAdminId());
+        if(!optionalAdmin.isPresent()) {
+            throw new NotFoundException(registerEmployeeDTO.getAdminId(), "User with ID: " + registerEmployeeDTO.getAdminId() + " is not found.");
+        }
+        Admin admin = optionalAdmin.get();
+        employee.setAdmin(admin);
+
         //Osam slobodnih radnih dana pri registraciji
         employee.setFreeDays(8);
         employee.setDateOfHiring(LocalDate.now());
-        return employeeService.add(employee);
+        return employeeRepository.save(employee);
     }
 
+    @Override
     public Admin findByUsername(String username) {
         return adminRepository.findByUsername(username);
     }
 
     @Override
     public List<Employee> getEmployees(Long id) {
-        return adminRepository.findById(id).get().getEmployeeList();
+        Optional<Admin> optionalAdmin = adminRepository.findById(id);
+        if(!optionalAdmin.isPresent()) {
+            throw new NotFoundException(id, "User with ID: " + id + " is not found.");
+        }
+        Admin admin = optionalAdmin.get();
+        return admin.getEmployeeList();
     }
 }

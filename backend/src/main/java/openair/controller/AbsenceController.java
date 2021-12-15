@@ -1,6 +1,8 @@
 package openair.controller;
 
 import openair.dto.RequestAbsenceDTO;
+import openair.exception.NotFoundException;
+import openair.exception.PeriodConflictException;
 import openair.model.Absence;
 import openair.model.Admin;
 import openair.model.Employee;
@@ -35,13 +37,13 @@ public class AbsenceController {
 
     @GetMapping("/get-absences/{id}")
     @PreAuthorize("hasRole('ADMIN')")
-    public ResponseEntity<List<Absence>> checkIfUsernameIsAvailable(@PathVariable Long id){
+    public ResponseEntity<List<Absence>> checkIfUsernameIsAvailable(@PathVariable Long id) throws NotFoundException{
         return new ResponseEntity<List<Absence>>(absenceService.getAllByUserId(id), HttpStatus.OK);
     }
 
     @PostMapping("/add")
     @PreAuthorize("hasRole('EMPLOYEE')")
-    public ResponseEntity<Absence> addAbsence(@RequestBody RequestAbsenceDTO requestAbsenceDTO, Principal loggedEmployee) {
+    public ResponseEntity<Absence> addAbsence(@RequestBody RequestAbsenceDTO requestAbsenceDTO, Principal loggedEmployee) throws NotFoundException, PeriodConflictException {
         Employee employee = employeeService.findByUsername(loggedEmployee.getName());
         Absence absence = absenceService.add(requestAbsenceDTO, employee.getId());
         return new ResponseEntity<>(absence, HttpStatus.CREATED);
@@ -49,7 +51,7 @@ public class AbsenceController {
 
     @PostMapping("/approve/{id}/{status}")
     @PreAuthorize("hasRole('ADMIN')")
-    public ResponseEntity<Absence> approveAbsence(@PathVariable Long id, @PathVariable Status status, Principal loggedAdmin) {
+    public ResponseEntity<Absence> approveAbsence(@PathVariable Long id, @PathVariable Status status, Principal loggedAdmin) throws NotFoundException {
         Admin admin = adminService.findByUsername(loggedAdmin.getName());
         Absence absence = absenceService.review(id, status);
         return new ResponseEntity<Absence>(absence, HttpStatus.OK);
