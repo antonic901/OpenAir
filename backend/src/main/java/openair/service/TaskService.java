@@ -104,13 +104,24 @@ public class TaskService implements ITaskService {
 
     @Override
     public Task addTaskToProject(Long taskId, Long projectId, Long employeeId) {
+
         Optional<Project> optionalProject = projectRepository.findById(projectId);
         if(!optionalProject.isPresent()) {
             throw new NotFoundException(projectId, "Project with ID: " + projectId + " not found.");
         }
         Project project = optionalProject.get();
-        Employee employee = employeeRepository.findById(employeeId).get();
-        Task task = taskRepository.findById(taskId).get();
+
+        Optional<Employee> optionalEmployee = employeeRepository.findById(employeeId);
+        if(!optionalEmployee.isPresent()) {
+            throw new NotFoundException(employeeId, "Employee with ID: " + employeeId + " not found.");
+        }
+        Employee employee = optionalEmployee.get();
+
+        Optional<Task> optionalTask = taskRepository.findById(taskId);
+        if(!optionalTask.isPresent()) {
+            throw  new NotFoundException(taskId, "Task with ID: " + taskId + " not found.");
+        }
+        Task task = optionalTask.get();
 
         List<Task> taskList = project.getTasks();
         if(!taskList.contains(task))

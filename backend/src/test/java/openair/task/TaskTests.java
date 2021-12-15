@@ -68,4 +68,9 @@ public class TaskTests {
         assertThat(taskService.addTask(name, project, employee)).isNotNull();
         //  assertThrows(NotFoundException.class, () -> taskService.addTask(name, project, employee), "Not found project");
     }
+
+    @Test
+    public void testAddTaskToProject() {
+        //  Treba da se zavrsi...
+    }
 }
