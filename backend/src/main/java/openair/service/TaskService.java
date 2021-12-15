@@ -1,6 +1,7 @@
 package openair.service;
 
 import openair.dto.TaskDTO;
+import openair.exception.NotFoundException;
 import openair.model.Employee;
 import openair.model.Project;
 import openair.model.Task;
@@ -103,7 +104,11 @@ public class TaskService implements ITaskService {
 
     @Override
     public Task addTaskToProject(Long taskId, Long projectId, Long employeeId) {
-        Project project = projectRepository.findById(projectId).get();
+        Optional<Project> optionalProject = projectRepository.findById(projectId);
+        if(!optionalProject.isPresent()) {
+            throw new NotFoundException(projectId, "Project with ID: " + projectId + " not found.");
+        }
+        Project project = optionalProject.get();
         Employee employee = employeeRepository.findById(employeeId).get();
         Task task = taskRepository.findById(taskId).get();
 
