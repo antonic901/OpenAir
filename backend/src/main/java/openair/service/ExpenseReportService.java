@@ -1,6 +1,7 @@
 package openair.service;
 
 import com.amazonaws.services.kms.model.NotFoundException;
+
 import openair.dto.ExspenseReportDTO;
 import openair.model.Employee;
 import openair.model.ExpenseReport;
@@ -8,11 +9,11 @@ import openair.model.Money;
 import openair.model.Project;
 import openair.model.enums.Currency;
 import openair.model.enums.Status;
-import openair.repository.AdminRepository;
 import openair.repository.EmployeeRepository;
 import openair.repository.ExpenseReportRepository;
 import openair.repository.ProjectRepository;
 import openair.service.interfaces.IExpenseReportService;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -83,7 +84,7 @@ public class ExpenseReportService implements IExpenseReportService {
     }
 
     @Override
-    public ExpenseReport reviewReport(Long reportId, Status status) {
+    public ExpenseReport reviewReport(Long reportId, Status status) throws NotFoundException{
 
         Optional<ExpenseReport> expenseReportOpt = expenseReportRepository.findById(reportId);
 

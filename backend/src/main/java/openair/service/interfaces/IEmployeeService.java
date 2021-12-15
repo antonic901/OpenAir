@@ -1,7 +1,6 @@
 package openair.service.interfaces;
 
 import openair.model.Employee;
-import openair.model.Project;
 
 import java.util.List;
 

@@ -1,17 +1,16 @@
 package openair.service;
 
 import com.amazonaws.services.kms.model.NotFoundException;
+
 import openair.email.model.Mail;
 import openair.email.service.MailService;
-import openair.exception.ResourceConflictException;
 import openair.model.Employee;
-import openair.model.Project;
 import openair.model.TimeSheetDay;
 import openair.repository.EmployeeRepository;
 import openair.repository.TimeSheetDayRepository;
 import openair.service.interfaces.IEmployeeService;
+
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.data.domain.Sort;
 import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.stereotype.Service;
 
