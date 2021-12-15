@@ -30,14 +30,12 @@ public class ExpenseReportController {
     private ExpenseReportService expenseReportService;
     private EmployeeService employeeService;
     private AdminService adminService;
-    private ProjectService projectService;
 
     @Autowired
     public ExpenseReportController(ExpenseReportService expenseReportService, EmployeeService employeeService,
-                                   ProjectService projectService, AdminService adminService) {
+                                    AdminService adminService) {
         this.expenseReportService = expenseReportService;
         this.employeeService = employeeService;
-        this.projectService = projectService;
         this.adminService = adminService;
     }
 
@@ -46,10 +44,8 @@ public class ExpenseReportController {
     public ResponseEntity<ExpenseReport> addReport(@RequestBody ExspenseReportDTO expenseReportDTO, Principal loggedEmployee) {
 
         Employee employee = employeeService.findByUsername(loggedEmployee.getName());
-        Project project = projectService.findProjectById(expenseReportDTO.getProjectId());
 
-        ExpenseReport expenseReport = this.expenseReportService.addReport(expenseReportDTO, employee, project);
-        return new ResponseEntity<>(expenseReport, HttpStatus.CREATED);
+        return new ResponseEntity<>(expenseReportService.addReport(expenseReportDTO, employee), HttpStatus.CREATED);
     }
 
     @GetMapping("/get-all-for-admin")
@@ -58,15 +54,13 @@ public class ExpenseReportController {
 
         Admin admin = adminService.findByUsername(loggedAdmin.getName());
 
-        List<ExpenseReport> expenseReports = this.expenseReportService.getAllByAdminId(admin.getId());
-        return new ResponseEntity<List<ExpenseReport>>(expenseReports, HttpStatus.OK);
+        return new ResponseEntity<>(expenseReportService.getAllByAdminId(admin.getId()), HttpStatus.OK);
     }
 
     @PostMapping("/review/{reportId}/{status}")
     @PreAuthorize("hasRole('ADMIN')")
     public ResponseEntity<ExpenseReport> reviewReport(@PathVariable Long reportId, @PathVariable Status status) {
 
-        ExpenseReport expenseReport = this.expenseReportService.reviewReport(reportId, status);
-        return new ResponseEntity<>(expenseReport, HttpStatus.OK);
+        return new ResponseEntity<>(expenseReportService.reviewReport(reportId, status), HttpStatus.OK);
     }
 }

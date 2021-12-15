@@ -35,12 +35,6 @@ public class ProjectController {
     @PreAuthorize("hasRole('ADMIN')")
     public ResponseEntity<Project> addProject(@RequestBody ProjectDTO projectDTO, Principal loggedAdmin) {
 
-        Project existProject = this.projectService.findProjectByName(projectDTO.getName());
-
-        if (existProject != null) {
-            throw new ResourceConflictException(existProject.getId(), "Project name already exists");
-        }
-
         //nadjem admina po username-u
         Admin admin = adminService.findByUsername(loggedAdmin.getName());
 

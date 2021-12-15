@@ -28,9 +28,7 @@ import java.util.stream.IntStream;
 public class EmployeeService implements IEmployeeService {
 
     private EmployeeRepository employeeRepository;
-
     private MailService mailService;
-
     private TimeSheetDayRepository timeSheetDayRepository;
 
     @Autowired
@@ -53,11 +51,12 @@ public class EmployeeService implements IEmployeeService {
 
     @Override
     public Employee findByUsername(String name) {
+
         Optional<Employee> employeeOptional = employeeRepository.findByUsername(name);
 
-        if(!employeeOptional.isPresent()) {
+        if(!employeeOptional.isPresent())
             throw new NotFoundException("Employee with username " + name + " does not exist.");
-        }
+
         return employeeOptional.get();
     }
 
@@ -65,9 +64,9 @@ public class EmployeeService implements IEmployeeService {
     public Employee findEmployeeById(Long employeeID) {
         Optional<Employee> employeeOptional = employeeRepository.findById(employeeID);
 
-        if(!employeeOptional.isPresent()) {
+        if(!employeeOptional.isPresent())
             throw new NotFoundException("Employee with id " + employeeID.toString() + " does not exist.");
-        }
+
         return employeeOptional.get();
     }
 
@@ -76,6 +75,7 @@ public class EmployeeService implements IEmployeeService {
     //At 00:00:00am, on the 1st day, every month
     @Scheduled(cron = "0 0 0 1 * ?")
     public void increaseEmployeeFreeDays() {
+
         List<Employee> employeeList = employeeRepository.findAll();
 
         long numOfYearsInCompany = 0;
@@ -125,6 +125,7 @@ public class EmployeeService implements IEmployeeService {
     }
 
     private List<LocalDate> findWorkDaysOfMonth(){
+
         List<LocalDate> workDayList = new ArrayList<>();
 
         LocalDate currentDate = LocalDate.now();
@@ -143,6 +144,7 @@ public class EmployeeService implements IEmployeeService {
         return workDayList;
     }
     private List<LocalDate> findFilledDates(List<TimeSheetDay> timeSheetDays){
+
         List<LocalDate> filledDates = new ArrayList<>();
 
         //treba proci kroz listu timeSheetDays i povaditi datume u filledDates
@@ -154,6 +156,7 @@ public class EmployeeService implements IEmployeeService {
     }
 
     private void sendMail(String emailAddress, LocalDate date){
+
         Mail mail = new Mail();
         
         mail.setMailFrom("pcserviskac@gmail.com");

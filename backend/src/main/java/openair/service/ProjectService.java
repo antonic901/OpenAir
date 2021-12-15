@@ -2,14 +2,13 @@ package openair.service;
 
 import com.amazonaws.services.kms.model.NotFoundException;
 import openair.dto.ProjectDTO;
+import openair.exception.ResourceConflictException;
 import openair.model.*;
 import openair.model.enums.Status;
 import openair.repository.*;
 import openair.service.interfaces.IProjectService;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
-
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
@@ -34,18 +33,24 @@ public class ProjectService implements IProjectService {
     }
 
     @Override
-    public Project findProjectByName(String name) {
+    public Project findProjectByName(String name) throws  NotFoundException{
+
         Optional<Project> projectOptional = projectRepository.findByName(name);
 
-        if(!projectOptional.isPresent()){
+        if(!projectOptional.isPresent())
             throw new NotFoundException("Project with name " + name + " does not exist.");
-        }
 
         return projectOptional.get();
     }
 
     @Override
-    public Project addProject(ProjectDTO projectDTO, Admin admin){
+    public Project addProject(ProjectDTO projectDTO, Admin admin) throws ResourceConflictException{
+
+        Optional<Project> existProject = projectRepository.findByName(projectDTO.getName());
+
+        if (existProject.isPresent())
+            throw new ResourceConflictException(existProject.get().getId(), "Project name already exists");
+
         Project project = new Project();
 
         project.setAdmin(admin);
@@ -56,17 +61,17 @@ public class ProjectService implements IProjectService {
     }
 
     @Override
-    public Project findProjectById(Long projectId) {
+    public Project findProjectById(Long projectId) throws  NotFoundException{
+
         Optional<Project> projectOptional = projectRepository.findById(projectId);
 
-        if(!projectOptional.isPresent()){
+        if(!projectOptional.isPresent())
             throw new NotFoundException("Project with id " + projectId.toString() + " does not exist.");
-        }
 
         return projectOptional.get();
     }
 
-    public Project addEmployeeToProject(Long employeeId, Long projectId) {
+    public Project addEmployeeToProject(Long employeeId, Long projectId) throws  NotFoundException{
 
         Optional<Project> projectOptional = projectRepository.findById(projectId);
         Optional<Employee> employeeOptional = employeeRepository.findById(employeeId);
@@ -88,59 +93,52 @@ public class ProjectService implements IProjectService {
 
 }
     @Override
-    public List<Project> findAllByUserId(Long userId) {
+    public List<Project> findAllByUserId(Long userId) throws  NotFoundException{
 
         Optional<User> userOptional = userRepository.findById(userId);
 
-        if(!userOptional.isPresent()){
+        if(!userOptional.isPresent())
             throw new NotFoundException("User with id " + userId.toString() + " does not exist.");
-        }
 
         if(userOptional.get().getUserType().name().equals("ROLE_ADMIN")){
 
             Admin admin = adminRepository.findById(userId).get();
             return admin.getProjects();
-
         }else if (userOptional.get().getUserType().name().equals("ROLE_EMPLOYEE")){
 
             Employee employee = employeeRepository.findById(userId).get();
             return employee.getProjects();
-
         }
-
         return null;
     }
 
     @Override
-    public List<Project> findAllNotRefundedByEmployeeId(Long id) {
+    public List<Project> findAllNotRefundedByEmployeeId(Long id) throws  NotFoundException{
 
         Optional<Employee> employeeOptional = employeeRepository.findById(id);
 
-        if(!employeeOptional.isPresent()){
+        if(!employeeOptional.isPresent())
             throw new NotFoundException("Employee with id " + id.toString() + " does not exist.");
-        }
 
         List<Project> projects = new ArrayList<>();
 
         for(Project project : employeeOptional.get().getProjects()) {
 
-            if(!checkIsRefunded(project.getId(), employeeOptional.get().getId())) {
-
+            if(!checkIsRefunded(project.getId(), employeeOptional.get().getId()))
                 projects.add(project);
-            }
         }
         return projects;
     }
 
     @Override
-    public List<Employee> findAllEmployeesByProjectId(Long projectId) {
+    public List<Employee> findAllEmployeesByProjectId(Long projectId) throws  NotFoundException{
 
-        Optional<Project> project =  projectRepository.findById(projectId);
+        Optional<Project> projectOptional =  projectRepository.findById(projectId);
 
-        if(project == null){
-            return null;
-        }
-        else return project.get().getEmployeeList();
+        if(!projectOptional.isPresent())
+            throw new NotFoundException("Project with id " + projectId.toString() + " does not exist.");
+
+        return projectOptional.get().getEmployeeList();
     }
 
     private boolean checkIsRefunded(Long projectId, Long employeeId) {

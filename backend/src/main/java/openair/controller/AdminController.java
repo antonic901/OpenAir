@@ -47,6 +47,7 @@ public class AdminController {
     public ResponseEntity<User> addUser(@RequestBody RegisterEmployeeDTO registerEmployeeDTO, Principal loggedAdmin, UriComponentsBuilder ucBuilder) {
 
         User existUser = this.userService.findByUsername(registerEmployeeDTO.getUsername());
+
         if (existUser != null) {
             throw new ResourceConflictException(existUser.getId(), "Username already exists");
         }
@@ -66,7 +67,7 @@ public class AdminController {
 
         Admin admin = adminService.findByUsername(loggedAdmin.getName());
 
-        return new ResponseEntity<List<Employee>>(adminService.getEmployees(admin.getId()), HttpStatus.OK);
+        return new ResponseEntity<>(adminService.getEmployees(admin.getId()), HttpStatus.OK);
     }
 
     @GetMapping("/export-pdf")
@@ -77,7 +78,7 @@ public class AdminController {
         PdfExporter exporter = new PdfExporter(employeeList, timeSheetDayService, storageService);
         String fileName = exporter.export(loggedAdmin.getName());
 
-        return new ResponseEntity<String>(fileName, HttpStatus.OK);
+        return new ResponseEntity<>(fileName, HttpStatus.OK);
     }
 
 }

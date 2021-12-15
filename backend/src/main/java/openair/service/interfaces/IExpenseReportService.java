@@ -10,6 +10,6 @@ import java.util.List;
 
 public interface IExpenseReportService {
     List<ExpenseReport> getAllByAdminId(Long id);
-    ExpenseReport addReport(ExspenseReportDTO expenseReportDTO, Employee employee, Project project);
+    ExpenseReport addReport(ExspenseReportDTO expenseReportDTO, Employee employee);
     ExpenseReport reviewReport(Long reportId, Status status);
 }
