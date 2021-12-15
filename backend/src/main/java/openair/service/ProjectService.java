@@ -74,6 +74,7 @@ public class ProjectService implements IProjectService {
         return projectOptional.get();
     }
 
+    @Override
     public Project addEmployeeToProject(Long employeeId, Long projectId) throws  NotFoundException{
 
         Optional<Project> projectOptional = projectRepository.findById(projectId);

@@ -73,25 +73,31 @@ public class EmployeeService implements IEmployeeService {
     //Svakog prvog u mesecu se poveca broj slobodnih dana za 2, +1 na svakih 5 godina zaposlenja
     //At 00:00:00am, on the 1st day, every month
     @Scheduled(cron = "0 0 0 1 * ?")
-    public void increaseEmployeeFreeDays() {
+    public List<Employee> increaseEmployeeFreeDays() {
 
         List<Employee> employeeList = employeeRepository.findAll();
 
+        for (int i = 0; i < employeeList.size(); i++) {
+            employeeList.get(i).setFreeDays((int) (employeeList.get(i).getFreeDays() +
+                    increaseByHowMuch(employeeList.get(i).getDateOfHiring())));
+        }
+
+        return employeeRepository.saveAll(employeeList);
+    }
+
+    private long increaseByHowMuch(LocalDate dateOfHiring){
         long numOfYearsInCompany = 0;
         long increaseBy = 2;
 
-        for (int i = 0; i < employeeList.size(); i++) {
-            //koliko je godina u firmi
-            numOfYearsInCompany = java.time.temporal.ChronoUnit.YEARS.between(employeeList.get(i).getDateOfHiring(), LocalDate.now());
+        //koliko je godina u firmi
+        numOfYearsInCompany = java.time.temporal.ChronoUnit.YEARS.between(dateOfHiring, LocalDate.now());
 
-            //ako je tu 5,10,15... godina vec dobija dodatne dane na svakih 5 godina jedan vise
-            if (numOfYearsInCompany % 5 == 0) {
-                increaseBy += numOfYearsInCompany / 5;
-            }
-            employeeList.get(i).setFreeDays((int) (employeeList.get(i).getFreeDays() + increaseBy));
+        //ako je tu 5,10,15... godina vec dobija dodatne dane na svakih 5 godina jedan vise
+        if (numOfYearsInCompany % 5 == 0) {
+            increaseBy += numOfYearsInCompany / 5;
         }
 
-        employeeRepository.saveAll(employeeList);
+        return increaseBy;
     }
 
     //Every month on the last weekday, at noon
@@ -142,6 +148,7 @@ public class EmployeeService implements IEmployeeService {
 
         return workDayList;
     }
+
     private List<LocalDate> findFilledDates(List<TimeSheetDay> timeSheetDays){
 
         List<LocalDate> filledDates = new ArrayList<>();

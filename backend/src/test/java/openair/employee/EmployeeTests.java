@@ -1,5 +1,6 @@
 package openair.employee;
 
+import com.amazonaws.services.kms.model.NotFoundException;
 import openair.model.Employee;
 import openair.model.Project;
 
@@ -12,14 +13,9 @@ import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.Spy;
 import static org.assertj.core.api.Assertions.assertThat;
-import static org.assertj.core.api.Assertions.assertThatThrownBy;
-import static org.mockito.ArgumentMatchers.any;
-import static org.mockito.Mockito.*;
-import static org.mockito.Mockito.times;
+import static org.junit.jupiter.api.Assertions.assertThrows;
 import org.springframework.boot.test.context.SpringBootTest;
 
-import java.io.IOException;
-import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 
@@ -43,48 +39,53 @@ public class EmployeeTests {
     private ProjectService projectService;
 
     @Test
-    public void testFindAllEmployeesByProjectId(){
-//        //given
-//        Project project = new Project();
-//        project.setId(1L);
-//
-//        Employee employee = new Employee();
-//        employee.setId(1L);
-//
-//        List<Employee> employees = new ArrayList<>();
-//        employees.add(employee);
-//
-//        project.setEmployeeList(employees);
-//
-//        //when
-//        when(projectService.findProjectById(1L)).thenReturn(project);
-//        when(projectService.findProjectById(2L)).thenReturn(null);
-//
-//        //then
-//        List<Employee> employeeList1 = employeeService.findAllByProjectId(1L);
-//        List<Employee> employeeList2 = employeeService.findAllByProjectId(2L);
-//
-//        assertThat(employeeList1).hasAtLeastOneElementOfType(Employee.class);
-//        assertThat(employeeList2).isNull();
+    public void testFindAnEmployeeByEmployeeId() {
+        //given
+        Employee employee = TestData.createEmployee();
 
+        //when
+        when(employeeRepository.findById(1L)).thenReturn(Optional.of(employee));
+
+        //then
+        assertThat(employeeService.findEmployeeById(1L)).isInstanceOf(Employee.class);
+        assertThrows(NotFoundException.class, () -> employeeService.findEmployeeById(2L));
     }
 
     @Test
-    public void testFindAnEmployeeByEmployeeId() {
-        //kreiramo test podatke
-        Employee employee = new Employee();
-        employee.setId(1L);
+    public void testFindAllEmployees() {
+        //given
+        List<Employee> employees = TestData.createEmployeeList();
 
-        //kazemo sta ce metoda findById vratiti u zavisnosti od toga sta joj prosledimo
-        when(employeeRepository.findById(1L)).thenReturn(Optional.of(employee));
-        when(employeeRepository.findById(2L)).thenReturn(Optional.empty());
+        //when
+        when(employeeRepository.findAll()).thenReturn(employees);
 
-        //testiramo funkcionalnost
-        Employee employeeIsNotNull = employeeService.findEmployeeById(1L);
-        Employee employeeIsNull = employeeService.findEmployeeById(2L);
-
-        //proverimo da li smo dobili zeljene rezultate
-        assertThat(employeeIsNotNull).isNotNull();
-        assertThat(employeeIsNull).isNull();
+        //then
+        assertThat(employeeService.findAll()).hasSize(2);
     }
+
+    @Test
+    public void testFindEmployeeByUsername() {
+        //given
+        Employee employee = TestData.createEmployee();
+
+        //when
+        when(employeeRepository.findByUsername("anjica99")).thenReturn(Optional.of(employee));
+
+        //then
+        assertThat(employeeService.findByUsername("anjica99")).isInstanceOf(Employee.class);
+        assertThrows(NotFoundException.class, () -> employeeService.findByUsername("max93"));
+    }
+
+    @Test
+    public void testAddEmployee() {
+        //given
+        Employee employee = TestData.createEmployee();
+
+        //when
+        when(employeeRepository.save(any(Employee.class))).thenReturn(employee);
+
+        //then
+        assertThat(employeeService.add(employee)).isInstanceOf(Employee.class);
+    }
+
 }
