@@ -61,7 +61,7 @@ public class ExpenseReportService implements IExpenseReportService {
         Optional<Project> projectOptional = projectRepository.findById(expenseReportDTO.getProjectId());
 
         if(!projectOptional.isPresent())
-            throw  new NotFoundException("Project with id " + expenseReportDTO.getProjectId().toString() + "does not exist.");
+            throw new NotFoundException("Project with id " + expenseReportDTO.getProjectId().toString() + " does not exist.");
 
         ExpenseReport expenseReport = new ExpenseReport();
         Money money = new Money();

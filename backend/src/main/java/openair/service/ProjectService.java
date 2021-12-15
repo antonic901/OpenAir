@@ -1,5 +1,6 @@
 package openair.service;
 
+import com.amazonaws.services.kms.model.AlreadyExistsException;
 import com.amazonaws.services.kms.model.NotFoundException;
 
 import openair.dto.ProjectDTO;
@@ -52,7 +53,7 @@ public class ProjectService implements IProjectService {
         Optional<Project> existProject = projectRepository.findByName(projectDTO.getName());
 
         if (existProject.isPresent())
-            throw new ResourceConflictException(existProject.get().getId(), "Project name already exists");
+            throw new AlreadyExistsException("Project with name " + projectDTO.getName() + " already exists.");
 
         Project project = new Project();
 

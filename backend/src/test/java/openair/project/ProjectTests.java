@@ -1,12 +1,13 @@
 package openair.project;
 
+import com.amazonaws.services.kms.model.AlreadyExistsException;
 import com.amazonaws.services.kms.model.NotFoundException;
 import openair.dto.ProjectDTO;
+import openair.exception.ResourceConflictException;
 import openair.model.Admin;
 import openair.model.Employee;
 import openair.model.Project;
 import openair.model.User;
-import openair.model.enums.UserType;
 import openair.repository.AdminRepository;
 import openair.repository.EmployeeRepository;
 import openair.repository.ProjectRepository;
@@ -19,12 +20,10 @@ import org.mockito.Spy;
 import org.springframework.boot.test.context.SpringBootTest;
 import static org.assertj.core.api.Assertions.assertThat;
 
-import java.util.List;
 import java.util.Optional;
 
 import static org.junit.jupiter.api.Assertions.assertThrows;
 import static org.mockito.ArgumentMatchers.any;
-import static org.mockito.ArgumentMatchers.anyLong;
 import static org.mockito.Mockito.when;
 
 @SpringBootTest
@@ -62,13 +61,17 @@ public class ProjectTests {
     public void testAddProject(){
         //given
         ProjectDTO projectDTO = TestData.createProjectDTO();
+        projectDTO.setName("Othername");
+        ProjectDTO projectDTO1 = TestData.createProjectDTO();
         Admin admin = new Admin();
 
         //when
+        when(projectRepository.findByName("OpenAir")).thenReturn(Optional.of(TestData.createProject()));
         when(projectRepository.save(any(Project.class))).thenReturn(new Project());
 
         //then
         assertThat(projectService.addProject(projectDTO,admin)).isInstanceOf(Project.class);
+        assertThrows(AlreadyExistsException.class, () -> projectService.addProject(projectDTO1,admin));
     }
 
     @Test
@@ -94,6 +97,7 @@ public class ProjectTests {
 
         //then
         assertThat(projectService.findAllEmployeesByProjectId(1L)).hasSize(2);
+        assertThrows(NotFoundException.class, () -> projectService.findAllEmployeesByProjectId(2L));
     }
 
     @Test
