@@ -92,6 +92,7 @@ public class AbsenceTests {
 
     }
 
+    @Test
     public void review() {
         Absence absence = TestDataAbsence.createAbsences().get(0);
 
