@@ -1,5 +1,6 @@
 package openair.service;
 
+import openair.exception.NotFoundException;
 import openair.model.Role;
 import openair.model.enums.UserType;
 import openair.repository.RoleRepository;
@@ -27,7 +28,7 @@ public class RoleService implements IRoleService {
             role = optionalRole.get();
         }
         else {
-            throw new RuntimeException("Role with ID: " + id + " doesn't exist");
+            throw new NotFoundException(id, "Role with ID: " + id + " is not found.");
         }
         return role;
     }

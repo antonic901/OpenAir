@@ -1,5 +1,6 @@
 package openair.role;
 
+import openair.exception.NotFoundException;
 import openair.model.Role;
 import openair.model.enums.UserType;
 import openair.repository.RoleRepository;
@@ -34,8 +35,8 @@ public class RoleTests {
 
         when(roleRepository.findById(1L)).thenReturn(Optional.of(role));
 
-        assertThat(roleService.findById(1L)).isNotNull();
-        assertThrows(RuntimeException.class, () -> roleService.findById(2L), "Role not found");
+        assertThat(roleService.findById(1L)).isExactlyInstanceOf(Role.class);
+        assertThrows(NotFoundException.class, () -> roleService.findById(2L), "Role not found");
     }
 
     @Test

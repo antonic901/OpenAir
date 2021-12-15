@@ -24,7 +24,6 @@ public class MoneyService implements IMoneyService {
     //DATE in format YYYY-MM-dd
     @Override
     public double convert(String date, String fromCurrency, String toCurrency, double quantity) {
-
 //      Promena base valute nije moguca na besplatnoj pretplati
 //        ResponseEntity<String> responseEntity = restTemplate.getForEntity("http://api.exchangeratesapi.io/v1/" + date + "?access_key=" + API_KEY + "&base=" + fromCurrency + "&symbols=" + toCurrency, String.class);
 
