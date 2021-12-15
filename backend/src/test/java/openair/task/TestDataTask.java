@@ -1,9 +1,10 @@
 package openair.task;
 
+import openair.absence.TestDataAbsence;
 import openair.model.Employee;
 import openair.model.Project;
 import openair.model.Task;
-import openair.absence.TestData;
+import openair.absence.TestDataAbsence;
 import openair.model.enums.ProjectType;
 
 import java.util.ArrayList;
@@ -14,7 +15,7 @@ public class TestDataTask {
         Project project = new Project();
 
         project.setId(1L);
-        project.setAdmin(TestData.createAdmin());
+        project.setAdmin(TestDataAbsence.createAdmin());
         project.setProjectType(ProjectType.INTERN);
 
         return project;
@@ -24,7 +25,7 @@ public class TestDataTask {
         Project project = new Project();
 
         project.setId(2L);
-        project.setAdmin(TestData.createAdmin());
+        project.setAdmin(TestDataAbsence.createAdmin());
         project.setProjectType(ProjectType.INTERN);
 
         return project;
@@ -33,7 +34,7 @@ public class TestDataTask {
     public static Task createTask() {
         Task task = new Task();
         Project project = createProject1();
-        Employee employee = TestData.createEmployee();
+        Employee employee = TestDataAbsence.createEmployee();
 
         task.setProject(project);
         task.setId(1L);

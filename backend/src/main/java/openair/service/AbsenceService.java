@@ -1,6 +1,8 @@
 package openair.service;
 
 import openair.dto.RequestAbsenceDTO;
+import openair.exception.PeriodConflictException;
+import openair.exception.NotFoundException;
 import openair.model.*;
 import openair.model.enums.Status;
 import openair.repository.AbsenceRepository;
@@ -38,14 +40,18 @@ public class AbsenceService implements IAbsenceService {
         if(userOptional.isPresent()) {
             user = userOptional.get();
         }
-        else return null;
+        else {
+            throw new NotFoundException(id, "User with ID: " + id + " is not found.");
+        };
         if(user.getUserType().name().equals("ROLE_ADMIN")){
             return absenceRepository.findAllByAdminId(id);
         }
         else if (user.getUserType().name().equals("ROLE_EMPLOYEE")){
             return absenceRepository.findAllByEmployeeId(id);
         }
-        else return null;
+        else {
+            throw new NotFoundException(id, "User with UserType: " + user.getUserType() + " is not found.");
+        }
     }
 
     @Override
@@ -57,15 +63,15 @@ public class AbsenceService implements IAbsenceService {
             employee = employeeOptional.get();
         }
         else {
-            throw new RuntimeException("User with ID: " + id + " doesn't exist.");
+            throw new NotFoundException(id, "User with ID: " + id + " is not found.");
         }
 
         if(requestAbsenceDTO.getStartTime().isAfter(requestAbsenceDTO.getEndTime())) {
-            throw new RuntimeException("Period is not valid.");
+            throw new PeriodConflictException(id, "User with ID: " + id + " have selected wrong period (start after end))");
         }
 
         else if(checkIsAbsenceConflicting(employee, requestAbsenceDTO.getStartTime(), requestAbsenceDTO.getEndTime())) {
-            throw new RuntimeException("Period is in conflict. ");
+            throw new PeriodConflictException(id, "User with ID: " + id + " have requested absence which is in conflict with other absence");
         }
 
         Period period = new Period(requestAbsenceDTO.getStartTime(),requestAbsenceDTO.getEndTime());
@@ -118,7 +124,7 @@ public class AbsenceService implements IAbsenceService {
             absence = optionalAbsence.get();
         }
         else {
-            throw new RuntimeException("Absence with ID: " + id + " doesn't exist.");
+            throw new NotFoundException(id, "Absence with ID: " + id + " is not found.");
         }
         absence.setStatus(status);
         return absenceRepository.save(absence);

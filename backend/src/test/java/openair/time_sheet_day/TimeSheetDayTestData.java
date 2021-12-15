@@ -6,7 +6,8 @@ import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
 
-import openair.absence.TestData;
+import openair.absence.TestDataAbsence;
+import openair.absence.TestDataAbsence;
 import openair.dto.TimeSheetDayDTO;
 import openair.model.Employee;
 import openair.model.Task;
@@ -18,7 +19,7 @@ public class TimeSheetDayTestData {
         List<TimeSheetDay> timeSheetDayList = new ArrayList<TimeSheetDay>();
 
         //  id, localDate, workTime, employee, Task
-        Employee employee = TestData.createEmployee();
+        Employee employee = TestDataAbsence.createEmployee();
         Task task = TestDataTask.createTask();
 
         timeSheetDayList.add(new TimeSheetDay(1L, LocalDate.now(), 14, employee, task));

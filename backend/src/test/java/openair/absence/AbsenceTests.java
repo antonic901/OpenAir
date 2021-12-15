@@ -1,6 +1,8 @@
 package openair.absence;
 
 import openair.dto.RequestAbsenceDTO;
+import openair.exception.NotFoundException;
+import openair.exception.PeriodConflictException;
 import openair.model.*;
 import openair.model.enums.Status;
 import openair.repository.AbsenceRepository;
@@ -46,11 +48,11 @@ public class AbsenceTests {
     @Test
     public void testGetAllByUserId() {
 
-        Admin admin = TestData.createAdmin();
+        Admin admin = TestDataAbsence.createAdmin();
 
-        Employee employee = TestData.createEmployee();
+        Employee employee = TestDataAbsence.createEmployee();
 
-        List<Absence> absences = TestData.createAbsences();
+        List<Absence> absences = TestDataAbsence.createAbsences();
 
         when(userRepository.findById(1L)).thenReturn(Optional.of((User) admin));
         when(userRepository.findById(2L)).thenReturn(Optional.of((User) employee));
@@ -58,17 +60,16 @@ public class AbsenceTests {
         when(absenceRepository.findAllByEmployeeId(2L)).thenReturn(absences);
 
         List<Absence> list1 = absenceService.getAllByUserId(1L);
-        List<Absence> list2 = absenceService.getAllByUserId(3L);
 
         assertThat(list1).hasSize(4);
-        assertThat(list2).isNull();
+        assertThrows(NotFoundException.class,() -> absenceService.getAllByUserId(3L), "User not found");
 
     }
 
     @Test
     public void testAdd() {
-        Employee employee = TestData.createEmployee();
-        List<Absence> absences = TestData.createAbsences();
+        Employee employee = TestDataAbsence.createEmployee();
+        List<Absence> absences = TestDataAbsence.createAbsences();
 
         when(employeeRepository.findById(2L)).thenReturn(Optional.of(employee));
         when(absenceRepository.findAllByEmployeeId(2L)).thenReturn(absences);
@@ -79,26 +80,27 @@ public class AbsenceTests {
                 LocalDateTime.of(2021, 12,30,0,0,0)
         );
 
-        assertThat(absenceService.add(dto1, 2L)).isNotNull();
-        assertThrows(RuntimeException.class, () -> absenceService.add(dto1, 3L), "User not found");
+        assertThat(absenceService.add(dto1, 2L)).isExactlyInstanceOf(Absence.class);
+        assertThrows(NotFoundException.class, () -> absenceService.add(dto1, 3L), "User not found");
 
         RequestAbsenceDTO dto2 = new RequestAbsenceDTO(
                 LocalDateTime.of(2021, 12,7,0,0,0),
                 LocalDateTime.of(2021, 12,13,0,0,0)
         );
 
-        assertThrows(RuntimeException.class, () -> absenceService.add(dto2, 2L), "Period is in conflict");
+        assertThrows(PeriodConflictException.class, () -> absenceService.add(dto2, 2L), "Period is in conflict");
 
     }
 
+    @Test
     public void review() {
-        Absence absence = TestData.createAbsences().get(0);
+        Absence absence = TestDataAbsence.createAbsences().get(0);
 
         when(absenceRepository.findById(1L)).thenReturn(Optional.of(absence));
         when(absenceRepository.save(any(Absence.class))).thenReturn(absence);
 
-        assertThat(absenceService.review(1L, Status.APPROVED)).isNotNull();
-        assertThrows(RuntimeException.class, () -> absenceService.review(2L, Status.APPROVED), "Absence doesn't exist");
+        assertThat(absenceService.review(1L, Status.APPROVED)).isExactlyInstanceOf(Absence.class);
+        assertThrows(NotFoundException.class, () -> absenceService.review(2L, Status.APPROVED), "Absence doesn't exist");
 
     }
 

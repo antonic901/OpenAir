@@ -1,6 +1,6 @@
 package openair.task;
 
-import openair.absence.TestData;
+import openair.absence.TestDataAbsence;
 import openair.exception.NotFoundException;
 import openair.model.Employee;
 import openair.model.Project;
@@ -14,13 +14,14 @@ import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.Spy;
 import org.springframework.boot.test.context.SpringBootTest;
-import static org.mockito.ArgumentMatchers.any;
 
 import java.util.ArrayList;
-import java.util.Optional;
 import java.util.List;
+import java.util.Optional;
+
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.junit.jupiter.api.Assertions.assertThrows;
+import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.Mockito.when;
 
 @SpringBootTest
@@ -77,7 +78,7 @@ public class TaskTests {
     public void testAddTask() {
         String name = "refactoring";
         Project project = TestDataTask.createProject1();
-        Employee employee = TestData.createEmployee();
+        Employee employee = TestDataAbsence.createEmployee();
 
         when(taskRepository.save(any(Task.class))).thenReturn(new Task());
 

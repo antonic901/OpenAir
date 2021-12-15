@@ -1,6 +1,6 @@
 package openair.time_sheet_day;
 
-import openair.absence.TestData;
+import openair.absence.TestDataAbsence;
 import openair.dto.TimeSheetDayDTO;
 import openair.model.Employee;
 import openair.model.TimeSheetDay;
@@ -41,7 +41,7 @@ public class TimeSheetDayTests {
     @Test
     public void testAddTimeSheetDay() {
         //  given
-        Employee employee = TestData.createEmployee();
+        Employee employee = TestDataAbsence.createEmployee();
         TimeSheetDayDTO timeSheetDayDTO = TimeSheetDayTestData.createTimeSheetDayDTO();
         //  when
         when(timeSheetDayRepository.save(any(TimeSheetDay.class))).thenReturn(new TimeSheetDay());
