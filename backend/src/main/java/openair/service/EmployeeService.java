@@ -1,7 +1,9 @@
 package openair.service;
 
+import com.amazonaws.services.kms.model.NotFoundException;
 import openair.email.model.Mail;
 import openair.email.service.MailService;
+import openair.exception.ResourceConflictException;
 import openair.model.Employee;
 import openair.model.Project;
 import openair.model.TimeSheetDay;
@@ -27,17 +29,14 @@ public class EmployeeService implements IEmployeeService {
 
     private EmployeeRepository employeeRepository;
 
-    private ProjectService projectService;
-
     private MailService mailService;
 
     private TimeSheetDayRepository timeSheetDayRepository;
 
     @Autowired
-    public EmployeeService(EmployeeRepository employeeRepository, ProjectService projectService,
-                           MailService mailService, TimeSheetDayRepository timeSheetDayRepository) {
+    public EmployeeService(EmployeeRepository employeeRepository, MailService mailService,
+                           TimeSheetDayRepository timeSheetDayRepository) {
         this.employeeRepository = employeeRepository;
-        this.projectService = projectService;
         this.mailService = mailService;
         this.timeSheetDayRepository = timeSheetDayRepository;
     }
@@ -48,34 +47,28 @@ public class EmployeeService implements IEmployeeService {
     }
 
     @Override
-    public List<Employee> findAllByProjectId(Long projectId) {
-        Project project =  projectService.findProjectById(projectId);
-        if(project == null){
-            return null;
-        }
-        else return project.getEmployeeList();
+    public List<Employee> findAll() {
+        return employeeRepository.findAll();
     }
 
     @Override
     public Employee findByUsername(String name) {
-        return employeeRepository.findByUsername(name);
-    }
+        Optional<Employee> employeeOptional = employeeRepository.findByUsername(name);
 
-    @Override
-    public List<Project> findAllProjects() {
-        List<Project> projectList = new ArrayList<Project>();
-        return projectList;
+        if(!employeeOptional.isPresent()) {
+            throw new NotFoundException("Employee with username " + name + " does not exist.");
+        }
+        return employeeOptional.get();
     }
 
     @Override
     public Employee findEmployeeById(Long employeeID) {
-
         Optional<Employee> employeeOptional = employeeRepository.findById(employeeID);
 
-        if(employeeOptional.isPresent()) {
-            return employeeOptional.get();
+        if(!employeeOptional.isPresent()) {
+            throw new NotFoundException("Employee with id " + employeeID.toString() + " does not exist.");
         }
-        else return null;
+        return employeeOptional.get();
     }
 
 
@@ -100,10 +93,6 @@ public class EmployeeService implements IEmployeeService {
         }
 
         employeeRepository.saveAll(employeeList);
-    }
-
-    public List<Employee> listAll() {
-        return employeeRepository.findAll();
     }
 
     //Every month on the last weekday, at noon

@@ -1,5 +1,6 @@
 package openair.service;
 
+import com.amazonaws.services.kms.model.NotFoundException;
 import openair.dto.ProjectDTO;
 import openair.model.*;
 import openair.model.enums.Status;
@@ -34,7 +35,13 @@ public class ProjectService implements IProjectService {
 
     @Override
     public Project findProjectByName(String name) {
-        return projectRepository.findByName(name);
+        Optional<Project> projectOptional = projectRepository.findByName(name);
+
+        if(!projectOptional.isPresent()){
+            throw new NotFoundException("Project with name " + name + " does not exist.");
+        }
+
+        return projectOptional.get();
     }
 
     @Override
@@ -50,61 +57,102 @@ public class ProjectService implements IProjectService {
 
     @Override
     public Project findProjectById(Long projectId) {
-        return projectRepository.findById(projectId).get();
+        Optional<Project> projectOptional = projectRepository.findById(projectId);
+
+        if(!projectOptional.isPresent()){
+            throw new NotFoundException("Project with id " + projectId.toString() + " does not exist.");
+        }
+
+        return projectOptional.get();
     }
 
     public Project addEmployeeToProject(Long employeeId, Long projectId) {
-        Project project = projectRepository.findById(projectId).get();
-        Employee employee = employeeRepository.findById(employeeId).get();
 
-        List<Employee> employeeList = project.getEmployeeList();
-        if(!employeeList.contains(employee))
-            employeeList.add(employee);
-        project.setEmployeeList(employeeList);
+        Optional<Project> projectOptional = projectRepository.findById(projectId);
+        Optional<Employee> employeeOptional = employeeRepository.findById(employeeId);
 
-        return projectRepository.save(project);
+        if(!projectOptional.isPresent()){
+            throw new NotFoundException("Project with id " + projectId.toString() + " does not exist.");
+        }else if(!employeeOptional.isPresent()){
+            throw new NotFoundException("Employee with id " + employeeId.toString() + " does not exist.");
+        }
+
+        List<Employee> employeeList = projectOptional.get().getEmployeeList();
+
+        if(!employeeList.contains(employeeOptional.get()))
+            employeeList.add(employeeOptional.get());
+
+        projectOptional.get().setEmployeeList(employeeList);
+
+        return projectRepository.save(projectOptional.get());
 
 }
     @Override
     public List<Project> findAllByUserId(Long userId) {
-        Optional<User> userOptional = userRepository.findById(userId);
-        User user;
-        if(userOptional.isPresent()){
-            user = userOptional.get();
-        }else
-            return null;
 
-        if(user.getUserType().name().equals("ROLE_ADMIN")){
+        Optional<User> userOptional = userRepository.findById(userId);
+
+        if(!userOptional.isPresent()){
+            throw new NotFoundException("User with id " + userId.toString() + " does not exist.");
+        }
+
+        if(userOptional.get().getUserType().name().equals("ROLE_ADMIN")){
+
             Admin admin = adminRepository.findById(userId).get();
             return admin.getProjects();
-        }else if (user.getUserType().name().equals("ROLE_EMPLOYEE")){
+
+        }else if (userOptional.get().getUserType().name().equals("ROLE_EMPLOYEE")){
+
             Employee employee = employeeRepository.findById(userId).get();
             return employee.getProjects();
-        }else
-            return null;
+
+        }
+
+        return null;
     }
 
     @Override
     public List<Project> findAllNotRefundedByEmployeeId(Long id) {
-        Employee employee = employeeRepository.findById(id).get();
-        List<Project> projects = new ArrayList<Project>();
-        for(Project project : employee.getProjects()) {
-            if(!checkIsRefunded(project.getId(), employee.getId())) {
+
+        Optional<Employee> employeeOptional = employeeRepository.findById(id);
+
+        if(!employeeOptional.isPresent()){
+            throw new NotFoundException("Employee with id " + id.toString() + " does not exist.");
+        }
+
+        List<Project> projects = new ArrayList<>();
+
+        for(Project project : employeeOptional.get().getProjects()) {
+
+            if(!checkIsRefunded(project.getId(), employeeOptional.get().getId())) {
+
                 projects.add(project);
             }
         }
         return projects;
     }
 
-    public List<Project> listAll() {
-        return projectRepository.findAll(Sort.by("projectType"));
+    @Override
+    public List<Employee> findAllEmployeesByProjectId(Long projectId) {
+
+        Optional<Project> project =  projectRepository.findById(projectId);
+
+        if(project == null){
+            return null;
+        }
+        else return project.get().getEmployeeList();
     }
 
     private boolean checkIsRefunded(Long projectId, Long employeeId) {
+
         for(ExpenseReport expenseReport : expenseReportRepository.findAll()) {
+
             if(expenseReport.getEmployee().getId().equals(employeeId)) {
+
                 if(expenseReport.getProject().getId().equals(projectId)) {
+
                     if(expenseReport.getStatus() == Status.APPROVED || expenseReport.getStatus() == Status.INPROCESS) {
+
                         return true;
                     }
                 }
@@ -112,5 +160,4 @@ public class ProjectService implements IProjectService {
         }
         return false;
     }
-
 }

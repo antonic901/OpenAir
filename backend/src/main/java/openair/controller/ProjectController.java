@@ -4,6 +4,7 @@ import openair.dto.AddEmployeeDTO;
 import openair.dto.ProjectDTO;
 import openair.exception.ResourceConflictException;
 import openair.model.Admin;
+import openair.model.Employee;
 import openair.model.Project;
 import openair.service.AdminService;
 import openair.service.ProjectService;
@@ -35,6 +36,7 @@ public class ProjectController {
     public ResponseEntity<Project> addProject(@RequestBody ProjectDTO projectDTO, Principal loggedAdmin) {
 
         Project existProject = this.projectService.findProjectByName(projectDTO.getName());
+
         if (existProject != null) {
             throw new ResourceConflictException(existProject.getId(), "Project name already exists");
         }
@@ -42,20 +44,19 @@ public class ProjectController {
         //nadjem admina po username-u
         Admin admin = adminService.findByUsername(loggedAdmin.getName());
 
-        Project project = this.projectService.addProject(projectDTO,admin);
-        return new ResponseEntity<>(project, HttpStatus.CREATED);
+        return new ResponseEntity<>(projectService.addProject(projectDTO,admin), HttpStatus.CREATED);
     }
 
     @GetMapping("/find-by-name")
     public ResponseEntity<Project> findProjectByName(@RequestBody String name){
 
-        return new ResponseEntity<>(this.projectService.findProjectByName(name), HttpStatus.OK);
+        return new ResponseEntity<>(projectService.findProjectByName(name), HttpStatus.OK);
     }
 
     @GetMapping("/find-by-id")
     public ResponseEntity<Project> findProjectById(@RequestBody Long projectId){
 
-        return new ResponseEntity<>(this.projectService.findProjectById(projectId), HttpStatus.OK);
+        return new ResponseEntity<>(projectService.findProjectById(projectId), HttpStatus.OK);
     }
 
     @PostMapping("/add-employee")
@@ -78,6 +79,13 @@ public class ProjectController {
     public ResponseEntity<List<Project>> findAllNotRefunded(@PathVariable Long userId) {
 
         return new ResponseEntity<>(projectService.findAllNotRefundedByEmployeeId(userId), HttpStatus.OK);
+    }
+
+    @GetMapping("/find-all-employees-by-project-id/{projectId}")
+    @PreAuthorize("hasRole('ADMIN')")
+    public ResponseEntity<List<Employee>> findAllByProjectId(@PathVariable Long projectId) {
+
+        return new ResponseEntity<>(projectService.findAllEmployeesByProjectId(projectId), HttpStatus.OK);
     }
 
 }

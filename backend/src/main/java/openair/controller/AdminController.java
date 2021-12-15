@@ -72,7 +72,7 @@ public class AdminController {
     @GetMapping("/export-pdf")
     @PreAuthorize("hasRole('ADMIN')")
     public ResponseEntity<String> exportPDF(Principal loggedAdmin) throws DocumentException, IOException {
-        List<Employee> employeeList = employeeService.listAll();
+        List<Employee> employeeList = employeeService.findAll();
 
         PdfExporter exporter = new PdfExporter(employeeList, timeSheetDayService, storageService);
         String fileName = exporter.export(loggedAdmin.getName());

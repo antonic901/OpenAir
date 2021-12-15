@@ -25,11 +25,4 @@ public class EmployeeController {
     public EmployeeController(EmployeeService employeeService) {
         this.employeeService = employeeService;
     }
-
-    @GetMapping("/find-all-by-project-id/{projectId}")
-    @PreAuthorize("hasRole('ADMIN')")
-    public ResponseEntity<List<Employee>> findAllByProjectId(@PathVariable Long projectId) {
-
-        return new ResponseEntity<>(employeeService.findAllByProjectId(projectId), HttpStatus.OK);
-    }
 }
