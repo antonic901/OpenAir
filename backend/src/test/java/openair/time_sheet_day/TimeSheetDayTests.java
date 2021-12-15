@@ -3,7 +3,6 @@ package openair.time_sheet_day;
 import openair.absence.TestData;
 import openair.dto.TimeSheetDayDTO;
 import openair.model.Employee;
-import openair.model.Task;
 import openair.model.TimeSheetDay;
 import openair.repository.EmployeeRepository;
 import openair.repository.TaskRepository;
@@ -16,9 +15,9 @@ import org.mockito.Mock;
 import org.mockito.Spy;
 import org.springframework.boot.test.context.SpringBootTest;
 
-import static org.mockito.Mockito.when;
-import static org.mockito.ArgumentMatchers.any;
 import static org.assertj.core.api.Assertions.assertThat;
+import static org.mockito.ArgumentMatchers.any;
+import static org.mockito.Mockito.when;
 
 @SpringBootTest
 public class TimeSheetDayTests {

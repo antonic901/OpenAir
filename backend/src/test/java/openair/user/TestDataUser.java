@@ -1,6 +1,10 @@
 package openair.user;
+import openair.model.Task;
 import openair.model.User;
 import openair.model.enums.UserType;
+
+import java.util.ArrayList;
+import java.util.List;
 
 public class TestDataUser {
     public static User createUser() {

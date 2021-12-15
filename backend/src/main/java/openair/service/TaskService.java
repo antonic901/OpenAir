@@ -59,8 +59,7 @@ public class TaskService implements ITaskService {
 
     @Override
     public List<Task> findAllByProjectId(Long projectId) {
-        Project project = projectService.findProjectById(projectId);
-        return project.getTasks();
+        return taskRepository.findAllByProjectId(projectId);
     }
 
     @Override
@@ -86,9 +85,7 @@ public class TaskService implements ITaskService {
 
     @Override
     public List<Task> findAllByEmployeeId(Long employeeId) {
-        Employee employee = employeeRepository.findById(employeeId).get();
-
-        return employee.getTasks();
+        return taskRepository.findAllByEmployeeId(employeeId);
     }
 
     @Override
@@ -104,7 +101,6 @@ public class TaskService implements ITaskService {
 
     @Override
     public Task addTaskToProject(Long taskId, Long projectId, Long employeeId) {
-
         Optional<Project> optionalProject = projectRepository.findById(projectId);
         if(!optionalProject.isPresent()) {
             throw new NotFoundException(projectId, "Project with ID: " + projectId + " not found.");
@@ -132,6 +128,4 @@ public class TaskService implements ITaskService {
 
         return taskRepository.save(task);
     }
-
-
 }

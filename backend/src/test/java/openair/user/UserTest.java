@@ -1,18 +1,16 @@
 package openair.user;
 
-import openair.model.Task;
+import openair.model.User;
 import openair.repository.UserRepository;
 import openair.service.UserService;
-import openair.model.User;
 import org.junit.jupiter.api.Test;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.Spy;
-import static org.mockito.ArgumentMatchers.any;
-import static org.assertj.core.api.Assertions.assertThat;
 import org.springframework.boot.test.context.SpringBootTest;
-import java.util.Optional;
 
+import static org.assertj.core.api.Assertions.assertThat;
+import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.Mockito.when;
 
 @SpringBootTest
@@ -24,9 +22,6 @@ public class UserTest {
     @InjectMocks
     private UserService userService;
 
-    //  Nesto se cudno desava sa User klasom
-    //      problem: kaze da je this.userReporsitory null ????
-
     @Test
     public void testAddUser() {
         User user = TestDataUser.createUser();
@@ -35,7 +30,6 @@ public class UserTest {
 
         assertThat(userService.addUser(user)).isNotNull();
     }
-
 
     @Test
     public void testFindByUsername() {
@@ -56,5 +50,4 @@ public class UserTest {
         assertThat(userIsNotNull).isNotNull();
         assertThat(userIsNull).isNull();
     }
-    
 }
