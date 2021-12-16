@@ -85,6 +85,7 @@ public class AbsenceService implements IAbsenceService {
 
     boolean checkIsAbsenceConflicting(Employee employee, LocalDateTime startTime, LocalDateTime endTime) {
         List<Absence> absences = absenceRepository.findAllByEmployeeId(employee.getId());
+
         for(Absence absence : absences) {
             if(absence.getPeriod().getStartTime().isEqual(startTime) && absence.getPeriod().getEndTime().isEqual(endTime)) {
                 return  true;
@@ -110,10 +111,10 @@ public class AbsenceService implements IAbsenceService {
         if(startTime.isBefore(absence.getPeriod().getStartTime()) && endTime.isAfter(absence.getPeriod().getStartTime())) {
             return  true;
         }
-        else if(absence.getPeriod().getStartTime().isBefore(startTime) && absence.getPeriod().getEndTime().isAfter(endTime)) {
+        if(absence.getPeriod().getStartTime().isBefore(startTime) && absence.getPeriod().getEndTime().isAfter(endTime)) {
             return true;
         }
-        else return false;
+        return false;
     }
 
     @Override
