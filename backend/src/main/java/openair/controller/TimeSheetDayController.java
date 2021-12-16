@@ -37,8 +37,7 @@ public class TimeSheetDayController {
         //nadjem zaposlenog po username-u
         Employee employee = employeeService.findByUsername(loggedEmployee.getName());
 
-        TimeSheetDay timeSheetDay = this.timeSheetDayService.addTimeSheetDay(timeSheetDayDTO,employee);
-        return new ResponseEntity<>(timeSheetDay, HttpStatus.CREATED);
+        return new ResponseEntity<>(timeSheetDayService.addTimeSheetDay(timeSheetDayDTO,employee), HttpStatus.CREATED);
     }
 
     @PostMapping("/add-by-admin/{employeeId}")
@@ -48,8 +47,7 @@ public class TimeSheetDayController {
         //nadjem zaposlenog po id-ju
         Employee employee = employeeService.findEmployeeById(employeeId);
 
-        TimeSheetDay timeSheetDay = this.timeSheetDayService.addTimeSheetDay(timeSheetDayDTO,employee);
-        return new ResponseEntity<>(timeSheetDay, HttpStatus.CREATED);
+        return new ResponseEntity<>(timeSheetDayService.addTimeSheetDay(timeSheetDayDTO,employee), HttpStatus.CREATED);
     }
 
 }

@@ -2,6 +2,8 @@ package openair.service;
 
 import liquibase.pro.packaged.T;
 import openair.dto.TimeSheetDayDTO;
+import openair.exception.NotFoundException;
+import openair.exception.ResourceConflictException;
 import openair.model.Employee;
 import openair.model.Task;
 import openair.model.TimeSheetDay;
@@ -28,6 +30,13 @@ public class TimeSheetDayService implements ITimeSheetDay {
 
     @Override
     public TimeSheetDay addTimeSheetDay(TimeSheetDayDTO timeSheetDayDTO, Employee employee) {
+        //za employee-a i task proveriti da li je kreiran vec timeSheetDay za datum
+        TimeSheetDay exist = timeSheetDayRepository.findByEmployeeIdAndTaskIdAndDate(
+                employee.getId(),timeSheetDayDTO.getTaskId(),timeSheetDayDTO.getDate());
+
+        if(exist != null)
+            throw new ResourceConflictException(exist.getId(),"Task is already logged for " + exist.getDate().toString() + ".");
+
         Task task = taskService.findById(timeSheetDayDTO.getTaskId());
 
         TimeSheetDay timeSheetDay = new TimeSheetDay();

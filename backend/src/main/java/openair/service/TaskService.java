@@ -63,27 +63,6 @@ public class TaskService implements ITaskService {
     }
 
     @Override
-    public List<Task> findAllNotLoggedTasksByProjectId(Long projectId) {
-        List<Task> tasks = new ArrayList<Task>();
-        Project project = projectService.findProjectById(projectId);
-        for(Task task : taskRepository.findAll()) {
-            if(!checkIsTaskLogged(task)) {
-                tasks.add(task);
-            }
-        }
-        return tasks;
-    }
-
-    private boolean checkIsTaskLogged(Task task) {
-        for(TimeSheetDay timeSheetDay : timeSheetDayRepository.findAll()) {
-            if(timeSheetDay.getDate().isEqual(LocalDate.now()) && timeSheetDay.getTask().getId().equals(task.getId())) {
-                return true;
-            }
-        }
-        return false;
-    }
-
-    @Override
     public List<Task> findAllByEmployeeId(Long employeeId) {
         return taskRepository.findAllByEmployeeId(employeeId);
     }
@@ -97,7 +76,6 @@ public class TaskService implements ITaskService {
         else
             return null;
     }
-
 
     @Override
     public Task addTaskToProject(Long taskId, Long projectId, Long employeeId) {
