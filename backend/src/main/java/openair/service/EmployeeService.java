@@ -1,9 +1,7 @@
 package openair.service;
 
-import com.amazonaws.services.kms.model.NotFoundException;
-
-import openair.email.model.Mail;
-import openair.email.service.MailService;
+import openair.model.Mail;
+import openair.exception.NotFoundException;
 import openair.model.Employee;
 import openair.model.TimeSheetDay;
 import openair.repository.EmployeeRepository;

@@ -15,48 +15,40 @@ import java.util.List;
 public class GlobalExceptionHandler {
 
     @ExceptionHandler({NotFoundException.class})
-    public final ResponseEntity<List<String>> handleException(Exception ex, WebRequest request) {
+    public final ResponseEntity<List<String>> handleNotFoundException(NotFoundException ex, WebRequest request){
+        HttpHeaders headers = new HttpHeaders();
+        HttpStatus status = HttpStatus.NOT_FOUND;
+        List<String> errors = Collections.singletonList(ex.getMessage());
+
+        return new ResponseEntity<>(errors, headers, status);
+    }
+
+    @ExceptionHandler({PeriodConflictException.class})
+    public final ResponseEntity<List<String>> handlePeriodConflictException(PeriodConflictException ex, WebRequest request){
+        HttpHeaders headers = new HttpHeaders();
+        HttpStatus status = HttpStatus.CONFLICT;
+        List<String> errors = Collections.singletonList(ex.getMessage());
+
+        return new ResponseEntity<>(errors, headers, status);
+    }
+
+    @ExceptionHandler({ResourceConflictException.class})
+    public final ResponseEntity<List<String>> handleResourceConflictException(ResourceConflictException ex, WebRequest request){
+        HttpHeaders headers = new HttpHeaders();
+        HttpStatus status = HttpStatus.CONFLICT;
+        List<String> errors = Collections.singletonList(ex.getMessage());
+
+        return new ResponseEntity<>(errors, headers, status);
+    }
+
+    @ExceptionHandler({Exception.class})
+    public final ResponseEntity<List<String>> handleException(Exception ex, WebRequest request){
 
         HttpHeaders headers = new HttpHeaders();
+        HttpStatus status = HttpStatus.INTERNAL_SERVER_ERROR;
+        List<String> errors = Collections.singletonList(ex.getMessage());
+        request.setAttribute(WebUtils.ERROR_EXCEPTION_ATTRIBUTE, ex, WebRequest.SCOPE_REQUEST);
 
-        if(ex instanceof NotFoundException) {
-            HttpStatus status = HttpStatus.NOT_FOUND;
-            NotFoundException exception = (NotFoundException) ex;
-            return handleNotFoundException(exception, headers, status, request);
-        }
-        else if(ex instanceof PeriodConflictException) {
-            HttpStatus status = HttpStatus.CONFLICT;
-            PeriodConflictException exception = (PeriodConflictException) ex;
-            return handlePeriodConflictException(exception, headers, status, request);
-        }
-        else if(ex instanceof ResourceConflictException) {
-            HttpStatus status = HttpStatus.CONFLICT;
-            ResourceConflictException exception = (ResourceConflictException) ex;
-            return handleResourceConflictException(exception, headers, status, request);
-        }
-        else  {
-            HttpStatus status = HttpStatus.INTERNAL_SERVER_ERROR;
-            return  handleExceptionInternal(ex, null, headers, status, request);
-        }
-    }
-
-    protected ResponseEntity<List<String>> handleNotFoundException(NotFoundException exception, HttpHeaders headers, HttpStatus status, WebRequest request) {
-        List<String> errors = Collections.singletonList(exception.getMessage());
-        return handleExceptionInternal(exception, errors, headers, status, request);
-    }
-    protected ResponseEntity<List<String>> handlePeriodConflictException(PeriodConflictException exception, HttpHeaders headers, HttpStatus status, WebRequest request) {
-        List<String> errors = Collections.singletonList(exception.getMessage());
-        return handleExceptionInternal(exception, errors, headers, status, request);
-    }
-    protected ResponseEntity<List<String>> handleResourceConflictException(ResourceConflictException exception, HttpHeaders headers, HttpStatus status, WebRequest request) {
-        List<String> errors = Collections.singletonList(exception.getMessage());
-        return handleExceptionInternal(exception, errors, headers, status, request);
-    }
-
-    protected ResponseEntity<List<String>> handleExceptionInternal(Exception exception, List<String> errors, HttpHeaders headers, HttpStatus status, WebRequest request) {
-        if(HttpStatus.INTERNAL_SERVER_ERROR.equals(status)) {
-            request.setAttribute(WebUtils.ERROR_EXCEPTION_ATTRIBUTE, exception, WebRequest.SCOPE_REQUEST);
-        }
-        return new ResponseEntity<List<String>>(errors,headers, status);
+        return new ResponseEntity<>(errors, headers, status);
     }
 }

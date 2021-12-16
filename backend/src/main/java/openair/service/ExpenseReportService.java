@@ -1,8 +1,7 @@
 package openair.service;
 
-import com.amazonaws.services.kms.model.NotFoundException;
-
 import openair.dto.ExspenseReportDTO;
+import openair.exception.NotFoundException;
 import openair.model.Employee;
 import openair.model.ExpenseReport;
 import openair.model.Money;
@@ -56,7 +55,7 @@ public class ExpenseReportService implements IExpenseReportService {
     }
 
     @Override
-    public ExpenseReport addReport(ExspenseReportDTO expenseReportDTO, Employee employee) throws NotFoundException{
+    public ExpenseReport addReport(ExspenseReportDTO expenseReportDTO, Employee employee) {
 
         Optional<Project> projectOptional = projectRepository.findById(expenseReportDTO.getProjectId());
 
@@ -84,7 +83,7 @@ public class ExpenseReportService implements IExpenseReportService {
     }
 
     @Override
-    public ExpenseReport reviewReport(Long reportId, Status status) throws NotFoundException{
+    public ExpenseReport reviewReport(Long reportId, Status status) {
 
         Optional<ExpenseReport> expenseReportOpt = expenseReportRepository.findById(reportId);
 

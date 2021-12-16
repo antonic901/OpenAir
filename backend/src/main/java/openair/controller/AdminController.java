@@ -45,7 +45,7 @@ public class AdminController {
 
     @PostMapping("/register")
     @PreAuthorize("hasRole('ADMIN')")
-    public ResponseEntity<User> addUser(@RequestBody RegisterEmployeeDTO registerEmployeeDTO, Principal loggedAdmin, UriComponentsBuilder ucBuilder) throws ResourceConflictException, NotFoundException {
+    public ResponseEntity<User> addUser(@RequestBody RegisterEmployeeDTO registerEmployeeDTO, Principal loggedAdmin, UriComponentsBuilder ucBuilder) {
 
         User existUser = this.userService.findByUsername(registerEmployeeDTO.getUsername());
 

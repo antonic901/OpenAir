@@ -1,9 +1,7 @@
 package openair.service;
 
-import com.amazonaws.services.kms.model.AlreadyExistsException;
-import com.amazonaws.services.kms.model.NotFoundException;
-
 import openair.dto.ProjectDTO;
+import openair.exception.NotFoundException;
 import openair.exception.ResourceConflictException;
 import openair.model.*;
 import openair.model.enums.Status;
@@ -37,7 +35,7 @@ public class ProjectService implements IProjectService {
     }
 
     @Override
-    public Project findProjectByName(String name) throws  NotFoundException{
+    public Project findProjectByName(String name) {
 
         Optional<Project> projectOptional = projectRepository.findByName(name);
 
@@ -48,12 +46,12 @@ public class ProjectService implements IProjectService {
     }
 
     @Override
-    public Project addProject(ProjectDTO projectDTO, Admin admin) throws ResourceConflictException{
+    public Project addProject(ProjectDTO projectDTO, Admin admin) {
 
         Optional<Project> existProject = projectRepository.findByName(projectDTO.getName());
 
         if (existProject.isPresent())
-            throw new AlreadyExistsException("Project with name " + projectDTO.getName() + " already exists.");
+            throw new ResourceConflictException("Project with name " + projectDTO.getName() + " already exists.");
 
         Project project = new Project();
 
@@ -65,7 +63,7 @@ public class ProjectService implements IProjectService {
     }
 
     @Override
-    public Project findProjectById(Long projectId) throws  NotFoundException{
+    public Project findProjectById(Long projectId) {
 
         Optional<Project> projectOptional = projectRepository.findById(projectId);
 
@@ -76,7 +74,7 @@ public class ProjectService implements IProjectService {
     }
 
     @Override
-    public Project addEmployeeToProject(Long employeeId, Long projectId) throws  NotFoundException{
+    public Project addEmployeeToProject(Long employeeId, Long projectId) {
 
         Optional<Project> projectOptional = projectRepository.findById(projectId);
         Optional<Employee> employeeOptional = employeeRepository.findById(employeeId);
@@ -98,7 +96,7 @@ public class ProjectService implements IProjectService {
 
 }
     @Override
-    public List<Project> findAllByUserId(Long userId) throws  NotFoundException{
+    public List<Project> findAllByUserId(Long userId) {
 
         Optional<User> userOptional = userRepository.findById(userId);
 
@@ -118,7 +116,7 @@ public class ProjectService implements IProjectService {
     }
 
     @Override
-    public List<Project> findAllNotRefundedByEmployeeId(Long id) throws  NotFoundException{
+    public List<Project> findAllNotRefundedByEmployeeId(Long id) {
 
         Optional<Employee> employeeOptional = employeeRepository.findById(id);
 
@@ -127,16 +125,16 @@ public class ProjectService implements IProjectService {
 
         List<Project> projects = new ArrayList<>();
 
-        for(Project project : employeeOptional.get().getProjects()) {
+        for(Project project : projectRepository.findAllByEmployeeId(id)) {
 
-            if(!checkIsRefunded(project.getId(), employeeOptional.get().getId()))
+            if( ! checkIsRefunded ( project.getId(), employeeOptional.get().getId() ) )
                 projects.add(project);
         }
         return projects;
     }
 
     @Override
-    public List<Employee> findAllEmployeesByProjectId(Long projectId) throws  NotFoundException{
+    public List<Employee> findAllEmployeesByProjectId(Long projectId) {
 
         Optional<Project> projectOptional =  projectRepository.findById(projectId);
 
@@ -148,19 +146,14 @@ public class ProjectService implements IProjectService {
 
     private boolean checkIsRefunded(Long projectId, Long employeeId) {
 
-        for(ExpenseReport expenseReport : expenseReportRepository.findAll()) {
+        Optional<ExpenseReport> expenseReport = expenseReportRepository.findByProjectIdAndEmployeeId(projectId,employeeId);
 
-            if(expenseReport.getEmployee().getId().equals(employeeId)) {
+        if(!expenseReport.isPresent())
+            return false;
 
-                if(expenseReport.getProject().getId().equals(projectId)) {
+        if(expenseReport.get().getStatus() != Status.REJECTED)
+            return true;
 
-                    if(expenseReport.getStatus() == Status.APPROVED || expenseReport.getStatus() == Status.INPROCESS) {
-
-                        return true;
-                    }
-                }
-            }
-        }
         return false;
     }
 }
