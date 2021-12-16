@@ -1,26 +1,22 @@
-package openair.time_sheet_day;
+package openair.service;
 
-import java.sql.Time;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
 
-import openair.absence.TestDataAbsence;
-import openair.absence.TestDataAbsence;
 import openair.dto.TimeSheetDayDTO;
 import openair.model.Employee;
 import openair.model.Task;
 import openair.model.TimeSheetDay;
-import openair.task.TestDataTask;
 
 public class TimeSheetDayTestData {
     public static List<TimeSheetDay> createTimeSheetDayList() {
         List<TimeSheetDay> timeSheetDayList = new ArrayList<TimeSheetDay>();
 
         //  id, localDate, workTime, employee, Task
-        Employee employee = TestDataAbsence.createEmployee();
-        Task task = TestDataTask.createTask();
+        Employee employee = AbsenceTestData.createEmployee();
+        Task task = TaskTestData.createTask();
 
         timeSheetDayList.add(new TimeSheetDay(1L, LocalDate.now(), 14, employee, task));
         timeSheetDayList.add(new TimeSheetDay(2L, LocalDate.now(), 14, employee, task));

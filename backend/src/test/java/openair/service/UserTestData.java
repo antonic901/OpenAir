@@ -1,12 +1,8 @@
-package openair.user;
-import openair.model.Task;
+package openair.service;
 import openair.model.User;
 import openair.model.enums.UserType;
 
-import java.util.ArrayList;
-import java.util.List;
-
-public class TestDataUser {
+public class UserTestData {
     public static User createUser() {
         User user = new User();
         user.setId(1L);

@@ -1,6 +1,7 @@
-package openair.email.service;
+package openair.service;
 
-import openair.email.model.Mail;
+import openair.model.Mail;
+import openair.service.interfaces.IMailService;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -10,16 +11,19 @@ import org.springframework.mail.javamail.MimeMessageHelper;
 import org.springframework.stereotype.Service;
 
 import javax.mail.internet.MimeMessage;
-import java.util.List;
 
 @Service
 public class MailService implements IMailService {
 
     private final JavaMailSender javaMailSender;
     private static final Logger logger = LoggerFactory.getLogger(MailService.class);
-    private static final String MAIL_FROM = "pcserviskac@gmail.com";
+
+    @Value("${spring.mail.username}")
+    private String MAIL_FROM = "pcserviskac@gmail.com";
+
     @Value("${custom.addr}")
     private String ADDR;
+
     @Value("${custom.fport}")
     private String PORT;
 

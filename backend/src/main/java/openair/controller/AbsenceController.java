@@ -37,13 +37,13 @@ public class AbsenceController {
 
     @GetMapping("/get-absences/{id}")
     @PreAuthorize("hasRole('ADMIN')")
-    public ResponseEntity<List<Absence>> checkIfUsernameIsAvailable(@PathVariable Long id) throws NotFoundException{
+    public ResponseEntity<List<Absence>> checkIfUsernameIsAvailable(@PathVariable Long id) {
         return new ResponseEntity<List<Absence>>(absenceService.getAllByUserId(id), HttpStatus.OK);
     }
 
     @PostMapping("/add")
     @PreAuthorize("hasRole('EMPLOYEE')")
-    public ResponseEntity<Absence> addAbsence(@RequestBody RequestAbsenceDTO requestAbsenceDTO, Principal loggedEmployee) throws NotFoundException, PeriodConflictException {
+    public ResponseEntity<Absence> addAbsence(@RequestBody RequestAbsenceDTO requestAbsenceDTO, Principal loggedEmployee)  {
         Employee employee = employeeService.findByUsername(loggedEmployee.getName());
         Absence absence = absenceService.add(requestAbsenceDTO, employee.getId());
         return new ResponseEntity<>(absence, HttpStatus.CREATED);
@@ -51,7 +51,7 @@ public class AbsenceController {
 
     @PostMapping("/approve/{id}/{status}")
     @PreAuthorize("hasRole('ADMIN')")
-    public ResponseEntity<Absence> approveAbsence(@PathVariable Long id, @PathVariable Status status, Principal loggedAdmin) throws NotFoundException {
+    public ResponseEntity<Absence> approveAbsence(@PathVariable Long id, @PathVariable Status status, Principal loggedAdmin)  {
         Admin admin = adminService.findByUsername(loggedAdmin.getName());
         Absence absence = absenceService.review(id, status);
         return new ResponseEntity<Absence>(absence, HttpStatus.OK);

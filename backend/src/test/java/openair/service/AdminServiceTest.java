@@ -1,4 +1,4 @@
-package openair.admin;
+package openair.service;
 
 import openair.exception.NotFoundException;
 import openair.model.Admin;
@@ -8,7 +8,6 @@ import openair.model.enums.UserType;
 import openair.repository.AdminRepository;
 import openair.repository.EmployeeRepository;
 import openair.repository.RoleRepository;
-import openair.service.AdminService;
 import org.junit.jupiter.api.Test;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
@@ -25,7 +24,7 @@ import static org.mockito.Mockito.*;
 import static org.junit.jupiter.api.Assertions.assertThrows;
 
 @SpringBootTest
-public class AdminTests {
+public class AdminServiceTest {
 
     @Mock
     private AdminRepository adminRepository;
@@ -45,23 +44,23 @@ public class AdminTests {
 
     @Test
     public void testRegisterEmployee() {
-        Admin admin = TestDataAdmin.createAdmin();
+        Admin admin = AdminTestData.createAdmin();
 
         when(passwordEncoder.encode(any(String.class))).thenReturn("##?A4@!");
         when(roleRepository.findByName(UserType.ROLE_EMPLOYEE)).thenReturn(new Role(1L, UserType.ROLE_EMPLOYEE));
         when(roleRepository.findByName(UserType.ROLE_ADMIN)).thenReturn(new Role(1L, UserType.ROLE_ADMIN));
         when(adminRepository.findById(1L)).thenReturn(Optional.of(admin));
-        when(employeeRepository.save(any(Employee.class))).thenReturn(TestDataAdmin.createEmployee());
+        when(employeeRepository.save(any(Employee.class))).thenReturn(AdminTestData.createEmployee());
 
-        assertThat(adminService.registerEmployee(TestDataAdmin.createRegisterEmployeeDTO1())).isExactlyInstanceOf(Employee.class);
-        assertThrows(NotFoundException.class, () -> adminService.registerEmployee(TestDataAdmin.createRegisterEmployeeDTO2()), "Admin not found");
+        assertThat(adminService.registerEmployee(AdminTestData.createRegisterEmployeeDTO1())).isExactlyInstanceOf(Employee.class);
+        assertThrows(NotFoundException.class, () -> adminService.registerEmployee(AdminTestData.createRegisterEmployeeDTO2()), "Admin not found");
 
-        assertThrows(NotFoundException.class, () -> adminService.registerEmployee(TestDataAdmin.createRegisterEmployeeDTO3()), "Role not found");
+        assertThrows(NotFoundException.class, () -> adminService.registerEmployee(AdminTestData.createRegisterEmployeeDTO3()), "Role not found");
     }
 
     @Test
     public void testFindByUsername() {
-        Admin admin = TestDataAdmin.createAdmin();
+        Admin admin = AdminTestData.createAdmin();
 
         when(adminRepository.findByUsername("admin")).thenReturn(admin);
 
@@ -71,7 +70,7 @@ public class AdminTests {
 
     @Test
     public void testGetEmployees() {
-        Admin admin = TestDataAdmin.createAdmin();
+        Admin admin = AdminTestData.createAdmin();
 
         when(adminRepository.findById(1L)).thenReturn(Optional.of((admin)));
 

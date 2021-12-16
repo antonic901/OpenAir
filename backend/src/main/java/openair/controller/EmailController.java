@@ -1,8 +1,8 @@
-package openair.email.controller;
+package openair.controller;
 
-import openair.email.dto.MailDTO;
-import openair.email.model.Mail;
-import openair.email.service.MailService;
+import openair.dto.MailDTO;
+import openair.model.Mail;
+import openair.service.MailService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;

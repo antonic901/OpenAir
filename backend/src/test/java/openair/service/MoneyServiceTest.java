@@ -1,4 +1,4 @@
-package openair.money;
+package openair.service;
 
 
 import openair.repository.MoneyRepository;
@@ -14,7 +14,7 @@ import org.springframework.web.client.RestTemplate;
 import static org.assertj.core.api.Assertions.assertThat;
 
 @SpringBootTest
-public class MoneyTests {
+public class MoneyServiceTest {
 
     @Mock
     private MoneyRepository moneyRepository;

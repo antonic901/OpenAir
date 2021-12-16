@@ -1,10 +1,9 @@
-package openair.role;
+package openair.service;
 
 import openair.exception.NotFoundException;
 import openair.model.Role;
 import openair.model.enums.UserType;
 import openair.repository.RoleRepository;
-import openair.service.RoleService;
 import org.junit.jupiter.api.Test;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
@@ -20,7 +19,7 @@ import static org.mockito.Mockito.*;
 import static org.junit.jupiter.api.Assertions.assertThrows;
 
 @SpringBootTest
-public class RoleTests {
+public class RoleServiceTest {
 
     @Mock
     private RoleRepository roleRepository;
@@ -31,7 +30,7 @@ public class RoleTests {
 
     @Test
     public void testFindById() {
-        Role role = TestDataRole.createRole();
+        Role role = RoleTestData.createRole();
 
         when(roleRepository.findById(1L)).thenReturn(Optional.of(role));
 
@@ -41,7 +40,7 @@ public class RoleTests {
 
     @Test
     public void testFindByName() {
-        Role role = TestDataRole.createRole();
+        Role role = RoleTestData.createRole();
 
         when(roleRepository.findByName(UserType.ROLE_EMPLOYEE)).thenReturn(role);
 

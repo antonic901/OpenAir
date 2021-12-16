@@ -1,4 +1,4 @@
-package openair.absence;
+package openair.service;
 
 import openair.dto.RequestAbsenceDTO;
 import openair.exception.NotFoundException;
@@ -9,7 +9,6 @@ import openair.repository.AbsenceRepository;
 import openair.repository.AdminRepository;
 import openair.repository.EmployeeRepository;
 import openair.repository.UserRepository;
-import openair.service.AbsenceService;
 import org.junit.jupiter.api.Test;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
@@ -27,7 +26,7 @@ import static org.mockito.Mockito.*;
 import static org.junit.jupiter.api.Assertions.assertThrows;
 
 @SpringBootTest
-public class AbsenceTests {
+public class AbsenceServiceTest {
 
     @Mock
     private AbsenceRepository absenceRepository;
@@ -48,11 +47,11 @@ public class AbsenceTests {
     @Test
     public void testGetAllByUserId() {
 
-        Admin admin = TestDataAbsence.createAdmin();
+        Admin admin = AbsenceTestData.createAdmin();
 
-        Employee employee = TestDataAbsence.createEmployee();
+        Employee employee = AbsenceTestData.createEmployee();
 
-        List<Absence> absences = TestDataAbsence.createAbsences();
+        List<Absence> absences = AbsenceTestData.createAbsences();
 
         when(userRepository.findById(1L)).thenReturn(Optional.of((User) admin));
         when(userRepository.findById(2L)).thenReturn(Optional.of((User) employee));
@@ -68,8 +67,8 @@ public class AbsenceTests {
 
     @Test
     public void testAdd() {
-        Employee employee = TestDataAbsence.createEmployee();
-        List<Absence> absences = TestDataAbsence.createAbsences();
+        Employee employee = AbsenceTestData.createEmployee();
+        List<Absence> absences = AbsenceTestData.createAbsences();
 
         when(employeeRepository.findById(2L)).thenReturn(Optional.of(employee));
         when(absenceRepository.findAllByEmployeeId(2L)).thenReturn(absences);
@@ -94,7 +93,7 @@ public class AbsenceTests {
 
     @Test
     public void review() {
-        Absence absence = TestDataAbsence.createAbsences().get(0);
+        Absence absence = AbsenceTestData.createAbsences().get(0);
 
         when(absenceRepository.findById(1L)).thenReturn(Optional.of(absence));
         when(absenceRepository.save(any(Absence.class))).thenReturn(absence);
