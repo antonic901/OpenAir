@@ -19,7 +19,7 @@ public class MailService implements IMailService {
     private static final Logger logger = LoggerFactory.getLogger(MailService.class);
 
     @Value("${spring.mail.username}")
-    private String MAIL_FROM = "pcserviskac@gmail.com";
+    private String MAIL_FROM;
 
     @Value("${custom.addr}")
     private String ADDR;

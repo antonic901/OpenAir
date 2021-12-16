@@ -9,36 +9,6 @@
                 Select project
             </v-stepper-step>
 
-            <!-- <v-divider></v-divider> -->
-
-            <v-stepper-step
-                :complete="e1 > 2"
-                step="2"
-            >
-                Select task
-            </v-stepper-step>
-
-            <!-- <v-divider></v-divider> -->
-
-            <v-stepper-step
-                :complete="e1 > 3"
-                step="3"
-            >
-                Log hours
-            </v-stepper-step>
-
-            <!-- <v-divider></v-divider> -->
-
-            <v-stepper-step
-                :complete="e1 > 4"
-                step="4"
-            >
-                Succesfully logged task
-            </v-stepper-step>
-
-            <!-- </v-stepper-header> -->
-
-            <v-stepper-items>
             <v-stepper-content step="1">
                 <v-card
                 class="mb-12"
@@ -76,6 +46,13 @@
                 Back
                 </v-btn>
             </v-stepper-content>
+
+            <v-stepper-step
+                :complete="e1 > 2"
+                step="2"
+            >
+                Select task
+            </v-stepper-step>
 
             <v-stepper-content step="2">
                 <v-card
@@ -122,6 +99,14 @@
                 Back
                 </v-btn>
             </v-stepper-content>
+
+            <v-stepper-step
+                :complete="e1 > 3"
+                step="3"
+            >
+                Log hours and select day
+            </v-stepper-step>
+
             <v-stepper-content step="3">
                 <v-slider
                     v-model="hours"
@@ -131,9 +116,16 @@
                     min="0"
                     style="margin:40px;"
                 ></v-slider>
+                <v-date-picker v-model="dates" multiple :max="today"></v-date-picker>
+                <v-text-field
+                    v-model="dates"
+                    label="Date range"
+                    prepend-icon="mdi-calendar"
+                    readonly
+                ></v-text-field>
                 <v-btn
                 color="success"
-                :disabled="hours === 0"
+                :disabled="hours === 0 || dates.length === 0"
                 @click="log"
                 >
                 Log task
@@ -143,6 +135,16 @@
                 Back
                 </v-btn>
             </v-stepper-content>
+
+            <v-stepper-step
+                :complete="e1 > 4"
+                step="4"
+            >
+                Succesfully logged task
+            </v-stepper-step>
+
+            <v-stepper-items>
+
             <v-stepper-content step="4">
                 <v-btn
                 color="success"
@@ -160,6 +162,9 @@
 
 export default {
     name: 'LogTask',
+    computed: {
+
+    },
     data() {
         return {
             e1: 1,
@@ -167,7 +172,9 @@ export default {
             tasks: [],
             project: null,
             task: null,
-            hours: 0
+            hours: 0,
+            dates: [],
+            today: null
         }
     },
     methods: {
@@ -180,14 +187,16 @@ export default {
 
         },
         log() {
-            var currentTime = this.getDateTimeFromString(this.getCurrentDateTime(), "00:00").getTime();
-            this.axios.post("/api/timesheetday/add-by-employee", {date: currentTime, workTime: this.hours, taskId:this.task.id}, {headers: {'Authorization': `Bearer ` + this.$store.getters.getJwt}})
+            this.dates.forEach(d => {
+                var time = this.getDateTimeFromString(d, "00:00").getTime();
+                this.axios.post("/api/timesheetday/add-by-employee", {date: time, workTime: this.hours, taskId:this.task.id}, {headers: {'Authorization': `Bearer ` + this.$store.getters.getJwt}})
                 .then(() => {
                     this.e1 = 4;
                 })
                 .catch(() => {
                     this.e1 = 3
                 })
+            })
         }, 
         // Expected yy-mm-dd and HH:mm format
         getDateTimeFromString: function(dstr, tstr) {
@@ -209,6 +218,11 @@ export default {
             .then(r => {
                 this.projects = r.data;
             })
+        var today = new Date();
+        var dd = String(today.getDate()).padStart(2, '0');
+        var mm = String(today.getMonth() + 1).padStart(2, '0'); //January is 0!
+        var yyyy = today.getFullYear();
+        this.today = yyyy + '-' + mm + '-' + dd;
     }
 }
 </script>
