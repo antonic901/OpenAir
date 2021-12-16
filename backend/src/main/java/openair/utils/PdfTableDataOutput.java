@@ -21,5 +21,5 @@ public class PdfTableDataOutput {
     @Column(name = "Work_time")
     private double work_time;
     @Column(name = "Project_type")
-    private ProjectType project_type;
+    private String project_type;
 }
