@@ -1,8 +1,7 @@
-package openair.user;
+package openair.service;
 
 import openair.model.User;
 import openair.repository.UserRepository;
-import openair.service.UserService;
 import org.junit.jupiter.api.Test;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
@@ -14,7 +13,7 @@ import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.Mockito.when;
 
 @SpringBootTest
-public class UserTest {
+public class UserServiceTest {
     @Mock
     private UserRepository userRepository;
 
@@ -24,7 +23,7 @@ public class UserTest {
 
     @Test
     public void testAddUser() {
-        User user = TestDataUser.createUser();
+        User user = UserTestData.createUser();
 
         when(userRepository.save(any(User.class))).thenReturn(new User());
 

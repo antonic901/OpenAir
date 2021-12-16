@@ -1,6 +1,5 @@
-package openair.task;
+package openair.service;
 
-import openair.absence.TestDataAbsence;
 import openair.exception.NotFoundException;
 import openair.model.Employee;
 import openair.model.Project;
@@ -8,7 +7,6 @@ import openair.model.Task;
 import openair.repository.EmployeeRepository;
 import openair.repository.ProjectRepository;
 import openair.repository.TaskRepository;
-import openair.service.TaskService;
 import org.junit.jupiter.api.Test;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
@@ -25,7 +23,7 @@ import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.Mockito.when;
 
 @SpringBootTest
-public class TaskTests {
+public class TaskServiceTest {
     @Mock
     private TaskRepository taskRepository;
 
@@ -77,8 +75,8 @@ public class TaskTests {
     @Test
     public void testAddTask() {
         String name = "refactoring";
-        Project project = TestDataTask.createProject1();
-        Employee employee = TestDataAbsence.createEmployee();
+        Project project = TaskTestData.createProject1();
+        Employee employee = AbsenceTestData.createEmployee();
 
         when(taskRepository.save(any(Task.class))).thenReturn(new Task());
 
@@ -91,7 +89,7 @@ public class TaskTests {
         //  Treba da se zavrsi...
 
         //  given
-        List<Task> taskList = TestDataTask.createTaskList();
+        List<Task> taskList = TaskTestData.createTaskList();
 
         Project project = new Project();
         project.setId(1L);
@@ -127,7 +125,7 @@ public class TaskTests {
 
     @Test
     public void testFindAllByProjectId() {
-        List<Task> taskList = TestDataTask.createTaskList();
+        List<Task> taskList = TaskTestData.createTaskList();
         List<Task> novaLista = new ArrayList<Task>();
         novaLista.add(taskList.get(1));
 
@@ -139,7 +137,7 @@ public class TaskTests {
 
     @Test
     public void testFindAllByEmployeeId() {
-        List<Task> taskList = TestDataTask.createTaskList();
+        List<Task> taskList = TaskTestData.createTaskList();
         List<Task> novaLista = new ArrayList<Task>();
         novaLista.add(taskList.get(1));
 

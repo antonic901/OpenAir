@@ -3,6 +3,7 @@ package openair.service;
 import openair.repository.MoneyRepository;
 import openair.service.interfaces.IMoneyService;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 import org.springframework.web.client.RestTemplate;
@@ -10,7 +11,8 @@ import org.springframework.web.client.RestTemplate;
 @Service
 public class MoneyService implements IMoneyService {
 
-    private static final String API_KEY = "b6020496acea6ff6c2fa3949ae1f7468";
+    @Value("${exchangeratesapi.token}")
+    private String API_KEY;
 
     private MoneyRepository moneyRepository;
     private RestTemplate restTemplate;

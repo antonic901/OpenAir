@@ -1,17 +1,14 @@
-package openair.admin;
+package openair.service;
 
-import liquibase.pro.packaged.E;
 import openair.dto.RegisterEmployeeDTO;
 import openair.model.*;
 import openair.model.enums.Department;
-import openair.model.enums.Status;
 import openair.model.enums.UserType;
 
-import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
 
-public class TestDataAdmin {
+public class AdminTestData {
 
     public static Admin createAdmin() {
         Admin admin = new Admin();

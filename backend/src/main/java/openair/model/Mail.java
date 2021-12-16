@@ -1,7 +1,7 @@
-package openair.email.model;
+package openair.model;
 
 import lombok.*;
-import openair.email.dto.MailDTO;
+import openair.dto.MailDTO;
 
 import java.util.List;
 

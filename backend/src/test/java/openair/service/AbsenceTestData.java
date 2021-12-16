@@ -1,4 +1,4 @@
-package openair.absence;
+package openair.service;
 
 import openair.model.*;
 import openair.model.enums.Status;
@@ -8,7 +8,7 @@ import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
 
-public class TestDataAbsence {
+public class AbsenceTestData {
 
     public static Admin createAdmin() {
         Admin admin = new Admin();

@@ -1,4 +1,4 @@
-package openair.email.dto;
+package openair.dto;
 
 import lombok.AllArgsConstructor;
 import lombok.Getter;

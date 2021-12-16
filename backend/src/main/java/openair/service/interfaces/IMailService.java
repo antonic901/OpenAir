@@ -1,6 +1,6 @@
-package openair.email.service;
+package openair.service.interfaces;
 
-import openair.email.model.Mail;
+import openair.model.Mail;
 
 public interface IMailService {
     boolean sendMail(Mail mail);

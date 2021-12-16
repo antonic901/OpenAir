@@ -1,14 +1,11 @@
-package openair.time_sheet_day;
+package openair.service;
 
-import openair.absence.TestDataAbsence;
 import openair.dto.TimeSheetDayDTO;
 import openair.model.Employee;
 import openair.model.TimeSheetDay;
 import openair.repository.EmployeeRepository;
 import openair.repository.TaskRepository;
 import openair.repository.TimeSheetDayRepository;
-import openair.service.TaskService;
-import openair.service.TimeSheetDayService;
 import org.junit.jupiter.api.Test;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
@@ -20,7 +17,7 @@ import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.Mockito.when;
 
 @SpringBootTest
-public class TimeSheetDayTests {
+public class TimeSheetDayServiceTest {
     @Mock
     private TimeSheetDayRepository timeSheetDayRepository;
 
@@ -41,7 +38,7 @@ public class TimeSheetDayTests {
     @Test
     public void testAddTimeSheetDay() {
         //  given
-        Employee employee = TestDataAbsence.createEmployee();
+        Employee employee = AbsenceTestData.createEmployee();
         TimeSheetDayDTO timeSheetDayDTO = TimeSheetDayTestData.createTimeSheetDayDTO();
         //  when
         when(timeSheetDayRepository.save(any(TimeSheetDay.class))).thenReturn(new TimeSheetDay());
