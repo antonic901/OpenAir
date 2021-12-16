@@ -8,6 +8,7 @@ import openair.model.Admin;
 import openair.model.Employee;
 import openair.model.Project;
 import openair.model.User;
+import openair.repository.TimeSheetDayRepository;
 import openair.service.*;
 import openair.utils.PdfExporter;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -30,16 +31,14 @@ public class AdminController {
 
     private AdminService adminService;
     private UserService userService;
-    private EmployeeService employeeService;
-    private TimeSheetDayService timeSheetDayService;
+    private TimeSheetDayRepository timeSheetDayRepository;
     private StorageService storageService;
 
     @Autowired
-    public AdminController(AdminService adminService, UserService userService, EmployeeService employeeService, TimeSheetDayService timeSheetDayService, StorageService storageService) {
+    public AdminController(AdminService adminService, UserService userService,TimeSheetDayRepository timeSheetDayRepository, StorageService storageService) {
         this.adminService = adminService;
         this.userService = userService;
-        this.employeeService = employeeService;
-        this.timeSheetDayService = timeSheetDayService;
+        this.timeSheetDayRepository = timeSheetDayRepository;
         this.storageService = storageService;
     }
 
@@ -74,9 +73,8 @@ public class AdminController {
     @GetMapping("/export-pdf")
     @PreAuthorize("hasRole('ADMIN')")
     public ResponseEntity<String> exportPDF(Principal loggedAdmin) throws DocumentException, IOException {
-        List<Employee> employeeList = employeeService.findAll();
 
-        PdfExporter exporter = new PdfExporter(employeeList, timeSheetDayService, storageService);
+        PdfExporter exporter = new PdfExporter(timeSheetDayRepository, storageService);
         String fileName = exporter.export(loggedAdmin.getName());
 
         return new ResponseEntity<>(fileName, HttpStatus.OK);
