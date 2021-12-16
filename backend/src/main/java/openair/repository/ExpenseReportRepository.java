@@ -12,8 +12,8 @@ public interface ExpenseReportRepository extends JpaRepository<ExpenseReport, Lo
     Optional<ExpenseReport> findByProjectIdAndEmployeeId(Long projectId, Long employeeId);
 
     @Query(value = "Select ep.id, ep.date_of_creation, ep.description, ep.name, ep.money_id, " +
-            "ep.status, ep.tracking_number, ep.document, ep.project_id, ap.employee_id" +
-            "From user u, expensereports ep" +
+            "ep.status, ep.tracking_number, ep.document, ep.project_id, ep.employee_id " +
+            "From users u, expensereports ep " +
             "where u.id = ep.employee_id and u.admin_id=?1",
             nativeQuery = true
     )

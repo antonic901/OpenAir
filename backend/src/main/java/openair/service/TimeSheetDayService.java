@@ -32,7 +32,7 @@ public class TimeSheetDayService implements ITimeSheetDay {
     public TimeSheetDay addTimeSheetDay(TimeSheetDayDTO timeSheetDayDTO, Employee employee) {
         //za employee-a i task proveriti da li je kreiran vec timeSheetDay za datum
         TimeSheetDay exist = timeSheetDayRepository.findByEmployeeIdAndTaskIdAndDate(
-                employee.getId(),timeSheetDayDTO.getTaskId(),timeSheetDayDTO.getDate());
+                employee.getId(),timeSheetDayDTO.getTaskId(),timeSheetDayDTO.getDate().toLocalDate());
 
         if(exist != null)
             throw new ResourceConflictException(exist.getId(),"Task is already logged for " + exist.getDate().toString() + ".");

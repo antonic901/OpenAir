@@ -177,7 +177,7 @@ export default {
     },
     methods: {
         getEmployee() {
-            this.axios.get("/api/employee/find-all-by-project-id/" + this.selectedProject.id,{headers: {'Authorization': `Bearer ` + this.$store.getters.getJwt}})
+            this.axios.get("/api/project/find-all-employees-by-project-id/" + this.selectedProject.id,{headers: {'Authorization': `Bearer ` + this.$store.getters.getJwt}})
                 .then(r => {
                     this.emploies = r.data;
                 })

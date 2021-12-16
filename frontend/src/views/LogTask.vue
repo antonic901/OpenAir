@@ -173,7 +173,7 @@ export default {
     methods: {
         getTasks() {
             this.e1 = 2;
-            this.axios.get("/api/task/find-all-not-logged-by/" + this.project.id, {headers: {'Authorization': `Bearer ` + this.$store.getters.getJwt}})
+            this.axios.get("/api/task/find-all-by-project-id/" + this.project.id, {headers: {'Authorization': `Bearer ` + this.$store.getters.getJwt}})
                 .then(r => {
                     this.tasks = r.data;
                 })
