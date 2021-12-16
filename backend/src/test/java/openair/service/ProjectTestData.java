@@ -83,7 +83,6 @@ public class ProjectTestData {
         Employee employee = new Employee();
 
         employee.setId(4L);
-        employee.setProjects(createProjectList());
 
         return employee;
     }

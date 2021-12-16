@@ -143,11 +143,11 @@ public class ProjectServiceTest {
 
         //when
         when(employeeRepository.findById(4L)).thenReturn(Optional.of(employee));
-        when(expenseReportRepository.findByProjectIdAndEmployeeId(anyLong(),eq(4L))).thenReturn(Optional.of(ProjectTestData.createReport()));
+        when(expenseReportRepository.findByProjectIdAndEmployeeId(1L,4L)).thenReturn(Optional.of(ProjectTestData.createReport()));
         when(projectRepository.findAllByEmployeeId(4L)).thenReturn(ProjectTestData.createProjectList());
 
         //then
         assertThat(projectService.findAllNotRefundedByEmployeeId(4L)).hasSize(1);
-        //assertThrows(NotFoundException.class, () -> projectService.findAllNotRefundedByEmployeeId(2L));
+        assertThrows(NotFoundException.class, () -> projectService.findAllNotRefundedByEmployeeId(2L));
     }
 }

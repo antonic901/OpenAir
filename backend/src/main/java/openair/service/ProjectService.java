@@ -127,7 +127,7 @@ public class ProjectService implements IProjectService {
 
         for(Project project : projectRepository.findAllByEmployeeId(id)) {
 
-            if( ! checkIsRefunded ( project.getId(), employeeOptional.get().getId() ) )
+            if(!checkIsRefunded(project.getId(), employeeOptional.get().getId()))
                 projects.add(project);
         }
         return projects;
