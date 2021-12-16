@@ -127,7 +127,7 @@
                     v-model="hours"
                     thumb-label="always"
                     ticks
-                    max="1000"
+                    max="16"
                     min="0"
                     style="margin:40px;"
                 ></v-slider>
@@ -173,7 +173,7 @@ export default {
     methods: {
         getTasks() {
             this.e1 = 2;
-            this.axios.get("/api/task/find-all-by-project-id/" + this.project.id, {headers: {'Authorization': `Bearer ` + this.$store.getters.getJwt}})
+            this.axios.get("/api/task/find-all-by-project-employee-id/" + this.project.id, {headers: {'Authorization': `Bearer ` + this.$store.getters.getJwt}})
                 .then(r => {
                     this.tasks = r.data;
                 })

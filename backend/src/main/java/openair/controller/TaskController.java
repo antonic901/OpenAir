@@ -8,12 +8,13 @@ import openair.model.Task;
 import openair.service.EmployeeService;
 import openair.service.ProjectService;
 import openair.service.TaskService;
-import org.apache.tomcat.util.http.parser.MediaType;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
+
+import java.security.Principal;
 import java.util.List;
 
 
@@ -55,7 +56,16 @@ public class TaskController {
         return new ResponseEntity<>(taskService.findAllByProjectId(projectId), HttpStatus.OK);
     }
 
-    @GetMapping("/find-all-by-employee-id/{projectId}")
+    @GetMapping("/find-all-by-project-employee-id/{projectId}")
+    @PreAuthorize("hasRole('EMPLOYEE')")
+    public ResponseEntity<List<Task>> findAllByProjectIdEmployeeId(@PathVariable Long projectId, Principal loggedEmployee) {
+
+        Employee employee = employeeService.findByUsername(loggedEmployee.getName());
+
+        return new ResponseEntity<>(taskService.findAllByProjectEmployeeId(projectId,employee.getId()), HttpStatus.OK);
+    }
+
+    @GetMapping("/find-all-by-employee-id/{employeeId}")
     @PreAuthorize("hasRole('ADMIN')")
     public ResponseEntity<List<Task>> findAllByEmployeeId(@PathVariable Long employeeId) {
 
