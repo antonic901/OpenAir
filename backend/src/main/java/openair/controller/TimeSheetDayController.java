@@ -1,8 +1,6 @@
 package openair.controller;
 
-import openair.dto.ProjectDTO;
 import openair.dto.TimeSheetDayDTO;
-import openair.exception.ResourceConflictException;
 import openair.model.*;
 import openair.service.EmployeeService;
 import openair.service.TaskService;
@@ -24,26 +22,27 @@ public class TimeSheetDayController {
     private TimeSheetDayService timeSheetDayService;
     private TaskService taskService;
 
+    private ModelMapper modelMapper;
+
     @Autowired
-    public TimeSheetDayController(EmployeeService employeeService, TimeSheetDayService timeSheetDayService, TaskService taskService){
+    public TimeSheetDayController(EmployeeService employeeService, TimeSheetDayService timeSheetDayService, TaskService taskService, ModelMapper modelMapper){
         this.employeeService = employeeService;
         this.timeSheetDayService = timeSheetDayService;
         this.taskService = taskService;
+        this.modelMapper = modelMapper;
     }
 
     @PostMapping("/add-by-employee")
     @PreAuthorize("hasRole('EMPLOYEE')")
     public ResponseEntity<TimeSheetDay> addDay(@RequestBody TimeSheetDayDTO timeSheetDayDTO, Principal loggedEmployee) {
-
-        //nadjem zaposlenog po username-u
-        Employee employee = employeeService.findByUsername(loggedEmployee.getName());
-
         TimeSheetDay timeSheetDay = new TimeSheetDay();
-        ModelMapper modelMapper = new ModelMapper();
         modelMapper.map(timeSheetDayDTO,timeSheetDay);
 
-        Task task = taskService.findById(timeSheetDay.getTask().getId());
+        Task task = taskService.findById(timeSheetDayDTO.getTaskId());
         timeSheetDay.setTask(task);
+
+        Employee employee = employeeService.findByUsername(loggedEmployee.getName());
+        timeSheetDay.setEmployee(employee);
 
         return new ResponseEntity<>(timeSheetDayService.addTimeSheetDay(timeSheetDay,employee), HttpStatus.CREATED);
     }
@@ -51,17 +50,10 @@ public class TimeSheetDayController {
     @PostMapping("/add-by-admin/{employeeId}")
     @PreAuthorize("hasRole('ADMIN')")
     public ResponseEntity<TimeSheetDay> addDay(@RequestBody TimeSheetDayDTO timeSheetDayDTO, @PathVariable Long employeeId) {
-
-        //nadjem zaposlenog po id-ju
         Employee employee = employeeService.findEmployeeById(employeeId);
-
         TimeSheetDay timeSheetDay = new TimeSheetDay();
-        ModelMapper modelMapper = new ModelMapper();
-        modelMapper.map(timeSheetDayDTO,timeSheetDay);
-
         Task task = taskService.findById(timeSheetDay.getTask().getId());
         timeSheetDay.setTask(task);
-
         return new ResponseEntity<>(timeSheetDayService.addTimeSheetDay(timeSheetDay,employee), HttpStatus.CREATED);
     }
 

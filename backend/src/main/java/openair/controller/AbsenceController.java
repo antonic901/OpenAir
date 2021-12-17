@@ -1,17 +1,11 @@
 package openair.controller;
 
 import openair.dto.RequestAbsenceDTO;
-import openair.exception.NotFoundException;
-import openair.exception.PeriodConflictException;
-import openair.model.Absence;
-import openair.model.Admin;
-import openair.model.Employee;
-import openair.model.Project;
+import openair.model.*;
 import openair.model.enums.Status;
 import openair.service.AbsenceService;
 import openair.service.AdminService;
 import openair.service.EmployeeService;
-import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
@@ -49,11 +43,12 @@ public class AbsenceController {
         Employee employee = employeeService.findByUsername(loggedEmployee.getName());
 
         Absence absence = new Absence();
-        ModelMapper mm = new ModelMapper();
-        mm.map(requestAbsenceDTO, absence);
+        absence.setPeriod(new Period(requestAbsenceDTO.getStartTime(), requestAbsenceDTO.getEndTime()));
+        absence.setStatus(Status.INPROCESS);
+        absence.setEmployee(employee);
+        absence.setAdmin(employee.getAdmin());
 
-        absenceService.add(absence, employee.getId());
-        return new ResponseEntity<>(absence, HttpStatus.CREATED);
+        return new ResponseEntity<>(absenceService.add(absence, employee.getId()), HttpStatus.CREATED);
     }
 
     @PostMapping("/approve/{id}/{status}")

@@ -5,11 +5,9 @@ import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
-import openair.utils.UnixToLocalDateTimeConverter;
+import openair.utils.UnixToLocalDateConverter;
 
-import javax.persistence.Column;
 import java.time.LocalDate;
-import java.time.LocalDateTime;
 
 @NoArgsConstructor
 @AllArgsConstructor
@@ -17,8 +15,8 @@ import java.time.LocalDateTime;
 @Setter
 public class TimeSheetDayDTO {
 
-    @JsonDeserialize(using = UnixToLocalDateTimeConverter.class)
-    private LocalDateTime date;
+    @JsonDeserialize(using = UnixToLocalDateConverter.class)
+    private LocalDate date;
 
     private double workTime;
 

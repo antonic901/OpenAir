@@ -140,7 +140,7 @@ export default {
             this.$store.dispatch('updateUserId', null);
         },
         generatePdf() {
-            this.axios.get("/api/admin/export-pdf", {headers: {'Authorization': `Bearer ` + this.$store.getters.getJwt}})
+            this.axios.get("/api/pdf/export-pdf", {headers: {'Authorization': `Bearer ` + this.$store.getters.getJwt}})
                 .then(r => {
                     var imageUrl = "https://nistagramstorage.s3.eu-central-1.amazonaws.com/" + r.data;
                     this.pdfLink = imageUrl;

@@ -1,6 +1,5 @@
 package openair.repository;
 
-
 import openair.model.User;
 import org.springframework.data.jpa.repository.JpaRepository;
 

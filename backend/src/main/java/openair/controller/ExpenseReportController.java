@@ -1,7 +1,6 @@
 package openair.controller;
 
 import openair.dto.ExspenseReportDTO;
-import openair.exception.NotFoundException;
 import openair.model.Admin;
 import openair.model.Employee;
 import openair.model.ExpenseReport;
@@ -20,9 +19,7 @@ import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 
 import java.security.Principal;
-import java.time.LocalDate;
 import java.util.List;
-import java.util.Optional;
 
 @RestController
 @RequestMapping(value = "/api/expensereport", produces = MediaType.APPLICATION_JSON_VALUE)
@@ -33,46 +30,40 @@ public class ExpenseReportController {
     private AdminService adminService;
     private ProjectService projectService;
 
+    private ModelMapper modelMapper;
+
     @Autowired
     public ExpenseReportController(ExpenseReportService expenseReportService, EmployeeService employeeService,
-                                    AdminService adminService, ProjectService projectService) {
+                                    AdminService adminService, ProjectService projectService, ModelMapper modelMapper) {
         this.expenseReportService = expenseReportService;
         this.employeeService = employeeService;
         this.adminService = adminService;
         this.projectService = projectService;
+        this.modelMapper = modelMapper;
     }
 
     @PostMapping("/add")
     @PreAuthorize("hasRole('EMPLOYEE')")
     public ResponseEntity<ExpenseReport> addReport(@RequestBody ExspenseReportDTO expenseReportDTO, Principal loggedEmployee) {
-
         Employee employee = employeeService.findByUsername(loggedEmployee.getName());
-
         Project project = projectService.findProjectById(expenseReportDTO.getProjectId());
-
         ExpenseReport expenseReport = new ExpenseReport();
-        ModelMapper mm = new ModelMapper();
-        mm.map(expenseReportDTO,expenseReport);
-
+        modelMapper.map(expenseReportDTO,expenseReport);
         expenseReport.setEmployee(employee);
         expenseReport.setProject(project);
-
         return new ResponseEntity<>(expenseReportService.addReport(expenseReport), HttpStatus.CREATED);
     }
 
     @GetMapping("/get-all-for-admin")
     @PreAuthorize("hasRole('ADMIN')")
     public ResponseEntity<List<ExpenseReport>> getAllByAdminId(Principal loggedAdmin) {
-
         Admin admin = adminService.findByUsername(loggedAdmin.getName());
-
         return new ResponseEntity<>(expenseReportService.getAllByAdminId(admin.getId()), HttpStatus.OK);
     }
 
     @PostMapping("/review/{reportId}/{status}")
     @PreAuthorize("hasRole('ADMIN')")
     public ResponseEntity<ExpenseReport> reviewReport(@PathVariable Long reportId, @PathVariable Status status) {
-
         return new ResponseEntity<>(expenseReportService.reviewReport(reportId, status), HttpStatus.OK);
     }
 }

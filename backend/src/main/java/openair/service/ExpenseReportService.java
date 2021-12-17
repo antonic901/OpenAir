@@ -1,11 +1,8 @@
 package openair.service;
 
-import openair.dto.ExspenseReportDTO;
 import openair.exception.NotFoundException;
 import openair.model.Employee;
 import openair.model.ExpenseReport;
-import openair.model.Money;
-import openair.model.Project;
 import openair.model.enums.Currency;
 import openair.model.enums.Status;
 import openair.repository.EmployeeRepository;

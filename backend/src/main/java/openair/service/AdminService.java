@@ -1,20 +1,13 @@
 package openair.service;
 
-import openair.dto.RegisterEmployeeDTO;
 import openair.exception.NotFoundException;
 import openair.model.Admin;
 import openair.model.Employee;
-import openair.model.Role;
-import openair.model.enums.UserType;
 import openair.repository.AdminRepository;
 import openair.repository.EmployeeRepository;
 import openair.repository.RoleRepository;
 import openair.service.interfaces.IAdminService;
-import openair.utils.PdfExporter;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.http.HttpStatus;
-import org.springframework.http.ResponseEntity;
-import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 

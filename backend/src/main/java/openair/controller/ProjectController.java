@@ -26,42 +26,37 @@ public class ProjectController {
     private ProjectService projectService;
     private AdminService adminService;
 
+    private ModelMapper modelMapper;
+
     @Autowired
-    public ProjectController(ProjectService projectService, AdminService adminService) {
+    public ProjectController(ProjectService projectService, AdminService adminService, ModelMapper modelMapper) {
         this.projectService = projectService;
         this.adminService = adminService;
+        this.modelMapper = modelMapper;
     }
 
     @PostMapping("/add")
     @PreAuthorize("hasRole('ADMIN')")
     public ResponseEntity<Project> addProject(@RequestBody ProjectDTO projectDTO, Principal loggedAdmin) {
-
-        //nadjem admina po username-u
         Admin admin = adminService.findByUsername(loggedAdmin.getName());
-
         Project project = new Project();
-        ModelMapper mm = new ModelMapper();
-        mm.map(projectDTO, project);
-
+        modelMapper.map(projectDTO, project);
         return new ResponseEntity<>(projectService.addProject(project,admin), HttpStatus.CREATED);
     }
 
     @GetMapping("/find-by-name")
     public ResponseEntity<Project> findProjectByName(@RequestBody String name){
-
         return new ResponseEntity<>(projectService.findProjectByName(name), HttpStatus.OK);
     }
 
     @GetMapping("/find-by-id")
     public ResponseEntity<Project> findProjectById(@RequestBody Long projectId){
-
         return new ResponseEntity<>(projectService.findProjectById(projectId), HttpStatus.OK);
     }
 
     @PostMapping("/add-employee")
     @PreAuthorize("hasRole('ADMIN')")
     public ResponseEntity<Project> addEmployee(@RequestBody AddEmployeeDTO addEmployeeDTO) {
-
         return new ResponseEntity<>(projectService.addEmployeeToProject(addEmployeeDTO.getEmployeeId(),addEmployeeDTO.getProjectId()), HttpStatus.CREATED);
     }
 
@@ -69,21 +64,18 @@ public class ProjectController {
     @GetMapping("/find-all-by-user-id/{userId}")
     @PreAuthorize("hasRole('ADMIN') || hasRole('EMPLOYEE')")
     public ResponseEntity<List<Project>> findAllByUserId(@PathVariable Long userId) {
-
         return new ResponseEntity<>(projectService.findAllByUserId(userId), HttpStatus.OK);
     }
 
     @GetMapping("/find-all-not-refunded/{userId}")
     @PreAuthorize("hasRole('EMPLOYEE')")
     public ResponseEntity<List<Project>> findAllNotRefunded(@PathVariable Long userId) {
-
         return new ResponseEntity<>(projectService.findAllNotRefundedByEmployeeId(userId), HttpStatus.OK);
     }
 
     @GetMapping("/find-all-employees-by-project-id/{projectId}")
     @PreAuthorize("hasRole('ADMIN')")
     public ResponseEntity<List<Employee>> findAllByProjectId(@PathVariable Long projectId) {
-
         return new ResponseEntity<>(projectService.findAllEmployeesByProjectId(projectId), HttpStatus.OK);
     }
 

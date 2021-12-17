@@ -1,8 +1,6 @@
 package openair.service.interfaces;
 
 import openair.model.ExpenseReport;
-import openair.model.Employee;
-import openair.model.ExpenseReport;
 import openair.model.enums.Status;
 
 import java.util.List;
