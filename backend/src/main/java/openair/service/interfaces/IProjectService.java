@@ -12,7 +12,7 @@ public interface IProjectService {
 
     Project findProjectByName(String name);
 
-    Project addProject(ProjectDTO projectDTO, Admin admin);
+    Project addProject(Project project, Admin admin);
 
     Project addEmployeeToProject(Long employeeId, Long projectId);
 

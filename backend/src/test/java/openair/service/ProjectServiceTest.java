@@ -59,9 +59,9 @@ public class ProjectServiceTest {
     @Test
     public void testAddProject(){
         //given
-        ProjectDTO projectDTO = ProjectTestData.createProjectDTO();
-        projectDTO.setName("Othername");
-        ProjectDTO projectDTO1 = ProjectTestData.createProjectDTO();
+        Project project = ProjectTestData.createProject();
+        project.setName("Othername");
+        Project project1 = ProjectTestData.createProject();
         Admin admin = new Admin();
 
         //when
@@ -69,8 +69,8 @@ public class ProjectServiceTest {
         when(projectRepository.save(any(Project.class))).thenReturn(new Project());
 
         //then
-        assertThat(projectService.addProject(projectDTO,admin)).isInstanceOf(Project.class);
-        assertThrows(ResourceConflictException.class, () -> projectService.addProject(projectDTO1,admin));
+        assertThat(projectService.addProject(project,admin)).isInstanceOf(Project.class);
+        assertThrows(ResourceConflictException.class, () -> projectService.addProject(project1,admin));
     }
 
     @Test
