@@ -41,14 +41,14 @@ public class GlobalExceptionHandler {
         return new ResponseEntity<>(errors, headers, status);
     }
 
-//    @ExceptionHandler({Exception.class})
-//    public final ResponseEntity<List<String>> handleException(Exception ex, WebRequest request){
-//
-//        HttpHeaders headers = new HttpHeaders();
-//        HttpStatus status = HttpStatus.INTERNAL_SERVER_ERROR;
-//        List<String> errors = Collections.singletonList(ex.getMessage());
-//        request.setAttribute(WebUtils.ERROR_EXCEPTION_ATTRIBUTE, ex, WebRequest.SCOPE_REQUEST);
-//
-//        return new ResponseEntity<>(errors, headers, status);
-//    }
+    @ExceptionHandler({Exception.class})
+    public final ResponseEntity<List<String>> handleException(Exception ex, WebRequest request){
+
+        HttpHeaders headers = new HttpHeaders();
+        HttpStatus status = HttpStatus.INTERNAL_SERVER_ERROR;
+        List<String> errors = Collections.singletonList(ex.getMessage());
+        request.setAttribute(WebUtils.ERROR_EXCEPTION_ATTRIBUTE, ex, WebRequest.SCOPE_REQUEST);
+
+        return new ResponseEntity<>(errors, headers, status);
+    }
 }

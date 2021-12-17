@@ -46,18 +46,12 @@ public class ProjectService implements IProjectService {
     }
 
     @Override
-    public Project addProject(ProjectDTO projectDTO, Admin admin) {
+    public Project addProject(Project project, Admin admin) {
 
-        Optional<Project> existProject = projectRepository.findByName(projectDTO.getName());
+        Optional<Project> existProject = projectRepository.findByName(project.getName());
 
         if (existProject.isPresent())
-            throw new ResourceConflictException("Project with name " + projectDTO.getName() + " already exists.");
-
-        Project project = new Project();
-
-        project.setAdmin(admin);
-        project.setName(projectDTO.getName());
-        project.setProjectType(projectDTO.getProjectType());
+            throw new ResourceConflictException("Project with name " + project.getName() + " already exists.");
 
         return projectRepository.save(project);
     }
