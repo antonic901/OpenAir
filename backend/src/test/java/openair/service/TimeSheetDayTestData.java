@@ -26,12 +26,16 @@ public class TimeSheetDayTestData {
         return timeSheetDayList;
     }
 
-    public static TimeSheetDayDTO createTimeSheetDayDTO() {
-        TimeSheetDayDTO timeSheetDayDTO = new TimeSheetDayDTO();
-        timeSheetDayDTO.setWorkTime(15);
-        timeSheetDayDTO.setTaskId(1L);
-        timeSheetDayDTO.setDate(LocalDateTime.now());
+    public static TimeSheetDay createTimeSheetDay() {
+        TimeSheetDay timeSheetDay = new TimeSheetDay();
+        timeSheetDay.setWorkTime(15);
+        Task task = new Task();
+        task.setId(1L);
+        timeSheetDay.setTask(task);
+        timeSheetDay.setDate(LocalDate.now());
 
-        return timeSheetDayDTO;
+        return timeSheetDay;
     }
+
+
 }

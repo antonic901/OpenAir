@@ -6,6 +6,6 @@ import openair.model.TimeSheetDay;
 import java.util.List;
 
 public interface ITimeSheetDay {
-    TimeSheetDay addTimeSheetDay(TimeSheetDayDTO timeSheetDayDTO, Employee employee);
+    TimeSheetDay addTimeSheetDay(TimeSheetDay timeSheetDay, Employee employee);
     TimeSheetDay getByTaskIdEmployeeId(Long taskId, Long employeeId);
 }

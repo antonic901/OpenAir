@@ -74,21 +74,11 @@ public class AbsenceServiceTest {
         when(absenceRepository.findAllByEmployeeId(2L)).thenReturn(absences);
         when(absenceRepository.save(any(Absence.class))).thenReturn(new Absence());
 
-        RequestAbsenceDTO dto1 = new RequestAbsenceDTO(
-                LocalDateTime.of(2021, 12,25,0,0,0),
-                LocalDateTime.of(2021, 12,30,0,0,0)
-        );
+        List<Absence> absenceList = AbsenceTestData.createAbsences();
 
-        assertThat(absenceService.add(dto1, 2L)).isExactlyInstanceOf(Absence.class);
-        assertThrows(NotFoundException.class, () -> absenceService.add(dto1, 3L), "User not found");
+        assertThrows(NotFoundException.class, () -> absenceService.add(absenceList.get(1), 3L), "User not found");
 
-        RequestAbsenceDTO dto2 = new RequestAbsenceDTO(
-                LocalDateTime.of(2021, 12,7,0,0,0),
-                LocalDateTime.of(2021, 12,13,0,0,0)
-        );
-
-        assertThrows(PeriodConflictException.class, () -> absenceService.add(dto2, 2L), "Period is in conflict");
-
+        assertThrows(PeriodConflictException.class, () -> absenceService.add(absenceList.get(2), 2L), "Period is in conflict");
     }
 
     @Test

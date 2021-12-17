@@ -39,11 +39,12 @@ public class TimeSheetDayServiceTest {
     public void testAddTimeSheetDay() {
         //  given
         Employee employee = AbsenceTestData.createEmployee();
-        TimeSheetDayDTO timeSheetDayDTO = TimeSheetDayTestData.createTimeSheetDayDTO();
+        TimeSheetDay timeSheetDay = TimeSheetDayTestData.createTimeSheetDay();
+
         //  when
         when(timeSheetDayRepository.save(any(TimeSheetDay.class))).thenReturn(new TimeSheetDay());
 
         //  then
-        assertThat(timeSheetDayService.addTimeSheetDay(timeSheetDayDTO, employee)).isNotNull();
+        assertThat(timeSheetDayService.addTimeSheetDay(timeSheetDay, employee)).isNotNull();
     }
 }

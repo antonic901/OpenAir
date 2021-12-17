@@ -24,6 +24,7 @@ import openair.model.Project;
 import com.lowagie.text.*;
 import com.lowagie.text.pdf.*;
 import openair.model.TimeSheetDay;
+import openair.repository.TimeSheetDayRepository;
 import openair.service.StorageService;
 import openair.service.TimeSheetDayService;
 import javax.servlet.http.HttpServletResponse;
@@ -34,8 +35,7 @@ import javax.servlet.http.HttpServletResponse;
 @Getter
 @Setter
 public class PdfExporter {
-    private List<Employee> employeeList;
-    private TimeSheetDayService timeSheetDayService;
+    private TimeSheetDayRepository timeSheetDayRepository;
     private StorageService storageService;
 
     private void writeTableHeader(PdfPTable table) {
@@ -58,29 +58,16 @@ public class PdfExporter {
         table.addCell(cell);
     }
 
-//    table.addCell(employee.getName());
-//    table.addCell(project.getName());
-//    //  Ovde treba ukupno uneti ukupno sati
-//    table.addCell(project.getProjectType().toString());
 
     private void writeTableData(PdfPTable table) {
-       for(Employee employee : employeeList) {
-           double workTime = 0;
-           List<Project> projectList = employee.getProjects();
-           for(Project project : projectList) {
-               List<Task> taskList = project.getTasks();
-               for(Task task : taskList) {
-                   TimeSheetDay timeSheetDay = timeSheetDayService.getByTaskIdEmployeeId(task.getId(), employee.getId()); // ovo se sigurno menja
-                   workTime += timeSheetDay.getWorkTime();
-               }
-               table.addCell(employee.getName());
-               table.addCell(project.getName());
-               table.addCell(String.valueOf(workTime));
-               String strProject = project.getProjectType().toString();
-               table.addCell(strProject);
-           }
+        List<PdfTableDataOutput> pdfTableDataOutputList = timeSheetDayRepository.getDataForPdf();
 
-       }
+        for(PdfTableDataOutput pdfTableDataOutput : pdfTableDataOutputList) {
+            table.addCell(pdfTableDataOutput.getEmployee());
+            table.addCell(pdfTableDataOutput.getProject());
+            table.addCell(String.valueOf(pdfTableDataOutput.getWork_time()));
+            table.addCell(pdfTableDataOutput.getProject_type());
+        }
     }
 
     public String export(String username) throws DocumentException, IOException {

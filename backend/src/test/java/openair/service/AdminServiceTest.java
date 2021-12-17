@@ -15,6 +15,7 @@ import org.mockito.Spy;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.security.crypto.password.PasswordEncoder;
 
+import java.util.List;
 import java.util.Optional;
 
 import static org.assertj.core.api.Assertions.assertThat;
@@ -52,10 +53,9 @@ public class AdminServiceTest {
         when(adminRepository.findById(1L)).thenReturn(Optional.of(admin));
         when(employeeRepository.save(any(Employee.class))).thenReturn(AdminTestData.createEmployee());
 
-        assertThat(adminService.registerEmployee(AdminTestData.createRegisterEmployeeDTO1())).isExactlyInstanceOf(Employee.class);
-        assertThrows(NotFoundException.class, () -> adminService.registerEmployee(AdminTestData.createRegisterEmployeeDTO2()), "Admin not found");
+        List<Employee> employeeList = AdminTestData.createEmployees();
 
-        assertThrows(NotFoundException.class, () -> adminService.registerEmployee(AdminTestData.createRegisterEmployeeDTO3()), "Role not found");
+        assertThat(adminService.registerEmployee(employeeList.get(1))).isNotNull();
     }
 
     @Test

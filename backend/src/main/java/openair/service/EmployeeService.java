@@ -1,22 +1,23 @@
 package openair.service;
 
+import openair.model.Absence;
 import openair.model.Mail;
 import openair.exception.NotFoundException;
 import openair.model.Employee;
 import openair.model.TimeSheetDay;
+import openair.model.enums.Status;
+import openair.repository.AbsenceRepository;
 import openair.repository.EmployeeRepository;
 import openair.repository.TimeSheetDayRepository;
 import openair.service.interfaces.IEmployeeService;
 
+import openair.utils.AbsenceInterface;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.stereotype.Service;
 
-import java.time.DayOfWeek;
-import java.time.LocalDate;
+import java.time.*;
 import java.util.ArrayList;
-import java.time.Month;
-import java.time.YearMonth;
 import java.util.List;
 import java.util.Optional;
 import java.util.stream.IntStream;
@@ -27,13 +28,15 @@ public class EmployeeService implements IEmployeeService {
     private EmployeeRepository employeeRepository;
     private MailService mailService;
     private TimeSheetDayRepository timeSheetDayRepository;
+    private AbsenceRepository absenceRepository;
 
     @Autowired
     public EmployeeService(EmployeeRepository employeeRepository, MailService mailService,
-                           TimeSheetDayRepository timeSheetDayRepository) {
+                           TimeSheetDayRepository timeSheetDayRepository, AbsenceRepository absenceRepository) {
         this.employeeRepository = employeeRepository;
         this.mailService = mailService;
         this.timeSheetDayRepository = timeSheetDayRepository;
+        this.absenceRepository = absenceRepository;
     }
 
     @Override
@@ -51,7 +54,7 @@ public class EmployeeService implements IEmployeeService {
 
         Optional<Employee> employeeOptional = employeeRepository.findByUsername(name);
 
-        if(!employeeOptional.isPresent())
+        if(employeeOptional.isEmpty())
             throw new NotFoundException("Employee with username " + name + " does not exist.");
 
         return employeeOptional.get();
@@ -61,36 +64,30 @@ public class EmployeeService implements IEmployeeService {
     public Employee findEmployeeById(Long employeeID) {
         Optional<Employee> employeeOptional = employeeRepository.findById(employeeID);
 
-        if(!employeeOptional.isPresent())
-            throw new NotFoundException("Employee with id " + employeeID.toString() + " does not exist.");
+        if(employeeOptional.isEmpty())
+            throw new NotFoundException("Employee with id " + employeeID + " does not exist.");
 
         return employeeOptional.get();
     }
 
-
-    //Svakog prvog u mesecu se poveca broj slobodnih dana za 2, +1 na svakih 5 godina zaposlenja
     //At 00:00:00am, on the 1st day, every month
     @Scheduled(cron = "0 0 0 1 * ?")
     public List<Employee> increaseEmployeeFreeDays() {
 
         List<Employee> employeeList = employeeRepository.findAll();
 
-        for (int i = 0; i < employeeList.size(); i++) {
-            employeeList.get(i).setFreeDays((int) (employeeList.get(i).getFreeDays() +
-                    increaseByHowMuch(employeeList.get(i).getDateOfHiring())));
+        for (Employee employee : employeeList) {
+            employee.setFreeDays((int) (employee.getFreeDays() +
+                    increaseByHowMuch(employee.getDateOfHiring())));
         }
 
         return employeeRepository.saveAll(employeeList);
     }
 
     private long increaseByHowMuch(LocalDate dateOfHiring){
-        long numOfYearsInCompany = 0;
         long increaseBy = 2;
+        long numOfYearsInCompany = java.time.temporal.ChronoUnit.YEARS.between(dateOfHiring, LocalDate.now());
 
-        //koliko je godina u firmi
-        numOfYearsInCompany = java.time.temporal.ChronoUnit.YEARS.between(dateOfHiring, LocalDate.now());
-
-        //ako je tu 5,10,15... godina vec dobija dodatne dane na svakih 5 godina jedan vise
         if (numOfYearsInCompany % 5 == 0) {
             increaseBy += numOfYearsInCompany / 5;
         }
@@ -102,29 +99,60 @@ public class EmployeeService implements IEmployeeService {
     @Scheduled(cron = "0 0 12 LW * ?")
     public void sendReminder() {
 
-        //pronadjem sve radne dane u mesecu
         List<LocalDate> workDayList = findWorkDaysOfMonth();
-
-        //lista svih radnika
         List<Employee> employeeList = employeeRepository.findAll();
 
-        for (int i = 0; i < employeeList.size(); i++) {
+        for (Employee employee : employeeList) {
 
-            //za svakog radnika pronadjem listu timeSheetDays
-            List<TimeSheetDay> timeSheetDays = timeSheetDayRepository.findAllByEmployeeId(employeeList.get(i).getId());
+            StringBuilder emailContent = new StringBuilder("Dear, you forgot to fill in your working hours for: ");
+            int detector = 0;
 
-            //povadim datume za koje je kreirao timeSheetDays
-            List<LocalDate> filledDates = findFilledDates(timeSheetDays);
+            List<LocalDate> filledDates = timeSheetDayRepository.findAllOfCurrentMonth(employee.getId(), LocalDateTime.now().getMonth().getValue(),LocalDateTime.now().getYear());;
+            List<LocalDate> absentDates = findAbsentDates(employee.getId(), Status.APPROVED);
 
-            //proverim da li za svaki radni dan u mesecu ima kreiran timeSheetDay
-            for(int j = 0; j < workDayList.size(); j++){
-                if(!filledDates.contains(workDayList.get(j))){
-                    //ako nema salje se mejl
-                    sendMail(employeeList.get(i).getEmail(),workDayList.get(j));
+            for (LocalDate workDate : workDayList) {
+                //date filled or employee on vacation
+                if (!filledDates.contains(workDate) && !absentDates.contains(workDate)) {
+                    detector = 1;
+                    emailContent.append(workDate.toString()).append(" ");
                 }
-
             }
+
+            //do not send mail if everything is filled
+            if (detector != 0) sendMail(employee.getEmail(), emailContent + ". Please do it before end of the month.");
+
         }
+    }
+
+    private List<LocalDate> findAbsentDates(Long employeeId,Status status){
+        List<LocalDate> absentDays = new ArrayList<>();
+
+        //vacation starts in current month
+        List<AbsenceInterface> absences = absenceRepository.findAllOfCurrentMonth(employeeId, LocalDateTime.now().getMonth().getValue(),LocalDateTime.now().getYear());
+
+        //extract dates to list
+        for (AbsenceInterface absence : absences) {
+            absentDays.addAll(findAllDatesBetweenTwoDates(absence.getStartDate(),
+                    absence.getEndDate()));
+
+        }
+
+        //remove dates from next month, when vacation ends in next month
+        absentDays.removeIf(date -> date.getMonth() != LocalDate.now().getMonth());
+
+        return absentDays;
+    }
+
+    private List<LocalDate> findAllDatesBetweenTwoDates(LocalDate start, LocalDate end){
+
+        List<LocalDate> totalDates = new ArrayList<>();
+
+        while (!start.isAfter(end)) {
+            totalDates.add(start);
+            start = start.plusDays(1);
+        }
+
+        return totalDates;
     }
 
     private List<LocalDate> findWorkDaysOfMonth(){
@@ -142,10 +170,11 @@ public class EmployeeService implements IEmployeeService {
                         date.getDayOfWeek() == DayOfWeek.WEDNESDAY ||
                         date.getDayOfWeek() == DayOfWeek.THURSDAY ||
                         date.getDayOfWeek() == DayOfWeek.FRIDAY)
-                .forEach(date -> workDayList.add(date));
+                .forEach(workDayList::add);
 
         return workDayList;
     }
+
 
     private List<LocalDate> findFilledDates(List<TimeSheetDay> timeSheetDays){
 
@@ -159,15 +188,12 @@ public class EmployeeService implements IEmployeeService {
         return filledDates;
     }
 
-    private void sendMail(String emailAddress, LocalDate date){
-
+    private void sendMail(String emailAddress, String emailContent){
         Mail mail = new Mail();
-        
-        mail.setMailFrom("pcserviskac@gmail.com");
+
         mail.setContentType("REMINDER");
         mail.setMailSubject("Monthly reminder to log your working hours");
-        mail.setMailContent("Dear, you forgot to fill in your working hours for " + date.toString() +
-                ". Please do it before end of the month.");
+        mail.setMailContent(emailContent);
         mail.setMailTo(emailAddress);
 
         mailService.sendMail(mail);

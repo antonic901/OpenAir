@@ -4,24 +4,26 @@ import com.lowagie.text.DocumentException;
 import openair.dto.RegisterEmployeeDTO;
 import openair.exception.NotFoundException;
 import openair.exception.ResourceConflictException;
-import openair.model.Admin;
-import openair.model.Employee;
-import openair.model.Project;
-import openair.model.User;
+import openair.model.*;
+import openair.repository.TimeSheetDayRepository;
 import openair.service.*;
 import openair.utils.PdfExporter;
+import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
+import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.security.access.prepost.PreAuthorize;
+import org.springframework.ui.ModelMap;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.util.UriComponentsBuilder;
 
 import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
 import java.security.Principal;
+import java.time.LocalDate;
 import java.util.List;
 
 @RestController
@@ -30,17 +32,17 @@ public class AdminController {
 
     private AdminService adminService;
     private UserService userService;
-    private EmployeeService employeeService;
-    private TimeSheetDayService timeSheetDayService;
+    private TimeSheetDayRepository timeSheetDayRepository;
     private StorageService storageService;
+    private RoleService roleService;
 
     @Autowired
-    public AdminController(AdminService adminService, UserService userService, EmployeeService employeeService, TimeSheetDayService timeSheetDayService, StorageService storageService) {
+    public AdminController(AdminService adminService, UserService userService,TimeSheetDayRepository timeSheetDayRepository, StorageService storageService, RoleService roleService) {
         this.adminService = adminService;
         this.userService = userService;
-        this.employeeService = employeeService;
-        this.timeSheetDayService = timeSheetDayService;
+        this.timeSheetDayRepository = timeSheetDayRepository;
         this.storageService = storageService;
+        this.roleService = roleService;
     }
 
     @PostMapping("/register")
@@ -53,10 +55,27 @@ public class AdminController {
             throw new ResourceConflictException(existUser.getId(), "Username already exists");
         }
 
+        /*
+        Project project = new Project();
+        ModelMapper mm = new ModelMapper();
+        mm.map(projectDTO, project);
+        * */
+
+        Employee employee = new Employee();
+        ModelMapper mm = new ModelMapper();
+        mm.map(registerEmployeeDTO, employee);
         Admin admin = adminService.findByUsername(loggedAdmin.getName());
+        employee.setAdmin(admin);
+
+
+        Role role = roleService.findByName(registerEmployeeDTO.getUserType());
+        if(role == null)
+            throw new NotFoundException("Role with user type: " + registerEmployeeDTO.getUserType() + " not found");
+
+        employee.getRoles().add(role);
         registerEmployeeDTO.setAdminId(admin.getId());
 
-        Employee employee = this.adminService.registerEmployee(registerEmployeeDTO);
+        this.adminService.registerEmployee(employee);
         HttpHeaders headers = new HttpHeaders();
         headers.setLocation(ucBuilder.path("/api/employee/{userId}").buildAndExpand(employee.getId()).toUri());
         return new ResponseEntity<>(employee, HttpStatus.CREATED);
@@ -74,13 +93,10 @@ public class AdminController {
     @GetMapping("/export-pdf")
     @PreAuthorize("hasRole('ADMIN')")
     public ResponseEntity<String> exportPDF(Principal loggedAdmin) throws DocumentException, IOException {
-        List<Employee> employeeList = employeeService.findAll();
 
-        PdfExporter exporter = new PdfExporter(employeeList, timeSheetDayService, storageService);
+        PdfExporter exporter = new PdfExporter(timeSheetDayRepository, storageService);
         String fileName = exporter.export(loggedAdmin.getName());
 
         return new ResponseEntity<>(fileName, HttpStatus.OK);
     }
-
-
 }

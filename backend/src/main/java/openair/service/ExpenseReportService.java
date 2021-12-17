@@ -42,42 +42,16 @@ public class ExpenseReportService implements IExpenseReportService {
     @Override
     public List<ExpenseReport> getAllByAdminId(Long id) {
 
-        List<ExpenseReport>  expenseReports = new ArrayList<>();
+        return expenseReportRepository.findAllByAdminId(id);
 
-        for(ExpenseReport expenseReport : expenseReportRepository.findAll()) {
-
-            if(expenseReport.getEmployee().getAdmin().getId().equals(id)) {
-
-                expenseReports.add(expenseReport);
-            }
-        }
-        return expenseReports;
     }
 
     @Override
-    public ExpenseReport addReport(ExspenseReportDTO expenseReportDTO, Employee employee) {
+    public ExpenseReport addReport(ExpenseReport expenseReport) {
 
-        Optional<Project> projectOptional = projectRepository.findById(expenseReportDTO.getProjectId());
-
-        if(!projectOptional.isPresent())
-            throw new NotFoundException("Project with id " + expenseReportDTO.getProjectId().toString() + " does not exist.");
-
-        ExpenseReport expenseReport = new ExpenseReport();
-        Money money = new Money();
-
-        money.setCurrency(expenseReportDTO.getRefund().getCurrency());
-        money.setDate(LocalDate.now());
-        money.setQuantity(expenseReportDTO.getRefund().getQuantity());
-
-        expenseReport.setDescription(expenseReportDTO.getDescription());
-        expenseReport.setEmployee(employee);
-        expenseReport.setRefund(money);
-        expenseReport.setName(expenseReportDTO.getName());
         expenseReport.setDateOfCreation(LocalDate.now());
-        expenseReport.setProject(projectOptional.get());
         expenseReport.setStatus(Status.INPROCESS);
-        expenseReport.setTrackingNumber(expenseReportDTO.getTrackingNumber());
-        expenseReport.setDocument(expenseReportDTO.getDocument());
+        expenseReport.getRefund().setDate(LocalDate.now());
 
         return expenseReportRepository.save(expenseReport);
     }

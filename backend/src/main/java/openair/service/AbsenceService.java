@@ -55,7 +55,7 @@ public class AbsenceService implements IAbsenceService {
     }
 
     @Override
-    public Absence add(RequestAbsenceDTO requestAbsenceDTO, Long id) {
+    public Absence add(Absence absence, Long id) {
 
         Optional<Employee> employeeOptional = employeeRepository.findById(id);
         Employee employee;
@@ -66,16 +66,15 @@ public class AbsenceService implements IAbsenceService {
             throw new NotFoundException(id, "User with ID: " + id + " is not found.");
         }
 
-        if(requestAbsenceDTO.getStartTime().isAfter(requestAbsenceDTO.getEndTime())) {
+        if(absence.getPeriod().getStartTime().isAfter(absence.getPeriod().getEndTime())) {
             throw new PeriodConflictException(id, "User with ID: " + id + " have selected wrong period (start after end))");
         }
 
-        else if(checkIsAbsenceConflicting(employee, requestAbsenceDTO.getStartTime(), requestAbsenceDTO.getEndTime())) {
+        else if(checkIsAbsenceConflicting(employee, absence.getPeriod().getStartTime(), absence.getPeriod().getEndTime())) {
             throw new PeriodConflictException(id, "User with ID: " + id + " have requested absence which is in conflict with other absence");
         }
 
-        Period period = new Period(requestAbsenceDTO.getStartTime(),requestAbsenceDTO.getEndTime());
-        Absence absence = new Absence();
+        Period period = new Period(absence.getPeriod().getStartTime(),absence.getPeriod().getEndTime());
         absence.setPeriod(period);
         absence.setEmployee(employee);
         absence.setAdmin(employee.getAdmin());
@@ -85,6 +84,7 @@ public class AbsenceService implements IAbsenceService {
 
     boolean checkIsAbsenceConflicting(Employee employee, LocalDateTime startTime, LocalDateTime endTime) {
         List<Absence> absences = absenceRepository.findAllByEmployeeId(employee.getId());
+
         for(Absence absence : absences) {
             if(absence.getPeriod().getStartTime().isEqual(startTime) && absence.getPeriod().getEndTime().isEqual(endTime)) {
                 return  true;
@@ -110,10 +110,10 @@ public class AbsenceService implements IAbsenceService {
         if(startTime.isBefore(absence.getPeriod().getStartTime()) && endTime.isAfter(absence.getPeriod().getStartTime())) {
             return  true;
         }
-        else if(absence.getPeriod().getStartTime().isBefore(startTime) && absence.getPeriod().getEndTime().isAfter(endTime)) {
+        if(absence.getPeriod().getStartTime().isBefore(startTime) && absence.getPeriod().getEndTime().isAfter(endTime)) {
             return true;
         }
-        else return false;
+        return false;
     }
 
     @Override

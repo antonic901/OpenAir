@@ -8,6 +8,7 @@ import openair.model.Project;
 import openair.service.AdminService;
 import openair.service.ProjectService;
 
+import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
@@ -38,7 +39,11 @@ public class ProjectController {
         //nadjem admina po username-u
         Admin admin = adminService.findByUsername(loggedAdmin.getName());
 
-        return new ResponseEntity<>(projectService.addProject(projectDTO,admin), HttpStatus.CREATED);
+        Project project = new Project();
+        ModelMapper mm = new ModelMapper();
+        mm.map(projectDTO, project);
+
+        return new ResponseEntity<>(projectService.addProject(project,admin), HttpStatus.CREATED);
     }
 
     @GetMapping("/find-by-name")

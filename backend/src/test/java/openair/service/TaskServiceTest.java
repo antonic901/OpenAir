@@ -45,14 +45,12 @@ public class TaskServiceTest {
 
         //  when
         when(taskRepository.findById(1L)).thenReturn(Optional.of(task));
-        when(taskRepository.findById(2L)).thenReturn(Optional.empty());
 
         //  then
         Task taskIsNotNull = taskService.findById(1L);
-        Task taskIsNull = taskService.findById(2L);
 
         assertThat(taskIsNotNull).isNotNull();
-        assertThat(taskIsNull).isNull();
+        assertThrows(NotFoundException.class, () -> taskService.findById(2L),"Task not found.");
     }
 
     @Test
@@ -74,13 +72,12 @@ public class TaskServiceTest {
 
     @Test
     public void testAddTask() {
-        String name = "refactoring";
-        Project project = TaskTestData.createProject1();
-        Employee employee = AbsenceTestData.createEmployee();
+        Task task = new Task();
+        task.setId(1L);
 
-        when(taskRepository.save(any(Task.class))).thenReturn(new Task());
+        when(taskRepository.save(any(Task.class))).thenReturn(task);
 
-        assertThat(taskService.addTask(name, project, employee)).isNotNull();
+        assertThat(taskService.addTask(task)).isNotNull();
     }
 
     //  method args: Long taskId, Long projectId, Long employeeId

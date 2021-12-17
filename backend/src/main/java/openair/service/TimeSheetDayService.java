@@ -29,22 +29,14 @@ public class TimeSheetDayService implements ITimeSheetDay {
     }
 
     @Override
-    public TimeSheetDay addTimeSheetDay(TimeSheetDayDTO timeSheetDayDTO, Employee employee) {
+    public TimeSheetDay addTimeSheetDay(TimeSheetDay timeSheetDay, Employee employee) {
+
         //za employee-a i task proveriti da li je kreiran vec timeSheetDay za datum
         TimeSheetDay exist = timeSheetDayRepository.findByEmployeeIdAndTaskIdAndDate(
-                employee.getId(),timeSheetDayDTO.getTaskId(),timeSheetDayDTO.getDate());
+                employee.getId(),timeSheetDay.getTask().getId(),timeSheetDay.getDate());
 
         if(exist != null)
             throw new ResourceConflictException(exist.getId(),"Task is already logged for " + exist.getDate().toString() + ".");
-
-        Task task = taskService.findById(timeSheetDayDTO.getTaskId());
-
-        TimeSheetDay timeSheetDay = new TimeSheetDay();
-
-        timeSheetDay.setEmployee(employee);
-        timeSheetDay.setTask(task);
-        timeSheetDay.setDate(timeSheetDayDTO.getDate().toLocalDate());
-        timeSheetDay.setWorkTime(timeSheetDayDTO.getWorkTime());
 
         return timeSheetDayRepository.save(timeSheetDay);
     }

@@ -43,18 +43,13 @@ public class ExpenseReportServiceTest {
     @Test
     public void testAddReport(){
         //given
-        Employee employee = new Employee();
-        ExspenseReportDTO expenseReportDTO1 = ExpenseReportTestData.createReportDTO();
-        ExspenseReportDTO expenseReportDTO2 = ExpenseReportTestData.createReportDTO();
-        expenseReportDTO2.setProjectId(2L);
+        ExpenseReport expenseReport1 = ExpenseReportTestData.createReport();
 
         //when
-        when(projectRepository.findById(1L)).thenReturn(Optional.of(ProjectTestData.createProject()));
         when(expenseReportRepository.save(any(ExpenseReport.class))).thenReturn(new ExpenseReport());
 
         //then
-        assertThat(expenseReportService.addReport(expenseReportDTO1,employee)).isInstanceOf(ExpenseReport.class);
-        assertThrows(NotFoundException.class, () -> expenseReportService.addReport(expenseReportDTO2,employee));
+        assertThat(expenseReportService.addReport(expenseReport1)).isInstanceOf(ExpenseReport.class);
     }
 
 
