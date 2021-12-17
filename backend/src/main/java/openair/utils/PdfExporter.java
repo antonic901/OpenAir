@@ -68,8 +68,8 @@ public class PdfExporter {
         List<PdfTableDataOutput> pdfTableDataOutputList = timeSheetDayRepository.getDataForPdf();
 
         for(PdfTableDataOutput pdfTableDataOutput : pdfTableDataOutputList) {
-            table.addCell(pdfTableDataOutput.getEmployee_name());
-            table.addCell(pdfTableDataOutput.getProject_name());
+//            table.addCell(pdfTableDataOutput.getEmployee_name());
+//            table.addCell(pdfTableDataOutput.getProject_name());
             table.addCell(String.valueOf(pdfTableDataOutput.getWork_time()));
             String strProject = pdfTableDataOutput.getProject_type().toString();
             table.addCell(strProject);
