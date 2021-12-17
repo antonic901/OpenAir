@@ -1,5 +1,6 @@
 package openair.controller;
 
+import openair.dto.ExpenseBasicInformationDTO;
 import openair.dto.ExspenseReportDTO;
 import openair.model.Admin;
 import openair.model.Employee;
@@ -10,6 +11,7 @@ import openair.service.AdminService;
 import openair.service.EmployeeService;
 import openair.service.ExpenseReportService;
 import openair.service.ProjectService;
+import openair.utils.ObjectMapperUtils;
 import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
@@ -44,26 +46,30 @@ public class ExpenseReportController {
 
     @PostMapping("/add")
     @PreAuthorize("hasRole('EMPLOYEE')")
-    public ResponseEntity<ExpenseReport> addReport(@RequestBody ExspenseReportDTO expenseReportDTO, Principal loggedEmployee) {
+    public ResponseEntity addReport(@RequestBody ExspenseReportDTO expenseReportDTO, Principal loggedEmployee) {
         Employee employee = employeeService.findByUsername(loggedEmployee.getName());
         Project project = projectService.findProjectById(expenseReportDTO.getProjectId());
         ExpenseReport expenseReport = new ExpenseReport();
         modelMapper.map(expenseReportDTO,expenseReport);
         expenseReport.setEmployee(employee);
         expenseReport.setProject(project);
-        return new ResponseEntity<>(expenseReportService.addReport(expenseReport), HttpStatus.CREATED);
+        expenseReportService.addReport(expenseReport);
+        return new ResponseEntity<>(HttpStatus.CREATED);
     }
 
     @GetMapping("/get-all-for-admin")
     @PreAuthorize("hasRole('ADMIN')")
-    public ResponseEntity<List<ExpenseReport>> getAllByAdminId(Principal loggedAdmin) {
+    public ResponseEntity<List<ExpenseBasicInformationDTO>> getAllByAdminId(Principal loggedAdmin) {
         Admin admin = adminService.findByUsername(loggedAdmin.getName());
-        return new ResponseEntity<>(expenseReportService.getAllByAdminId(admin.getId()), HttpStatus.OK);
+        List<ExpenseReport> expenseReports = expenseReportService.getAllByAdminId(admin.getId());
+        List<ExpenseBasicInformationDTO> response = ObjectMapperUtils.mapAll(expenseReports, ExpenseBasicInformationDTO.class);
+        return new ResponseEntity<>(response, HttpStatus.OK);
     }
 
     @PostMapping("/review/{reportId}/{status}")
     @PreAuthorize("hasRole('ADMIN')")
-    public ResponseEntity<ExpenseReport> reviewReport(@PathVariable Long reportId, @PathVariable Status status) {
-        return new ResponseEntity<>(expenseReportService.reviewReport(reportId, status), HttpStatus.OK);
+    public ResponseEntity reviewReport(@PathVariable Long reportId, @PathVariable Status status) {
+        expenseReportService.reviewReport(reportId, status);
+        return new ResponseEntity<>(HttpStatus.NO_CONTENT);
     }
 }

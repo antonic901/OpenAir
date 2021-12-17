@@ -1,10 +1,12 @@
 package openair.controller;
 
 import openair.dto.RegisterEmployeeDTO;
+import openair.dto.UserBasicInformationDTO;
 import openair.exception.NotFoundException;
 import openair.exception.ResourceConflictException;
 import openair.model.*;
 import openair.service.*;
+import openair.utils.ObjectMapperUtils;
 import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpHeaders;
@@ -38,7 +40,7 @@ public class AdminController {
 
     @PostMapping("/register")
     @PreAuthorize("hasRole('ADMIN')")
-    public ResponseEntity<User> addUser(@RequestBody RegisterEmployeeDTO registerEmployeeDTO, Principal loggedAdmin, UriComponentsBuilder ucBuilder) {
+    public ResponseEntity addUser(@RequestBody RegisterEmployeeDTO registerEmployeeDTO, Principal loggedAdmin, UriComponentsBuilder ucBuilder) {
 
         User existUser = this.userService.findByUsername(registerEmployeeDTO.getUsername());
 
@@ -62,14 +64,16 @@ public class AdminController {
         adminService.registerEmployee(employee);
         HttpHeaders headers = new HttpHeaders();
         headers.setLocation(ucBuilder.path("/api/employee/{userId}").buildAndExpand(employee.getId()).toUri());
-        return new ResponseEntity<>(employee, HttpStatus.CREATED);
+        return new ResponseEntity<>(HttpStatus.CREATED);
     }
 
     @GetMapping("/get-employees")
     @PreAuthorize("hasRole('ADMIN')")
-    public ResponseEntity<List<Employee>> addUser(Principal loggedAdmin) {
+    public ResponseEntity<List<UserBasicInformationDTO>> addUser(Principal loggedAdmin) {
         Admin admin = adminService.findByUsername(loggedAdmin.getName());
-        return new ResponseEntity<>(adminService.getEmployees(admin.getId()), HttpStatus.OK);
+        List<Employee> employees = adminService.getEmployees(admin.getId());
+        List<UserBasicInformationDTO> response = ObjectMapperUtils.mapAll(employees, UserBasicInformationDTO.class);
+        return new ResponseEntity<>(response, HttpStatus.OK);
     }
 
 }

@@ -1,11 +1,13 @@
 package openair.controller;
 
 import openair.dto.LoginDTO;
+import openair.dto.UserBasicInformationDTO;
 import openair.dto.UserTokenState;
 import openair.model.User;
 import openair.dto.JwtAuthenticationRequest;
 import openair.service.UserService;
 import openair.utils.TokenUtils;
+import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
@@ -29,11 +31,14 @@ public class AuthenticationController {
 
     private UserService userService;
 
+    private ModelMapper modelMapper;
+
     @Autowired
-    public AuthenticationController(TokenUtils tokenUtils, AuthenticationManager authenticationManager, UserService userService) {
+    public AuthenticationController(TokenUtils tokenUtils, AuthenticationManager authenticationManager, UserService userService, ModelMapper modelMapper) {
         this.tokenUtils = tokenUtils;
         this.authenticationManager = authenticationManager;
         this.userService = userService;
+        this.modelMapper = modelMapper;
     }
 
     @PostMapping("/login")
@@ -60,12 +65,12 @@ public class AuthenticationController {
     }
 
     @GetMapping("/get-basic-informations")
-    public ResponseEntity<User> getBasicInformations(Principal loggedUser) {
+    public ResponseEntity<UserBasicInformationDTO> getBasicInformations(Principal loggedUser) {
         User user = null;
         if(loggedUser != null) {
            user = userService.findByUsername(loggedUser.getName());
         }
-        return new ResponseEntity<User>(user, HttpStatus.OK);
+        return new ResponseEntity<UserBasicInformationDTO>(modelMapper.map(user, UserBasicInformationDTO.class), HttpStatus.OK);
 
     }
 

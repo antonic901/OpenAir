@@ -1,5 +1,6 @@
 package openair.controller;
 
+import openair.dto.TimeBasicInformationDTO;
 import openair.dto.TimeSheetDayDTO;
 import openair.model.*;
 import openair.service.EmployeeService;
@@ -34,7 +35,7 @@ public class TimeSheetDayController {
 
     @PostMapping("/add-by-employee")
     @PreAuthorize("hasRole('EMPLOYEE')")
-    public ResponseEntity<TimeSheetDay> addDay(@RequestBody TimeSheetDayDTO timeSheetDayDTO, Principal loggedEmployee) {
+    public ResponseEntity<TimeBasicInformationDTO> addDay(@RequestBody TimeSheetDayDTO timeSheetDayDTO, Principal loggedEmployee) {
         TimeSheetDay timeSheetDay = new TimeSheetDay();
         modelMapper.map(timeSheetDayDTO,timeSheetDay);
 
@@ -44,17 +45,17 @@ public class TimeSheetDayController {
         Employee employee = employeeService.findByUsername(loggedEmployee.getName());
         timeSheetDay.setEmployee(employee);
 
-        return new ResponseEntity<>(timeSheetDayService.addTimeSheetDay(timeSheetDay,employee), HttpStatus.CREATED);
+        return new ResponseEntity<>(modelMapper.map(timeSheetDayService.addTimeSheetDay(timeSheetDay,employee),TimeBasicInformationDTO.class), HttpStatus.CREATED);
     }
 
     @PostMapping("/add-by-admin/{employeeId}")
     @PreAuthorize("hasRole('ADMIN')")
-    public ResponseEntity<TimeSheetDay> addDay(@RequestBody TimeSheetDayDTO timeSheetDayDTO, @PathVariable Long employeeId) {
+    public ResponseEntity<TimeBasicInformationDTO> addDay(@RequestBody TimeSheetDayDTO timeSheetDayDTO, @PathVariable Long employeeId) {
         Employee employee = employeeService.findEmployeeById(employeeId);
         TimeSheetDay timeSheetDay = new TimeSheetDay();
         Task task = taskService.findById(timeSheetDay.getTask().getId());
         timeSheetDay.setTask(task);
-        return new ResponseEntity<>(timeSheetDayService.addTimeSheetDay(timeSheetDay,employee), HttpStatus.CREATED);
+        return new ResponseEntity<>(modelMapper.map(timeSheetDayService.addTimeSheetDay(timeSheetDay,employee), TimeBasicInformationDTO.class), HttpStatus.CREATED);
     }
 
 }
