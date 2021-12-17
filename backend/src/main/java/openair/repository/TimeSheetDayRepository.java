@@ -12,8 +12,6 @@ import java.util.List;
 
 public interface TimeSheetDayRepository extends JpaRepository<TimeSheetDay, Long> {
 
-    List<TimeSheetDay> findAllByEmployeeId(Long employeeId);
-
     TimeSheetDay findByEmployeeIdAndTaskIdAndDate(Long id, Long taskId, LocalDate date);
 
     @Query(value = "Select u.name as \"Employee\", p.name as \"Project\", sum(tsd.work_time) as \"Work_time\", p.project_type as \"Project_type\" " +
@@ -24,4 +22,11 @@ public interface TimeSheetDayRepository extends JpaRepository<TimeSheetDay, Long
             "group by u.name, t.project_id, p.name, p.project_type",
             nativeQuery = true)
     List<PdfTableDataOutput> getDataForPdf();
+
+    @Query(value = "select tsd.date " +
+            "from time_sheet_day tsd " +
+            "where tsd.employee_id = ?1 AND " +
+            "(extract(month from tsd.date) = ?2 AND " +
+            "extract(year from tsd.date) = ?3)", nativeQuery = true)
+    List<LocalDate> findAllOfCurrentMonth(Long employeeId, int value, int year);
 }
