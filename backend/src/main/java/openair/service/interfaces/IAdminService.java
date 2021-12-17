@@ -1,13 +1,12 @@
 package openair.service.interfaces;
 
-import openair.dto.RegisterEmployeeDTO;
-import openair.model.Admin;
 import openair.model.Employee;
+import openair.model.Admin;
 
 import java.util.List;
 
 public interface IAdminService {
-    Employee registerEmployee(RegisterEmployeeDTO registerEmployeeDTO);
+    Employee registerEmployee(Employee employee);
     Admin findByUsername(String username);
     List<Employee> getEmployees(Long id);
 }

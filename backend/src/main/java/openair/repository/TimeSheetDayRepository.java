@@ -15,7 +15,7 @@ public interface TimeSheetDayRepository extends JpaRepository<TimeSheetDay, Long
     TimeSheetDay findByEmployeeIdAndTaskIdAndDate(Long id, Long taskId, LocalDate date);
 
 
-    @Query(value = "Select u.name as \"Employee\", p.name as \"Project\", sum(tsd.work_time) as \"Work_time\", p.project_type as \"Project_type\" " +
+    @Query(value = "Select u.name as Employee, p.name as Project, sum(tsd.work_time) as \"Work_time\", p.project_type as \"Project_type\" " +
 
             "From time_sheet_day tsd, tasks t, projects p, users u " +
             "where tsd.task_id = t.id " +

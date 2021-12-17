@@ -107,7 +107,6 @@ public class EmployeeService implements IEmployeeService {
             StringBuilder emailContent = new StringBuilder("Dear, you forgot to fill in your working hours for: ");
             int detector = 0;
 
-
             List<LocalDate> filledDates = timeSheetDayRepository.findAllOfCurrentMonth(employee.getId(), LocalDateTime.now().getMonth().getValue(),LocalDateTime.now().getYear());;
             List<LocalDate> absentDates = findAbsentDates(employee.getId(), Status.APPROVED);
 
@@ -188,7 +187,6 @@ public class EmployeeService implements IEmployeeService {
 
         return filledDates;
     }
-
 
     private void sendMail(String emailAddress, String emailContent){
         Mail mail = new Mail();

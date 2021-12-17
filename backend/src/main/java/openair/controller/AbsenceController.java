@@ -6,10 +6,12 @@ import openair.exception.PeriodConflictException;
 import openair.model.Absence;
 import openair.model.Admin;
 import openair.model.Employee;
+import openair.model.Project;
 import openair.model.enums.Status;
 import openair.service.AbsenceService;
 import openair.service.AdminService;
 import openair.service.EmployeeService;
+import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
@@ -45,7 +47,12 @@ public class AbsenceController {
     @PreAuthorize("hasRole('EMPLOYEE')")
     public ResponseEntity<Absence> addAbsence(@RequestBody RequestAbsenceDTO requestAbsenceDTO, Principal loggedEmployee)  {
         Employee employee = employeeService.findByUsername(loggedEmployee.getName());
-        Absence absence = absenceService.add(requestAbsenceDTO, employee.getId());
+
+        Absence absence = new Absence();
+        ModelMapper mm = new ModelMapper();
+        mm.map(requestAbsenceDTO, absence);
+
+        absenceService.add(absence, employee.getId());
         return new ResponseEntity<>(absence, HttpStatus.CREATED);
     }
 

@@ -1,5 +1,7 @@
 package openair.service;
 
+import liquibase.pro.packaged.A;
+import liquibase.pro.packaged.E;
 import openair.dto.RegisterEmployeeDTO;
 import openair.model.*;
 import openair.model.enums.Department;
@@ -49,34 +51,39 @@ public class AdminTestData {
         return employee;
     }
 
-    public static RegisterEmployeeDTO createRegisterEmployeeDTO1() {
-        RegisterEmployeeDTO dto = new RegisterEmployeeDTO();
-        dto.setName("Admin");
-        dto.setSurname("Adminovic");
-        dto.setEmail("admin@gmail.com");
-        dto.setUsername("admin");
-        dto.setPassword("admin");
-        dto.setPhone("0613824291");
-        dto.setUserType(UserType.ROLE_ADMIN);
-        dto.setDepartment(Department.JAVA);
-        dto.setSalary(0);
-        dto.setAdminId(1L);
-        return dto;
+    public static Employee createEmployee1() {
+        Employee employee = new Employee();
+        employee.setName("Admin");
+        employee.setSurname("Adminovic");
+        employee.setEmail("admin@gmail.com");
+        employee.setUsername("admin");
+        employee.setPassword("admin");
+        employee.setPhone("0613824291");
+        employee.setUserType(UserType.ROLE_ADMIN);
+        employee.setDepartment(Department.JAVA);
+        employee.setSalary(0);
+        Admin admin = new Admin();
+        admin.setId(1L);
+        employee.setAdmin(admin);
+        return employee;
     }
 
-    public static RegisterEmployeeDTO createRegisterEmployeeDTO2() {
-        RegisterEmployeeDTO dto = new RegisterEmployeeDTO();
-        dto.setName("Admin");
-        dto.setSurname("Adminovic");
-        dto.setEmail("admin@gmail.com");
-        dto.setUsername("admin");
-        dto.setPassword("admin");
-        dto.setPhone("0613824291");
-        dto.setUserType(UserType.ROLE_ADMIN);
-        dto.setDepartment(Department.JAVA);
-        dto.setSalary(0);
-        dto.setAdminId(2L);
-        return dto;
+    public static Employee createEmployee2() {
+        Employee employee = new Employee();
+        employee.setName("Admin");
+        employee.setSurname("Adminovic");
+        employee.setEmail("admin@gmail.com");
+        employee.setUsername("admin");
+        employee.setPassword("admin");
+        employee.setPhone("0613824291");
+        employee.setUserType(UserType.ROLE_ADMIN);
+        employee.setDepartment(Department.JAVA);
+        employee.setSalary(0);
+        Admin admin = new Admin();
+        admin.setId(2L);
+        employee.setAdmin(admin);
+
+        return employee;
     }
 
     public static RegisterEmployeeDTO createRegisterEmployeeDTO3() {
