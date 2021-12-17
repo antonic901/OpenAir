@@ -110,6 +110,9 @@ public class EmployeeService implements IEmployeeService {
 
         for (int i = 0; i < employeeList.size(); i++) {
 
+            String emailContent = "Dear, you forgot to fill in your working hours for: ";
+            int detector = 0;
+
             //za svakog radnika pronadjem listu timeSheetDays
             List<TimeSheetDay> timeSheetDays = timeSheetDayRepository.findAllByEmployeeId(employeeList.get(i).getId());
 
@@ -119,11 +122,13 @@ public class EmployeeService implements IEmployeeService {
             //proverim da li za svaki radni dan u mesecu ima kreiran timeSheetDay
             for(int j = 0; j < workDayList.size(); j++){
                 if(!filledDates.contains(workDayList.get(j))){
-                    //ako nema salje se mejl
-                    sendMail(employeeList.get(i).getEmail(),workDayList.get(j));
+                    detector = 1;
+                    emailContent = emailContent + workDayList.get(j).toString() + " ";
                 }
-
             }
+            //ako nema salje se mejl
+            if(detector != 0) sendMail(employeeList.get(i).getEmail(),emailContent + ". Please do it before end of the month.");
+
         }
     }
 
@@ -159,15 +164,12 @@ public class EmployeeService implements IEmployeeService {
         return filledDates;
     }
 
-    private void sendMail(String emailAddress, LocalDate date){
-
+    private void sendMail(String emailAddress, String emailContent){
         Mail mail = new Mail();
-        
-        mail.setMailFrom("pcserviskac@gmail.com");
+
         mail.setContentType("REMINDER");
         mail.setMailSubject("Monthly reminder to log your working hours");
-        mail.setMailContent("Dear, you forgot to fill in your working hours for " + date.toString() +
-                ". Please do it before end of the month.");
+        mail.setMailContent(emailContent);
         mail.setMailTo(emailAddress);
 
         mailService.sendMail(mail);

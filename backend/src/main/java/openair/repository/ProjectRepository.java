@@ -13,9 +13,9 @@ public interface ProjectRepository extends JpaRepository<Project, Long> {
     Optional<Project> findByName(String name);
 
     @Query(value = "Select p.id, p.name, p.project_type, p.admin_id" +
-            " From project p, employee_project ep" +
-            "where p.id == ep.project_id" +
-            "and ep.employee_id == ?1",
+            " From projects p, employee_project ep " +
+            "where p.id = ep.project_id " +
+            "and ep.employee_id = ?1",
             nativeQuery = true
     )
     List<Project> findAllByEmployeeId(Long id);

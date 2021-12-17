@@ -63,6 +63,9 @@ public class TaskService implements ITaskService {
     }
 
     @Override
+    public List<Task> findAllByProjectEmployeeId(Long projectId, Long employeeId) { return taskRepository.findAllByProjectIdAndEmployeeId(projectId,employeeId); }
+
+    @Override
     public List<Task> findAllByEmployeeId(Long employeeId) {
         return taskRepository.findAllByEmployeeId(employeeId);
     }

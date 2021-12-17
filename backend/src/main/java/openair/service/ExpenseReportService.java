@@ -42,16 +42,8 @@ public class ExpenseReportService implements IExpenseReportService {
     @Override
     public List<ExpenseReport> getAllByAdminId(Long id) {
 
-        List<ExpenseReport>  expenseReports = new ArrayList<>();
+        return expenseReportRepository.findAllByAdminId(id);
 
-        for(ExpenseReport expenseReport : expenseReportRepository.findAll()) {
-
-            if(expenseReport.getEmployee().getAdmin().getId().equals(id)) {
-
-                expenseReports.add(expenseReport);
-            }
-        }
-        return expenseReports;
     }
 
     @Override
