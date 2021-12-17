@@ -58,14 +58,30 @@ public class PdfExporter {
         table.addCell(cell);
     }
 
+<<<<<<< HEAD
+=======
+//      table.addCell(employee.getName());
+//      table.addCell(project.getName());
+//      table.addCell(String.valueOf(workTime));
+//      String strProject = project.getProjectType().toString();
+//      table.addCell(strProject);
+
+>>>>>>> 2ac52398cdb303adb4078ef62bd7188ba0a5749b
     private void writeTableData(PdfPTable table) {
         List<PdfTableDataOutput> pdfTableDataOutputList = timeSheetDayRepository.getDataForPdf();
 
         for(PdfTableDataOutput pdfTableDataOutput : pdfTableDataOutputList) {
+<<<<<<< HEAD
             table.addCell(pdfTableDataOutput.getEmployee());
             table.addCell(pdfTableDataOutput.getProject());
             table.addCell(String.valueOf(pdfTableDataOutput.getWork_time()));
             String strProject = pdfTableDataOutput.getProject_type();
+=======
+//            table.addCell(pdfTableDataOutput.getEmployee_name());
+//            table.addCell(pdfTableDataOutput.getProject_name());
+            table.addCell(String.valueOf(pdfTableDataOutput.getWork_time()));
+            String strProject = pdfTableDataOutput.getProject_type().toString();
+>>>>>>> 2ac52398cdb303adb4078ef62bd7188ba0a5749b
             table.addCell(strProject);
         }
     }
