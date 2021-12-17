@@ -1,13 +1,17 @@
 package openair.controller;
 
 import openair.dto.ExspenseReportDTO;
+import openair.exception.NotFoundException;
 import openair.model.Admin;
 import openair.model.Employee;
 import openair.model.ExpenseReport;
+import openair.model.Project;
 import openair.model.enums.Status;
 import openair.service.AdminService;
 import openair.service.EmployeeService;
 import openair.service.ExpenseReportService;
+import openair.service.ProjectService;
+import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
@@ -16,7 +20,9 @@ import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 
 import java.security.Principal;
+import java.time.LocalDate;
 import java.util.List;
+import java.util.Optional;
 
 @RestController
 @RequestMapping(value = "/api/expensereport", produces = MediaType.APPLICATION_JSON_VALUE)
@@ -25,13 +31,15 @@ public class ExpenseReportController {
     private ExpenseReportService expenseReportService;
     private EmployeeService employeeService;
     private AdminService adminService;
+    private ProjectService projectService;
 
     @Autowired
     public ExpenseReportController(ExpenseReportService expenseReportService, EmployeeService employeeService,
-                                    AdminService adminService) {
+                                    AdminService adminService, ProjectService projectService) {
         this.expenseReportService = expenseReportService;
         this.employeeService = employeeService;
         this.adminService = adminService;
+        this.projectService = projectService;
     }
 
     @PostMapping("/add")
@@ -40,7 +48,16 @@ public class ExpenseReportController {
 
         Employee employee = employeeService.findByUsername(loggedEmployee.getName());
 
-        return new ResponseEntity<>(expenseReportService.addReport(expenseReportDTO, employee), HttpStatus.CREATED);
+        Project project = projectService.findProjectById(expenseReportDTO.getProjectId());
+
+        ExpenseReport expenseReport = new ExpenseReport();
+        ModelMapper mm = new ModelMapper();
+        mm.map(expenseReportDTO,expenseReport);
+
+        expenseReport.setEmployee(employee);
+        expenseReport.setProject(project);
+
+        return new ResponseEntity<>(expenseReportService.addReport(expenseReport), HttpStatus.CREATED);
     }
 
     @GetMapping("/get-all-for-admin")

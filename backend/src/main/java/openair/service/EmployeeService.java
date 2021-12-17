@@ -104,32 +104,13 @@ public class EmployeeService implements IEmployeeService {
 
         for (Employee employee : employeeList) {
 
-<<<<<<< HEAD
-            String emailContent = "Dear, you forgot to fill in your working hours for: ";
-            int detector = 0;
-
-            //za svakog radnika pronadjem listu timeSheetDays
-            List<TimeSheetDay> timeSheetDays = timeSheetDayRepository.findAllByEmployeeId(employeeList.get(i).getId());
-=======
             StringBuilder emailContent = new StringBuilder("Dear, you forgot to fill in your working hours for: ");
             int detector = 0;
->>>>>>> 2ac52398cdb303adb4078ef62bd7188ba0a5749b
+
 
             List<LocalDate> filledDates = timeSheetDayRepository.findAllOfCurrentMonth(employee.getId(), LocalDateTime.now().getMonth().getValue(),LocalDateTime.now().getYear());;
             List<LocalDate> absentDates = findAbsentDates(employee.getId(), Status.APPROVED);
 
-<<<<<<< HEAD
-            //proverim da li za svaki radni dan u mesecu ima kreiran timeSheetDay
-            for(int j = 0; j < workDayList.size(); j++){
-                if(!filledDates.contains(workDayList.get(j))){
-                    detector = 1;
-                    emailContent = emailContent + workDayList.get(j).toString() + " ";
-                }
-            }
-            //ako nema salje se mejl
-            if(detector != 0) sendMail(employeeList.get(i).getEmail(),emailContent + ". Please do it before end of the month.");
-
-=======
             for (LocalDate workDate : workDayList) {
                 //date filled or employee on vacation
                 if (!filledDates.contains(workDate) && !absentDates.contains(workDate)) {
@@ -154,7 +135,7 @@ public class EmployeeService implements IEmployeeService {
         for (AbsenceInterface absence : absences) {
             absentDays.addAll(findAllDatesBetweenTwoDates(absence.getStartDate(),
                     absence.getEndDate()));
->>>>>>> 2ac52398cdb303adb4078ef62bd7188ba0a5749b
+
         }
 
         //remove dates from next month, when vacation ends in next month
@@ -195,7 +176,7 @@ public class EmployeeService implements IEmployeeService {
         return workDayList;
     }
 
-<<<<<<< HEAD
+
     private List<LocalDate> findFilledDates(List<TimeSheetDay> timeSheetDays){
 
         List<LocalDate> filledDates = new ArrayList<>();
@@ -208,8 +189,7 @@ public class EmployeeService implements IEmployeeService {
         return filledDates;
     }
 
-=======
->>>>>>> 2ac52398cdb303adb4078ef62bd7188ba0a5749b
+
     private void sendMail(String emailAddress, String emailContent){
         Mail mail = new Mail();
 

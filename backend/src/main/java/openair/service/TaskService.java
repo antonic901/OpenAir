@@ -48,12 +48,7 @@ public class TaskService implements ITaskService {
     }
 
     @Override
-    public Task addTask(String name, Project project, Employee employee) {
-        Task task = new Task();
-        task.setProject(project);
-        task.setEmployee(employee);
-        task.setName(name);
-
+    public Task addTask(Task task) {
         return taskRepository.save(task);
     }
 
@@ -73,11 +68,10 @@ public class TaskService implements ITaskService {
     @Override
     public Task findById(Long taskId) {
         Optional<Task> taskOptional = taskRepository.findById(taskId);
-        if(taskOptional.isPresent())
-            return taskOptional.get();
+        if(!taskOptional.isPresent())
+            throw new NotFoundException("Task with id " + taskId + " does not exist.");
 
-        else
-            return null;
+        return taskOptional.get();
     }
 
     @Override

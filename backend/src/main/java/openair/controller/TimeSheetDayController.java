@@ -3,12 +3,11 @@ package openair.controller;
 import openair.dto.ProjectDTO;
 import openair.dto.TimeSheetDayDTO;
 import openair.exception.ResourceConflictException;
-import openair.model.Admin;
-import openair.model.Employee;
-import openair.model.Project;
-import openair.model.TimeSheetDay;
+import openair.model.*;
 import openair.service.EmployeeService;
+import openair.service.TaskService;
 import openair.service.TimeSheetDayService;
+import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -23,11 +22,13 @@ public class TimeSheetDayController {
 
     private EmployeeService employeeService;
     private TimeSheetDayService timeSheetDayService;
+    private TaskService taskService;
 
     @Autowired
-    public TimeSheetDayController(EmployeeService employeeService, TimeSheetDayService timeSheetDayService){
+    public TimeSheetDayController(EmployeeService employeeService, TimeSheetDayService timeSheetDayService, TaskService taskService){
         this.employeeService = employeeService;
         this.timeSheetDayService = timeSheetDayService;
+        this.taskService = taskService;
     }
 
     @PostMapping("/add-by-employee")
@@ -37,7 +38,14 @@ public class TimeSheetDayController {
         //nadjem zaposlenog po username-u
         Employee employee = employeeService.findByUsername(loggedEmployee.getName());
 
-        return new ResponseEntity<>(timeSheetDayService.addTimeSheetDay(timeSheetDayDTO,employee), HttpStatus.CREATED);
+        TimeSheetDay timeSheetDay = new TimeSheetDay();
+        ModelMapper modelMapper = new ModelMapper();
+        modelMapper.map(timeSheetDayDTO,timeSheetDay);
+
+        Task task = taskService.findById(timeSheetDay.getTask().getId());
+        timeSheetDay.setTask(task);
+
+        return new ResponseEntity<>(timeSheetDayService.addTimeSheetDay(timeSheetDay,employee), HttpStatus.CREATED);
     }
 
     @PostMapping("/add-by-admin/{employeeId}")
@@ -47,7 +55,14 @@ public class TimeSheetDayController {
         //nadjem zaposlenog po id-ju
         Employee employee = employeeService.findEmployeeById(employeeId);
 
-        return new ResponseEntity<>(timeSheetDayService.addTimeSheetDay(timeSheetDayDTO,employee), HttpStatus.CREATED);
+        TimeSheetDay timeSheetDay = new TimeSheetDay();
+        ModelMapper modelMapper = new ModelMapper();
+        modelMapper.map(timeSheetDayDTO,timeSheetDay);
+
+        Task task = taskService.findById(timeSheetDay.getTask().getId());
+        timeSheetDay.setTask(task);
+
+        return new ResponseEntity<>(timeSheetDayService.addTimeSheetDay(timeSheetDay,employee), HttpStatus.CREATED);
     }
 
 }

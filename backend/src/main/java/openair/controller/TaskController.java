@@ -8,6 +8,7 @@ import openair.model.Task;
 import openair.service.EmployeeService;
 import openair.service.ProjectService;
 import openair.service.TaskService;
+import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -42,10 +43,15 @@ public class TaskController {
 
         Project project = projectService.findProjectById(taskDTO.getProjectID());
         Employee employee = employeeService.findEmployeeById(taskDTO.getEmployeeID());
-        Task task = this.taskService.addTask(taskDTO.getName(), project, employee);
 
-        System.out.println("Odsada");
-        return new ResponseEntity<Task>(task, HttpStatus.CREATED);
+        Task task = new Task();
+        ModelMapper mm = new ModelMapper();
+        mm.map(taskDTO,task);
+
+        task.setEmployee(employee);
+        task.setProject(project);
+
+        return new ResponseEntity<>(taskService.addTask(task), HttpStatus.CREATED);
     }
 
 
