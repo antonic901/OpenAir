@@ -1,5 +1,6 @@
 import Vue from 'vue'
 import VueRouter from 'vue-router'
+import axios from 'axios'
 
 Vue.use(VueRouter)
 
@@ -28,6 +29,19 @@ const routes = [
   },
   {
     path: "/register",
+    // beforeEnter: (to, from, next) => {
+    //   if(localStorage.jws) {
+    //     axios.get("/auth/get-role", {headers: {'Authorization': `Bearer ` + localStorage.jws}})
+    //       .then(r => {
+    //         if(r.data != 'ROLE_ADMIN') {
+    //           next({name: 'Home'})
+    //         }
+    //       })
+    //   } else {
+    //     next({name: 'Login'})
+    //   }
+      
+    // },
     name: "Register",
     component: Register
   },
