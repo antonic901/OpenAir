@@ -18,6 +18,7 @@ import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.web.bind.annotation.*;
 
+import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.security.Principal;
 
@@ -51,7 +52,7 @@ public class AuthenticationController {
 
         SecurityContextHolder.getContext().setAuthentication(authentication);
         User user = (User) authentication.getPrincipal();
-        String jwt = tokenUtils.generateToken(user.getUsername());
+        String jwt = tokenUtils.generateToken(user.getUsername(), user.getUserType().toString());
         int expiresIn = tokenUtils.getExpiredIn();
         UserTokenState userTokenState = new UserTokenState(jwt,expiresIn);
 
@@ -71,8 +72,15 @@ public class AuthenticationController {
            user = userService.findByUsername(loggedUser.getName());
         }
         return new ResponseEntity<UserBasicInformationDTO>(modelMapper.map(user, UserBasicInformationDTO.class), HttpStatus.OK);
-
     }
+
+    @GetMapping("/get-role")
+    public ResponseEntity<String> getRole(HttpServletRequest request) {
+        String token = tokenUtils.getToken(request);
+        return ResponseEntity.ok(tokenUtils.getRoleFromToken(token));
+    }
+
+
 
 //    // U slucaju isteka vazenja JWT tokena, endpoint koji se poziva da se token osvezi
 //    @PostMapping(value = "/refresh")
