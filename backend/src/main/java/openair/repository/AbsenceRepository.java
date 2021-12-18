@@ -1,15 +1,10 @@
 package openair.repository;
 
 import openair.model.Absence;
-import openair.model.enums.Status;
 import openair.utils.AbsenceInterface;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
-import org.springframework.data.repository.query.Param;
 
-import java.time.LocalDate;
-import java.time.LocalDateTime;
-import java.time.Month;
 import java.util.List;
 
 public interface AbsenceRepository extends JpaRepository<Absence, Long> {

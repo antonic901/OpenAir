@@ -1,8 +1,5 @@
 package openair.service.interfaces;
 
-import openair.dto.TaskDTO;
-import openair.model.Employee;
-import openair.model.Project;
 import openair.model.Task;
 
 import java.util.List;

@@ -1,6 +1,5 @@
 package openair.service.interfaces;
 
-import openair.dto.RequestAbsenceDTO;
 import openair.model.Absence;
 import openair.model.enums.Status;
 

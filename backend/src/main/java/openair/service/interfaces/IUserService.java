@@ -1,6 +1,5 @@
 package openair.service.interfaces;
 
-
 import openair.model.User;
 
 public interface IUserService {

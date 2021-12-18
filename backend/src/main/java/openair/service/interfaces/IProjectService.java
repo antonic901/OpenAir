@@ -1,6 +1,5 @@
 package openair.service.interfaces;
 
-import openair.dto.ProjectDTO;
 import openair.model.Admin;
 import openair.model.Employee;
 import openair.model.Project;

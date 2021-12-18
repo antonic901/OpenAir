@@ -1,19 +1,12 @@
 package openair.service;
 
-import liquibase.pro.packaged.T;
-import openair.dto.TimeSheetDayDTO;
-import openair.exception.NotFoundException;
 import openair.exception.ResourceConflictException;
 import openair.model.Employee;
-import openair.model.Task;
 import openair.model.TimeSheetDay;
 import openair.repository.TimeSheetDayRepository;
 import openair.service.interfaces.ITimeSheetDay;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
-
-import java.util.ArrayList;
-import java.util.List;
 
 @Service
 public class TimeSheetDayService implements ITimeSheetDay {

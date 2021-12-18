@@ -1,28 +1,22 @@
 package openair.controller;
 
 import openair.dto.LoginDTO;
-import openair.dto.RegisterEmployeeDTO;
+import openair.dto.UserBasicInformationDTO;
 import openair.dto.UserTokenState;
-import openair.exception.ResourceConflictException;
-import openair.model.Admin;
-import openair.model.Employee;
 import openair.model.User;
 import openair.dto.JwtAuthenticationRequest;
-import openair.service.EmployeeService;
 import openair.service.UserService;
 import openair.utils.TokenUtils;
+import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
-import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.web.bind.annotation.*;
-import org.springframework.web.util.UriComponentsBuilder;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
@@ -38,11 +32,14 @@ public class AuthenticationController {
 
     private UserService userService;
 
+    private ModelMapper modelMapper;
+
     @Autowired
-    public AuthenticationController(TokenUtils tokenUtils, AuthenticationManager authenticationManager, UserService userService) {
+    public AuthenticationController(TokenUtils tokenUtils, AuthenticationManager authenticationManager, UserService userService, ModelMapper modelMapper) {
         this.tokenUtils = tokenUtils;
         this.authenticationManager = authenticationManager;
         this.userService = userService;
+        this.modelMapper = modelMapper;
     }
 
     @PostMapping("/login")
@@ -69,13 +66,12 @@ public class AuthenticationController {
     }
 
     @GetMapping("/get-basic-informations")
-    public ResponseEntity<User> getBasicInformations(Principal loggedUser) {
+    public ResponseEntity<UserBasicInformationDTO> getBasicInformations(Principal loggedUser) {
         User user = null;
         if(loggedUser != null) {
            user = userService.findByUsername(loggedUser.getName());
         }
-        return new ResponseEntity<User>(user, HttpStatus.OK);
-
+        return new ResponseEntity<UserBasicInformationDTO>(modelMapper.map(user, UserBasicInformationDTO.class), HttpStatus.OK);
     }
 
     @GetMapping("/get-role")

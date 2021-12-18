@@ -1,6 +1,5 @@
 package openair.service;
 
-import openair.dto.ProjectDTO;
 import openair.exception.NotFoundException;
 import openair.exception.ResourceConflictException;
 import openair.model.*;
@@ -53,6 +52,7 @@ public class ProjectService implements IProjectService {
         if (existProject.isPresent())
             throw new ResourceConflictException("Project with name " + project.getName() + " already exists.");
 
+        project.setAdmin(admin);
         return projectRepository.save(project);
     }
 

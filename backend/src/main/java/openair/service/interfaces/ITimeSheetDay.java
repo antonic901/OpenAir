@@ -1,9 +1,7 @@
 package openair.service.interfaces;
 
-import openair.dto.TimeSheetDayDTO;
 import openair.model.Employee;
 import openair.model.TimeSheetDay;
-import java.util.List;
 
 public interface ITimeSheetDay {
     TimeSheetDay addTimeSheetDay(TimeSheetDay timeSheetDay, Employee employee);

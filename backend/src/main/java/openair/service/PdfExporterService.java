@@ -1,7 +1,7 @@
-package openair.utils;
+package openair.service;
+
 import java.io.File;
 import java.io.FileOutputStream;
-import java.io.FileWriter;
 import java.io.IOException;
 import java.time.LocalDateTime;
 import java.util.List;
@@ -10,33 +10,28 @@ import com.lowagie.text.Document;
 import com.lowagie.text.DocumentException;
 import com.lowagie.text.PageSize;
 import com.lowagie.text.Paragraph;
-import com.lowagie.text.pdf.PdfCell;
 import com.lowagie.text.pdf.PdfPTable;
 import com.lowagie.text.pdf.PdfWriter;
-import liquibase.pro.packaged.P;
-import lombok.AllArgsConstructor;
-import lombok.Getter;
-import lombok.NoArgsConstructor;
-import lombok.Setter;
-import openair.model.Employee;
-import openair.model.Task;
-import openair.model.Project;
 import com.lowagie.text.*;
 import com.lowagie.text.pdf.*;
-import openair.model.TimeSheetDay;
 import openair.repository.TimeSheetDayRepository;
-import openair.service.StorageService;
-import openair.service.TimeSheetDayService;
-import javax.servlet.http.HttpServletResponse;
+import openair.service.interfaces.IPdfExporterService;
+import openair.utils.PdfTableDataOutput;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Service;
 
+@Service
+public class PdfExporterService implements IPdfExporterService {
 
-@AllArgsConstructor
-@NoArgsConstructor
-@Getter
-@Setter
-public class PdfExporter {
-    private TimeSheetDayRepository timeSheetDayRepository;
     private StorageService storageService;
+
+    private TimeSheetDayRepository timeSheetDayRepository;
+
+    @Autowired
+    public PdfExporterService(StorageService storageService, TimeSheetDayRepository timeSheetDayRepository) {
+        this.storageService = storageService;
+        this.timeSheetDayRepository = timeSheetDayRepository;
+    }
 
     private void writeTableHeader(PdfPTable table) {
         PdfPCell cell = new PdfPCell();

@@ -1,6 +1,7 @@
 package openair.dto;
 
 import com.fasterxml.jackson.databind.annotation.JsonDeserialize;
+import com.fasterxml.jackson.databind.annotation.JsonSerialize;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
@@ -13,13 +14,17 @@ import java.time.LocalDate;
 @AllArgsConstructor
 @Getter
 @Setter
-public class TimeSheetDayDTO {
+public class TimeBasicInformationDTO {
+
+    private Long id;
 
     @JsonDeserialize(using = UnixToLocalDateConverter.class)
     private LocalDate date;
 
     private double workTime;
 
-    private Long taskId;
+    private UserBasicInformationDTO employee;
+
+    private TaskBasicInformationDTO task;
 
 }

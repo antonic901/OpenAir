@@ -1,6 +1,5 @@
 package openair.service;
 
-import openair.dto.RequestAbsenceDTO;
 import openair.exception.PeriodConflictException;
 import openair.exception.NotFoundException;
 import openair.model.*;

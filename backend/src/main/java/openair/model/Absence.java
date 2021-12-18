@@ -7,7 +7,6 @@ import lombok.Setter;
 import openair.model.enums.Status;
 
 import javax.persistence.*;
-import java.time.LocalDateTime;
 
 @Entity
 @Table(name = "absences")

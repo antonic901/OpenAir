@@ -1,17 +1,13 @@
 package openair.controller;
 
+import openair.dto.AbsenceBasicInformationDTO;
 import openair.dto.RequestAbsenceDTO;
-import openair.exception.NotFoundException;
-import openair.exception.PeriodConflictException;
-import openair.model.Absence;
-import openair.model.Admin;
-import openair.model.Employee;
-import openair.model.Project;
+import openair.model.*;
 import openair.model.enums.Status;
 import openair.service.AbsenceService;
 import openair.service.AdminService;
 import openair.service.EmployeeService;
-import org.modelmapper.ModelMapper;
+import openair.utils.ObjectMapperUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
@@ -39,29 +35,33 @@ public class AbsenceController {
 
     @GetMapping("/get-absences/{id}")
     @PreAuthorize("hasRole('ADMIN')")
-    public ResponseEntity<List<Absence>> checkIfUsernameIsAvailable(@PathVariable Long id) {
-        return new ResponseEntity<List<Absence>>(absenceService.getAllByUserId(id), HttpStatus.OK);
+    public ResponseEntity<List<AbsenceBasicInformationDTO>> checkIfUsernameIsAvailable(@PathVariable Long id) {
+        List<Absence> absences = absenceService.getAllByUserId(id);
+        List<AbsenceBasicInformationDTO> response = ObjectMapperUtils.mapAll(absences, AbsenceBasicInformationDTO.class);
+        return new ResponseEntity<>(response, HttpStatus.OK);
     }
 
     @PostMapping("/add")
     @PreAuthorize("hasRole('EMPLOYEE')")
-    public ResponseEntity<Absence> addAbsence(@RequestBody RequestAbsenceDTO requestAbsenceDTO, Principal loggedEmployee)  {
+    public ResponseEntity addAbsence(@RequestBody RequestAbsenceDTO requestAbsenceDTO, Principal loggedEmployee)  {
         Employee employee = employeeService.findByUsername(loggedEmployee.getName());
 
         Absence absence = new Absence();
-        ModelMapper mm = new ModelMapper();
-        mm.map(requestAbsenceDTO, absence);
+        absence.setPeriod(new Period(requestAbsenceDTO.getStartTime(), requestAbsenceDTO.getEndTime()));
+        absence.setStatus(Status.INPROCESS);
+        absence.setEmployee(employee);
+        absence.setAdmin(employee.getAdmin());
 
         absenceService.add(absence, employee.getId());
-        return new ResponseEntity<>(absence, HttpStatus.CREATED);
+        return new ResponseEntity<>(HttpStatus.CREATED);
     }
 
     @PostMapping("/approve/{id}/{status}")
     @PreAuthorize("hasRole('ADMIN')")
-    public ResponseEntity<Absence> approveAbsence(@PathVariable Long id, @PathVariable Status status, Principal loggedAdmin)  {
+    public ResponseEntity approveAbsence(@PathVariable Long id, @PathVariable Status status, Principal loggedAdmin)  {
         Admin admin = adminService.findByUsername(loggedAdmin.getName());
         Absence absence = absenceService.review(id, status);
-        return new ResponseEntity<Absence>(absence, HttpStatus.OK);
+        return new ResponseEntity<>(HttpStatus.NO_CONTENT);
     }
 
 }
