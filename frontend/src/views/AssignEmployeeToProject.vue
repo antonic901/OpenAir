@@ -170,7 +170,7 @@ export default {
         }
     },
     mounted() {
-        this.axios.get("/api/project/find-all-by-user-id/" + this.$store.getters.getUserId,{headers: {'Authorization': `Bearer ` + this.$store.getters.getJwt}})
+        this.axios.get("/api/project/find-all-by-user-id/" + this.$store.getters.getUserId,{headers: {'Authorization': `Bearer ` + localStorage.jws}})
             .then(r => {
                 this.projects = r.data;
             })
