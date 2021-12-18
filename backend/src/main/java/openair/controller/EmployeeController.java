@@ -46,7 +46,7 @@ public class EmployeeController {
         this.timeSheetDayService = timeSheetDayService;
     }
 
-    @PostMapping("/register")
+    @PostMapping
     @PreAuthorize("hasRole('ADMIN')")
     public ResponseEntity addEmployee(@RequestBody RegisterEmployeeDTO registerEmployeeDTO, Principal loggedAdmin, UriComponentsBuilder ucBuilder) {
 

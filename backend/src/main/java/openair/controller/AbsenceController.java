@@ -35,7 +35,7 @@ public class AbsenceController {
 
     @GetMapping("/{id}")
     @PreAuthorize("hasRole('ADMIN')")
-    public ResponseEntity<List<AbsenceBasicInformationDTO>> findAllById(@PathVariable Long id) {
+    public ResponseEntity<List<AbsenceBasicInformationDTO>> findById(@PathVariable Long id) {
         List<Absence> absences = absenceService.getAllByUserId(id);
         List<AbsenceBasicInformationDTO> response = ObjectMapperUtils.mapAll(absences, AbsenceBasicInformationDTO.class);
         return new ResponseEntity<>(response, HttpStatus.OK);

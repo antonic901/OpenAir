@@ -39,6 +39,9 @@ public class UserController {
     }
 
     //ovo je putanja za get basic info o useru
+    //TODO ako se dobavljaju podaci o ulogovanom korisniku onda ima smisla dodati autorizaciju
+    //jer ne moze pristupiti metodi ako nije ulogovan??
+    //i u web config da se doda da toj putanji ne mogu svi da pristupe nego admin i employee samo
     @GetMapping("/{userId}")
     public ResponseEntity<UserBasicInformationDTO> findByUsername(Principal loggedUser) {
         User user = null;
