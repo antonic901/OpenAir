@@ -18,10 +18,7 @@ axios.interceptors.response.use(
   },
   (err) => {
     if(err.response.status === 401) {
-      localStorage.clear()
-      this.$store.dispatch('updateJwt', null);
-      this.$store.dispatch('updateUserType', null);
-      this.$store.dispatch('updateUserId', null);
+      console.log("Refresh token.")
     }
   }
 )
