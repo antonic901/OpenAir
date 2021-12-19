@@ -202,3 +202,4 @@ public class TokenUtils {
     public String getRoleFromToken(String token) {
         return Jwts.parser().setSigningKey(SECRET).parseClaimsJws(token).getBody().get("role", String.class);
     }
+}

@@ -19,7 +19,7 @@ import java.security.Principal;
 import java.util.List;
 
 @RestController
-@RequestMapping(value = "/api/absence", produces = MediaType.APPLICATION_JSON_VALUE)
+@RequestMapping(value = "/absences", produces = MediaType.APPLICATION_JSON_VALUE)
 public class AbsenceController {
 
     private AbsenceService absenceService;
@@ -33,15 +33,15 @@ public class AbsenceController {
         this.adminService = adminService;
     }
 
-    @GetMapping("/get-absences/{id}")
+    @GetMapping("/{id}")
     @PreAuthorize("hasRole('ADMIN')")
-    public ResponseEntity<List<AbsenceBasicInformationDTO>> checkIfUsernameIsAvailable(@PathVariable Long id) {
+    public ResponseEntity<List<AbsenceBasicInformationDTO>> findById(@PathVariable Long id) {
         List<Absence> absences = absenceService.getAllByUserId(id);
         List<AbsenceBasicInformationDTO> response = ObjectMapperUtils.mapAll(absences, AbsenceBasicInformationDTO.class);
         return new ResponseEntity<>(response, HttpStatus.OK);
     }
 
-    @PostMapping("/add")
+    @PostMapping
     @PreAuthorize("hasRole('EMPLOYEE')")
     public ResponseEntity addAbsence(@RequestBody RequestAbsenceDTO requestAbsenceDTO, Principal loggedEmployee)  {
         Employee employee = employeeService.findByUsername(loggedEmployee.getName());
@@ -56,9 +56,9 @@ public class AbsenceController {
         return new ResponseEntity<>(HttpStatus.CREATED);
     }
 
-    @PostMapping("/approve/{id}/{status}")
+    @PutMapping("/{id}")
     @PreAuthorize("hasRole('ADMIN')")
-    public ResponseEntity approveAbsence(@PathVariable Long id, @PathVariable Status status, Principal loggedAdmin)  {
+    public ResponseEntity reviewAbsence(@PathVariable Long id, @RequestBody Status status, Principal loggedAdmin)  {
         Admin admin = adminService.findByUsername(loggedAdmin.getName());
         Absence absence = absenceService.review(id, status);
         return new ResponseEntity<>(HttpStatus.NO_CONTENT);

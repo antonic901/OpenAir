@@ -1,7 +1,6 @@
 package openair.controller;
 
 import openair.dto.LoginDTO;
-import openair.dto.UserBasicInformationDTO;
 import openair.dto.UserTokenState;
 import openair.model.User;
 import openair.dto.JwtAuthenticationRequest;
@@ -20,18 +19,14 @@ import org.springframework.web.bind.annotation.*;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
-import java.security.Principal;
 
 @RestController
 @RequestMapping(value = "/auth", produces = MediaType.APPLICATION_JSON_VALUE)
 public class AuthenticationController {
 
     private TokenUtils tokenUtils;
-
     private AuthenticationManager authenticationManager;
-
     private UserService userService;
-
     private ModelMapper modelMapper;
 
     @Autowired
@@ -65,16 +60,7 @@ public class AuthenticationController {
         return new ResponseEntity<>(userService.checkIfUsernameIsAvailable(username), HttpStatus.OK);
     }
 
-    @GetMapping("/get-basic-informations")
-    public ResponseEntity<UserBasicInformationDTO> getBasicInformations(Principal loggedUser) {
-        User user = null;
-        if(loggedUser != null) {
-           user = userService.findByUsername(loggedUser.getName());
-        }
-        return new ResponseEntity<UserBasicInformationDTO>(modelMapper.map(user, UserBasicInformationDTO.class), HttpStatus.OK);
-    }
-
-    @GetMapping("/get-role")
+    @GetMapping("/role")
     public ResponseEntity<String> getRole(HttpServletRequest request) {
         String token = tokenUtils.getToken(request);
         return ResponseEntity.ok(tokenUtils.getRoleFromToken(token));

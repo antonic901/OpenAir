@@ -12,7 +12,7 @@ import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.multipart.MultipartFile;
 
 @RestController
-@RequestMapping(value = "/api/upload")
+@RequestMapping(value = "/uploads")
 public class FileUploadController {
 
     private StorageService storageService;

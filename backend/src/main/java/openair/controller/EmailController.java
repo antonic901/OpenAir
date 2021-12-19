@@ -9,7 +9,7 @@ import org.springframework.http.MediaType;
 import org.springframework.web.bind.annotation.*;
 
 @RestController
-@RequestMapping(value = "api/email")
+@RequestMapping(value = "email")
 public class EmailController {
 	
 	private MailService emailService;
@@ -21,7 +21,7 @@ public class EmailController {
 
 	@ResponseStatus(HttpStatus.OK)
 	@PostMapping(value = "/send-mail", produces = MediaType.APPLICATION_JSON_VALUE, consumes = MediaType.APPLICATION_JSON_VALUE)
-	public boolean sendMessagesToAllSubscribers(@RequestBody MailDTO emailDTO) throws Exception{
+	public boolean sendMail(@RequestBody MailDTO emailDTO) throws Exception{
 		Mail mail = new Mail(emailDTO.getMailFrom(),emailDTO.getMailTo(),emailDTO.getMailCc(),emailDTO.getMailBcc(),
 				emailDTO.getMailSubject(),emailDTO.getMailContent(),emailDTO.getContentType(),emailDTO.getAttachments());
 		return emailService.sendMail(mail);

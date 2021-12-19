@@ -16,13 +16,12 @@ import org.springframework.web.bind.annotation.*;
 import java.security.Principal;
 
 @RestController
-@RequestMapping(value = "/api/timesheetday")
+@RequestMapping(value = "/timesheetdays")
 public class TimeSheetDayController {
 
     private EmployeeService employeeService;
     private TimeSheetDayService timeSheetDayService;
     private TaskService taskService;
-
     private ModelMapper modelMapper;
 
     @Autowired
@@ -33,9 +32,9 @@ public class TimeSheetDayController {
         this.modelMapper = modelMapper;
     }
 
-    @PostMapping("/add-by-employee")
+    @PostMapping
     @PreAuthorize("hasRole('EMPLOYEE')")
-    public ResponseEntity<TimeBasicInformationDTO> addDay(@RequestBody TimeSheetDayDTO timeSheetDayDTO, Principal loggedEmployee) {
+    public ResponseEntity<TimeBasicInformationDTO> addTimeSheetDay(@RequestBody TimeSheetDayDTO timeSheetDayDTO, Principal loggedEmployee) {
         TimeSheetDay timeSheetDay = new TimeSheetDay();
         modelMapper.map(timeSheetDayDTO,timeSheetDay);
 
@@ -46,16 +45,6 @@ public class TimeSheetDayController {
         timeSheetDay.setEmployee(employee);
 
         return new ResponseEntity<>(modelMapper.map(timeSheetDayService.addTimeSheetDay(timeSheetDay,employee),TimeBasicInformationDTO.class), HttpStatus.CREATED);
-    }
-
-    @PostMapping("/add-by-admin/{employeeId}")
-    @PreAuthorize("hasRole('ADMIN')")
-    public ResponseEntity<TimeBasicInformationDTO> addDay(@RequestBody TimeSheetDayDTO timeSheetDayDTO, @PathVariable Long employeeId) {
-        Employee employee = employeeService.findEmployeeById(employeeId);
-        TimeSheetDay timeSheetDay = new TimeSheetDay();
-        Task task = taskService.findById(timeSheetDay.getTask().getId());
-        timeSheetDay.setTask(task);
-        return new ResponseEntity<>(modelMapper.map(timeSheetDayService.addTimeSheetDay(timeSheetDay,employee), TimeBasicInformationDTO.class), HttpStatus.CREATED);
     }
 
 }
