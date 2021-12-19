@@ -12,6 +12,20 @@ Vue.use(VueAxios,axios)
 
 axios.defaults.baseURL = process.env.VUE_APP_API_ENDPOINT
 
+axios.interceptors.response.use(
+  (response) => {
+    return response;
+  },
+  (err) => {
+    if(err.response.status === 401) {
+      localStorage.clear()
+      this.$store.dispatch('updateJwt', null);
+      this.$store.dispatch('updateUserType', null);
+      this.$store.dispatch('updateUserId', null);
+    }
+  }
+)
+
 new Vue({
   vuetify,
   router,

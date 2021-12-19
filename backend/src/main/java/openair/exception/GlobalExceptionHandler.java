@@ -1,5 +1,6 @@
 package openair.exception;
 
+import io.jsonwebtoken.ExpiredJwtException;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -38,6 +39,14 @@ public class GlobalExceptionHandler {
         HttpStatus status = HttpStatus.CONFLICT;
         List<String> errors = Collections.singletonList(ex.getMessage());
 
+        return new ResponseEntity<>(errors, headers, status);
+    }
+
+    @ExceptionHandler({ExpiredJwtException.class})
+    public final ResponseEntity<List<String>> handleExpiredJwtException(ExpiredJwtException ex, WebRequest request){
+        HttpHeaders headers = new HttpHeaders();
+        HttpStatus status = HttpStatus.UNAUTHORIZED;
+        List<String> errors = Collections.singletonList(ex.getMessage());
         return new ResponseEntity<>(errors, headers, status);
     }
 

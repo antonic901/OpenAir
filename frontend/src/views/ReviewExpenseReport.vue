@@ -102,7 +102,7 @@ export default {
     },
     methods: {
         review(item, status) {
-            this.axios.post("/api/expensereport/review/" + item.id + "/" + status, null,{headers: {'Content-Type': 'application/json', 'Authorization': `Bearer ` + this.$store.getters.getJwt}})
+            this.axios.post("/api/expensereport/review/" + item.id + "/" + status, null,{headers: {'Content-Type': 'application/json', 'Authorization': `Bearer ` + localStorage.jws}})
                 .then(() => {
                     item.status = status;
                 })
@@ -154,7 +154,7 @@ export default {
         }
     },
     mounted() {
-        this.axios.get("/api/expensereport/get-all-for-admin", {headers: {'Authorization': `Bearer ` + this.$store.getters.getJwt}})
+        this.axios.get("/api/expensereport/get-all-for-admin", {headers: {'Authorization': `Bearer ` + localStorage.jws}})
             .then(r => {
                 this.expenseReports = r.data;
             })

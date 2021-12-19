@@ -177,7 +177,7 @@ export default {
     },
     methods: {
         getEmployee() {
-            this.axios.get("/api/project/find-all-employees-by-project-id/" + this.selectedProject.id,{headers: {'Authorization': `Bearer ` + this.$store.getters.getJwt}})
+            this.axios.get("/api/project/find-all-employees-by-project-id/" + this.selectedProject.id,{headers: {'Authorization': `Bearer ` + localStorage.jws}})
                 .then(r => {
                     this.emploies = r.data;
                 })
@@ -197,7 +197,7 @@ export default {
                 employeeID: this.selectedEmployee.id,
                 projectID: this.selectedProject.id
             }
-            this.axios.post("/api/task/add-task", add ,{headers: {'Authorization': `Bearer ` + this.$store.getters.getJwt}})
+            this.axios.post("/api/task/add-task", add ,{headers: {'Authorization': `Bearer ` + localStorage.jws}})
                 .then(() => {
                     this.e1 = 5;
                     this.name = '';
@@ -213,7 +213,7 @@ export default {
         }
     },
     mounted() {
-        this.axios.get("/api/project/find-all-by-user-id/" + this.$store.getters.getUserId,{headers: {'Authorization': `Bearer ` + this.$store.getters.getJwt}})
+        this.axios.get("/api/project/find-all-by-user-id/" + this.$store.getters.getUserId,{headers: {'Authorization': `Bearer ` + localStorage.jws}})
             .then(r => {
                 this.projects = r.data;
             })
