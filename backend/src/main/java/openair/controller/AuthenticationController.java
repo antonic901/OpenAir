@@ -90,5 +90,5 @@ public class AuthenticationController {
         int expiresIn = tokenUtils.getExpiredIn();
         return ResponseEntity.ok(new UserTokenState(refreshedToken, expiresIn));
     }
-
+    
 }
