@@ -1,15 +1,17 @@
 package openair.controller;
 
-import openair.dto.AddEmployeeDTO;
 import openair.dto.ProjectBasicInformationDTO;
 import openair.dto.ProjectDTO;
+import openair.dto.TaskBasicInformationDTO;
 import openair.dto.UserBasicInformationDTO;
 import openair.model.Admin;
 import openair.model.Employee;
 import openair.model.Project;
+import openair.model.Task;
 import openair.service.AdminService;
 import openair.service.ProjectService;
 
+import openair.service.TaskService;
 import openair.utils.ObjectMapperUtils;
 import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -20,26 +22,27 @@ import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 
 import java.security.Principal;
-import java.util.ArrayList;
 import java.util.List;
 
 @RestController
-@RequestMapping(value = "/api/project", produces = MediaType.APPLICATION_JSON_VALUE)
+@RequestMapping(value = "/projects", produces = MediaType.APPLICATION_JSON_VALUE)
 public class ProjectController {
 
     private ProjectService projectService;
     private AdminService adminService;
-
     private ModelMapper modelMapper;
+    private TaskService taskService;
 
     @Autowired
-    public ProjectController(ProjectService projectService, AdminService adminService, ModelMapper modelMapper) {
+    public ProjectController(ProjectService projectService, AdminService adminService,
+                             ModelMapper modelMapper, TaskService taskService) {
         this.projectService = projectService;
         this.adminService = adminService;
         this.modelMapper = modelMapper;
+        this.taskService = taskService;
     }
 
-    @PostMapping("/add")
+    @PostMapping
     @PreAuthorize("hasRole('ADMIN')")
     public ResponseEntity addProject(@RequestBody ProjectDTO projectDTO, Principal loggedAdmin) {
         Admin admin = adminService.findByUsername(loggedAdmin.getName());
@@ -49,47 +52,39 @@ public class ProjectController {
         return new ResponseEntity<>(HttpStatus.CREATED);
     }
 
-    @GetMapping("/find-by-name")
-    public ResponseEntity<ProjectBasicInformationDTO> findProjectByName(@RequestBody String name){
+    //TODO koriste li se gde ove dve metode??
+    /*@GetMapping("/{name}}")
+    public ResponseEntity<ProjectBasicInformationDTO> findProjectByName(@PathVariable String name){
         Project project = projectService.findProjectByName(name);
         return new ResponseEntity<>(modelMapper.map(project,ProjectBasicInformationDTO.class), HttpStatus.OK);
     }
 
-    @GetMapping("/find-by-id")
-    public ResponseEntity<ProjectBasicInformationDTO> findProjectById(@RequestBody Long projectId){
+    @GetMapping("/{projectId}")
+    public ResponseEntity<ProjectBasicInformationDTO> findProjectById(@PathVariable Long projectId){
         Project project = projectService.findProjectById(projectId);
         return new ResponseEntity<>(modelMapper.map(project,ProjectBasicInformationDTO.class), HttpStatus.OK);
-    }
+    }*/
 
-    @PostMapping("/add-employee")
+    @PutMapping("/{projectId}/employees")
     @PreAuthorize("hasRole('ADMIN')")
-    public ResponseEntity<ProjectBasicInformationDTO> addEmployee(@RequestBody AddEmployeeDTO addEmployeeDTO) {
-        Project project = projectService.addEmployeeToProject(addEmployeeDTO.getEmployeeId(),addEmployeeDTO.getProjectId());
+    public ResponseEntity<ProjectBasicInformationDTO> addEmployeeToProject(@PathVariable Long projectId, @RequestBody Long employeeId) {
+        Project project = projectService.addEmployeeToProject(employeeId,projectId);
         return new ResponseEntity<>(modelMapper.map(project, ProjectBasicInformationDTO.class), HttpStatus.CREATED);
     }
 
-    //vraca liste projekata i za admina i za employee-a
-    @GetMapping("/find-all-by-user-id/{userId}")
-    @PreAuthorize("hasRole('ADMIN') || hasRole('EMPLOYEE')")
-    public ResponseEntity<List<ProjectBasicInformationDTO>> findAllByUserId(@PathVariable Long userId) {
-        List<Project> projects = projectService.findAllByUserId(userId);
-        List<ProjectBasicInformationDTO> response = ObjectMapperUtils.mapAll(projects, ProjectBasicInformationDTO.class);
-        return new ResponseEntity<>(response, HttpStatus.OK);
-    }
-
-    @GetMapping("/find-all-not-refunded/{userId}")
-    @PreAuthorize("hasRole('EMPLOYEE')")
-    public ResponseEntity<List<ProjectBasicInformationDTO>> findAllNotRefunded(@PathVariable Long userId) {
-        List<Project> projects = projectService.findAllNotRefundedByEmployeeId(userId);
-        List<ProjectBasicInformationDTO> response = ObjectMapperUtils.mapAll(projects, ProjectBasicInformationDTO.class);
-        return new ResponseEntity<>(response, HttpStatus.OK);
-    }
-
-    @GetMapping("/find-all-employees-by-project-id/{projectId}")
+    @GetMapping("/{projectId}/employees")
     @PreAuthorize("hasRole('ADMIN')")
-    public ResponseEntity<List<UserBasicInformationDTO>> findAllByProjectId(@PathVariable Long projectId) {
+    public ResponseEntity<List<UserBasicInformationDTO>> findAllEmployeesByProjectId(@PathVariable Long projectId) {
         List<Employee> employees = projectService.findAllEmployeesByProjectId(projectId);
         List<UserBasicInformationDTO> response = ObjectMapperUtils.mapAll(employees, UserBasicInformationDTO.class);
+        return new ResponseEntity<>(response, HttpStatus.OK);
+    }
+
+    @GetMapping("/{projectId}/tasks")
+    @PreAuthorize("hasRole('ADMIN') || hasRole('EMPLOYEE')")
+    public ResponseEntity<List<TaskBasicInformationDTO>> findAllTasksByProjectId(@PathVariable Long projectId) {
+        List<Task> tasks = taskService.findAllByProjectId(projectId);
+        List<TaskBasicInformationDTO> response = ObjectMapperUtils.mapAll(tasks, TaskBasicInformationDTO.class);
         return new ResponseEntity<>(response, HttpStatus.OK);
     }
 

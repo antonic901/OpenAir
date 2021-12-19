@@ -15,7 +15,7 @@ import java.io.IOException;
 import java.security.Principal;
 
 @RestController
-@RequestMapping(value = "/api/pdf", produces = MediaType.APPLICATION_JSON_VALUE)
+@RequestMapping(value = "/pdfs", produces = MediaType.APPLICATION_JSON_VALUE)
 public class PdfExporterController {
 
     private PdfExporterService pdfExporterService;
