@@ -23,7 +23,6 @@ public class Task {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    @NotNull
     private Long id;
 
     @Column
@@ -34,10 +33,6 @@ public class Task {
     @ManyToOne
     @JoinColumn(name = "project_id", nullable = false)
     private Project project;
-
-    @JsonIgnore
-    @OneToMany(fetch = FetchType.LAZY, mappedBy="task", cascade = CascadeType.ALL)
-    private List<TimeSheetDay> timeSheetDays = new ArrayList<TimeSheetDay>();
 
     @ManyToOne
     @JoinColumn(name = "employee_id", nullable = false)

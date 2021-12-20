@@ -13,7 +13,6 @@
             <column name="password" value="$2a$12$YUHEExGhPLiUzvkHKgsnn.Xwfc3jW5hT7jCQb6CyPYBv.ZHus.XCC"/>
             <column name="phone" value="066666666"/>
             <column name="usertype" value="ROLE_ADMIN"/>
-            <column name="admin_id" value="1"/>
         </insert>
     </changeSet>
 </databaseChangeLog>

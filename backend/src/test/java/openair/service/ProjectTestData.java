@@ -65,7 +65,7 @@ public class ProjectTestData {
         Admin admin = new Admin();
 
         admin.setId(1L);
-        admin.setProjects(createProjectList());
+//        admin.setProjects(createProjectList());
 
         return admin;
     }
@@ -74,7 +74,7 @@ public class ProjectTestData {
         Employee employee = new Employee();
 
         employee.setId(2L);
-        employee.setProjects(createProjectList());
+//        employee.setProjects(createProjectList());
 
         return employee;
     }

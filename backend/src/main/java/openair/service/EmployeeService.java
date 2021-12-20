@@ -50,23 +50,12 @@ public class EmployeeService implements IEmployeeService {
 
     @Override
     public Employee findByUsername(String name) {
-
-        Optional<Employee> employeeOptional = employeeRepository.findByUsername(name);
-
-        if(employeeOptional.isEmpty())
-            throw new NotFoundException("Employee with username " + name + " does not exist.");
-
-        return employeeOptional.get();
+        return employeeRepository.findByUsername(name).orElseThrow(() -> new NotFoundException("Employee with username " + name + " does not exist."));
     }
 
     @Override
     public Employee findEmployeeById(Long employeeID) {
-        Optional<Employee> employeeOptional = employeeRepository.findById(employeeID);
-
-        if(employeeOptional.isEmpty())
-            throw new NotFoundException("Employee with id " + employeeID + " does not exist.");
-
-        return employeeOptional.get();
+        return employeeRepository.findById(employeeID).orElseThrow(() -> new NotFoundException("Employee with id " + employeeID + " does not exist."));
     }
 
     //At 00:00:00am, on the 1st day, every month

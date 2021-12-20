@@ -34,14 +34,7 @@ public class AbsenceService implements IAbsenceService {
 
     @Override
     public List<Absence> getAllByUserId(Long id) {
-        Optional<User> userOptional = userRepository.findById(id);
-        User user;
-        if(userOptional.isPresent()) {
-            user = userOptional.get();
-        }
-        else {
-            throw new NotFoundException(id, "User with ID: " + id + " is not found.");
-        };
+        User user = userRepository.findById(id).orElseThrow(() -> new NotFoundException(id, "User with ID: " + id + " is not found."));
         if(user.getUserType().name().equals("ROLE_ADMIN")){
             return absenceRepository.findAllByAdminId(id);
         }
@@ -55,15 +48,7 @@ public class AbsenceService implements IAbsenceService {
 
     @Override
     public Absence add(Absence absence, Long id) {
-
-        Optional<Employee> employeeOptional = employeeRepository.findById(id);
-        Employee employee;
-        if(employeeOptional.isPresent()) {
-            employee = employeeOptional.get();
-        }
-        else {
-            throw new NotFoundException(id, "User with ID: " + id + " is not found.");
-        }
+        Employee employee = employeeRepository.findById(id).orElseThrow(() -> new NotFoundException(id, "User with ID: " + id + " is not found."));
 
         if(absence.getPeriod().getStartTime().isAfter(absence.getPeriod().getEndTime())) {
             throw new PeriodConflictException(id, "User with ID: " + id + " have selected wrong period (start after end))");
@@ -117,14 +102,7 @@ public class AbsenceService implements IAbsenceService {
 
     @Override
     public Absence review(Long id, Status status) {
-        Optional<Absence> optionalAbsence = absenceRepository.findById(id);
-        Absence absence;
-        if(optionalAbsence.isPresent()) {
-            absence = optionalAbsence.get();
-        }
-        else {
-            throw new NotFoundException(id, "Absence with ID: " + id + " is not found.");
-        }
+        Absence absence = absenceRepository.findById(id).orElseThrow(() -> new NotFoundException(id, "Absence with ID: " + id + " is not found."));
         absence.setStatus(status);
         return absenceRepository.save(absence);
     }

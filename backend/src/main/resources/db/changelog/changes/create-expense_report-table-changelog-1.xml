@@ -26,7 +26,7 @@
             <column name="tracking_number" type="VARCHAR(30)">
                 <constraints nullable="false"/>
             </column>
-            <column name="document" type="VARCHAR(50)">
+            <column name="document" type="VARCHAR(150)">
                 <constraints nullable="false"/>
             </column>
             <column name="project_id" type="BIGINT">

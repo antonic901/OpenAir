@@ -25,7 +25,6 @@ public class User implements UserDetails {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    @NotNull
     private Long id;
 
     @Column
@@ -60,7 +59,6 @@ public class User implements UserDetails {
     @Enumerated(EnumType.STRING)
     @NotNull(message = "Usertype can not be null")
     private UserType userType;
-
 
     @ManyToMany(fetch = FetchType.EAGER)
     @JoinTable(name = "user_role",

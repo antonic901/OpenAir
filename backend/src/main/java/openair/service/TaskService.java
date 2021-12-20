@@ -43,9 +43,7 @@ public class TaskService implements ITaskService {
     }
 
     @Override
-    public Task addTask(Task task) {
-        return taskRepository.save(task);
-    }
+    public Task addTask(Task task) { return taskRepository.save(task); }
 
     @Override
     public List<Task> findAllByProjectId(Long projectId) {
@@ -62,40 +60,7 @@ public class TaskService implements ITaskService {
 
     @Override
     public Task findById(Long taskId) {
-        Optional<Task> taskOptional = taskRepository.findById(taskId);
-        if(!taskOptional.isPresent())
-            throw new NotFoundException("Task with id " + taskId + " does not exist.");
-
-        return taskOptional.get();
+        return taskRepository.findById(taskId).orElseThrow(() -> new NotFoundException("Task with id " + taskId + " does not exist."));
     }
 
-    @Override
-    public Task addTaskToProject(Long taskId, Long projectId, Long employeeId) {
-        Optional<Project> optionalProject = projectRepository.findById(projectId);
-        if(!optionalProject.isPresent()) {
-            throw new NotFoundException(projectId, "Project with ID: " + projectId + " not found.");
-        }
-        Project project = optionalProject.get();
-
-        Optional<Employee> optionalEmployee = employeeRepository.findById(employeeId);
-        if(!optionalEmployee.isPresent()) {
-            throw new NotFoundException(employeeId, "Employee with ID: " + employeeId + " not found.");
-        }
-        Employee employee = optionalEmployee.get();
-
-        Optional<Task> optionalTask = taskRepository.findById(taskId);
-        if(!optionalTask.isPresent()) {
-            throw  new NotFoundException(taskId, "Task with ID: " + taskId + " not found.");
-        }
-        Task task = optionalTask.get();
-
-        List<Task> taskList = project.getTasks();
-        if(!taskList.contains(task))
-            taskList.add(task);
-
-        project.setTasks(taskList);
-        employee.setTasks(taskList);
-
-        return taskRepository.save(task);
-    }
 }
