@@ -6,10 +6,12 @@ import openair.dto.TimeBasicInformationDTO;
 import openair.dto.TimeSheetDayDTO;
 import openair.exception.NotFoundException;
 import openair.exception.ResourceConflictException;
+import openair.exception.ValidationException;
 import openair.model.*;
 import openair.service.*;
 
 import openair.utils.ObjectMapperUtils;
+import openair.utils.ValidationUtils;
 import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpHeaders;
@@ -20,6 +22,7 @@ import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.util.UriComponentsBuilder;
 
+import javax.validation.ConstraintViolationException;
 import java.security.Principal;
 import java.util.List;
 
@@ -55,6 +58,9 @@ public class EmployeeController {
         if (existUser != null) {
             throw new ResourceConflictException(existUser.getId(), "Username already exists");
         }
+
+        if(!ValidationUtils.isValidPassword(registerEmployeeDTO.getPassword()))
+            throw new ValidationException("Password is not valid.");
 
         Employee employee = new Employee();
         modelMapper.map(registerEmployeeDTO, employee);

@@ -8,6 +8,9 @@ import lombok.Setter;
 import openair.model.enums.Currency;
 
 import javax.persistence.*;
+import javax.validation.constraints.FutureOrPresent;
+import javax.validation.constraints.NotNull;
+import javax.validation.constraints.PastOrPresent;
 import java.time.LocalDate;
 
 @Entity
@@ -23,13 +26,17 @@ public class Money {
     private Long id;
 
     @Column
+    @NotNull(message = "Quantity cannot be null")
     private double quantity;
 
-    @Column(nullable = true)
+    @Column
     @Enumerated(EnumType.STRING)
+    @NotNull(message = "Currency cannot be null")
     private Currency currency;
 
     @Column
+    @PastOrPresent
+    @NotNull(message = "Date cannot be null")
     private LocalDate date;
 
     @JsonIgnore
