@@ -31,24 +31,24 @@ public class User implements UserDetails {
     private Long id;
 
     @Column
-    @NotBlank
+    @NotBlank(message = "Name can not be blank")
     private String name;
 
     @Column
-    @NotBlank
+    @NotBlank(message = "Surname can not be blank")
     private String surname;
 
     @Column
-    @Email
+    @Email(message = "Email must be valid")
     private String email;
 
     @Column
-    @NotBlank
+    @NotBlank(message = "Username can not be blank")
     private String username;
 
     @JsonIgnore
     @Column
-    @NotBlank
+    @NotBlank(message = "Password can not be blank")
     private String password;
 
     @Column
@@ -56,7 +56,7 @@ public class User implements UserDetails {
 
     @Column(name = "usertype", nullable = false)
     @Enumerated(EnumType.STRING)
-    @NotNull
+    @NotNull(message = "Usertype can not be null")
     private UserType userType;
 
 

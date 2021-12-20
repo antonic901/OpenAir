@@ -26,7 +26,7 @@ public class Task {
     private Long id;
 
     @Column
-    @NotBlank
+    @NotBlank(message = "Name can not be blank")
     private String name;
 
     @ManyToOne

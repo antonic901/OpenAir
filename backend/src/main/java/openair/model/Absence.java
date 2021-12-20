@@ -20,7 +20,7 @@ public class Absence {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    @NotNull
+    @NotNull(message = "Id can not be null")
     private Long id;
 
     @Column(name = "period", nullable = false)
@@ -34,12 +34,12 @@ public class Absence {
 
     @ManyToOne
     @JoinColumn(name = "employee_id", nullable = false)
-    @NotNull
+    @NotNull(message = "Employee can not be null")
     private Employee employee;
 
     @ManyToOne
     @JoinColumn(name = "admin_id", nullable = false)
-    @NotNull
+    @NotNull(message = "Admin can not be null")
     private Admin admin;
 
 }

@@ -30,12 +30,12 @@ public class TimeSheetDay {
 
     @ManyToOne
     @JoinColumn(name = "employee_id", nullable = false)
-    @NotNull
+    @NotNull(message = "Employee can not be null")
     private Employee employee;
 
     @ManyToOne
     @JoinColumn(name = "task_id", nullable = false)
-    @NotNull
+    @NotNull(message = "Task can not be null")
     private Task task;
 
 }
