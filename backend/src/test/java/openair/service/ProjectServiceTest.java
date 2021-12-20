@@ -16,6 +16,7 @@ import org.mockito.Spy;
 import org.springframework.boot.test.context.SpringBootTest;
 import static org.assertj.core.api.Assertions.assertThat;
 
+import java.util.ArrayList;
 import java.util.Optional;
 
 import static org.junit.jupiter.api.Assertions.assertThrows;
@@ -112,10 +113,12 @@ public class ProjectServiceTest {
         when(userRepository.findById(2L)).thenReturn(Optional.of(user2));
         when(adminRepository.findById(1L)).thenReturn(Optional.of(admin));
         when(employeeRepository.findById(2L)).thenReturn(Optional.of(employee));
+        when(projectRepository.findAllByAdminId(1L)).thenReturn(ProjectTestData.createProjectList());
+        when(projectRepository.findAllByEmployeeId(2L)).thenReturn(new ArrayList<Project>());
 
         //then
         assertThat(projectService.findAllByUserId(1L)).hasSize(2);
-        assertThat(projectService.findAllByUserId(2L)).hasSize(2);
+        assertThat(projectService.findAllByUserId(2L)).hasSize(0);
         assertThrows(NotFoundException.class, () -> projectService.findAllByUserId(3L));
     }
 

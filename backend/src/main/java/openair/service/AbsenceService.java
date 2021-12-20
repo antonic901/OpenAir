@@ -47,15 +47,16 @@ public class AbsenceService implements IAbsenceService {
 
     @Override
     public Absence add(Absence absence, Long id) {
-        Employee employee = employeeRepository.findById(id).orElseThrow(() -> new NotFoundException(id, "User with ID: " + id + " is not found."));
 
         if(absence.getPeriod().getStartTime().isAfter(absence.getPeriod().getEndTime())) {
             throw new PeriodConflictException(id, "User with ID: " + id + " have selected wrong period (start after end))");
         }
 
-        else if(checkIsAbsenceConflicting(employee, absence.getPeriod().getStartTime(), absence.getPeriod().getEndTime())) {
+        else if(checkIsAbsenceConflicting(id, absence.getPeriod().getStartTime(), absence.getPeriod().getEndTime())) {
             throw new PeriodConflictException(id, "User with ID: " + id + " have requested absence which is in conflict with other absence");
         }
+
+        Employee employee = employeeRepository.findById(id).orElseThrow(() -> new NotFoundException(id, "User with ID: " + id + " is not found."));
 
         Period period = new Period(absence.getPeriod().getStartTime(),absence.getPeriod().getEndTime());
         absence.setPeriod(period);
@@ -65,9 +66,8 @@ public class AbsenceService implements IAbsenceService {
         return absenceRepository.save(absence);
     }
 
-    boolean checkIsAbsenceConflicting(Employee employee, LocalDateTime startTime, LocalDateTime endTime) {
-
-        List<Absence> absences = absenceRepository.findAllByEmployeeIdAndStatus(employee.getId());
+    boolean checkIsAbsenceConflicting(Long id, LocalDateTime startTime, LocalDateTime endTime) {
+        List<Absence> absences = absenceRepository.findAllByEmployeeIdAndStatus(id);
         boolean isConflict = false;
         for(Absence absence : absences) {
             isConflict = checkConflict(absence,startTime,endTime);

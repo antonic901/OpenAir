@@ -48,12 +48,8 @@ public class AdminServiceTest {
 
     @Test
     public void testRegisterEmployee() {
-        Admin admin = AdminTestData.createAdmin();
 
         when(passwordEncoder.encode(any(String.class))).thenReturn("##?A4@!");
-        when(roleRepository.findByName(UserType.ROLE_EMPLOYEE)).thenReturn(new Role(1L, UserType.ROLE_EMPLOYEE));
-        when(roleRepository.findByName(UserType.ROLE_ADMIN)).thenReturn(new Role(1L, UserType.ROLE_ADMIN));
-        when(adminRepository.findById(1L)).thenReturn(Optional.of(admin));
         when(employeeRepository.save(any(Employee.class))).thenReturn(AdminTestData.createEmployee());
 
         List<Employee> employeeList = AdminTestData.createEmployees();
