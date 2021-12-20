@@ -23,7 +23,6 @@ public class AdminTestData {
         admin.setPhone("0613824291");
         admin.setUserType(UserType.ROLE_ADMIN);
         admin.getRoles().add(new Role(1L, UserType.ROLE_ADMIN));
-        admin.setEmployeeList(createEmployees());
         return admin;
     }
 

@@ -44,10 +44,6 @@ public class UserService implements IUserService, UserDetailsService {
         User user = userRepository.findByUsername(username);
 
         //true when username available
-        if (user != null) {
-            return false;
-        }
-
-        return true;
+        return user == null;
     }
 }
