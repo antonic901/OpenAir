@@ -17,25 +17,25 @@
             <column name="date_of_hiring" type="TIMESTAMP">
                 <constraints nullable="true"/>
             </column>
-            <column name="email" type="VARCHAR(255)">
+            <column name="email" type="VARCHAR(30)">
                 <constraints nullable="false"/>
             </column>
-            <column name="name" type="VARCHAR(255)">
+            <column name="name" type="VARCHAR(30)">
                 <constraints nullable="false"/>
             </column>
-            <column name="username" type="VARCHAR(255)">
+            <column name="username" type="VARCHAR(30)">
                 <constraints nullable="false"/>
             </column>
-            <column name="password" type="VARCHAR(255)">
+            <column name="password" type="VARCHAR(100)">
                 <constraints nullable="false"/>
             </column>
-            <column name="phone" type="VARCHAR(255)">
+            <column name="phone" type="VARCHAR(30)">
                 <constraints nullable="false"/>
             </column>
-            <column name="surname" type="VARCHAR(255)">
+            <column name="surname" type="VARCHAR(30)">
                 <constraints nullable="false"/>
             </column>
-            <column name="usertype" type="VARCHAR(255)">
+            <column name="usertype" type="VARCHAR(30)">
                 <constraints nullable="false"/>
             </column>
             <column name="department" type="VARCHAR(30)">

@@ -7,6 +7,8 @@ import lombok.Setter;
 import openair.model.enums.Status;
 
 import javax.persistence.*;
+import javax.validation.constraints.FutureOrPresent;
+import javax.validation.constraints.NotNull;
 
 @Entity
 @Table(name = "absences")
@@ -18,10 +20,12 @@ public class Absence {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
+    @NotNull(message = "Id can not be null")
     private Long id;
 
     @Column(name = "period", nullable = false)
     @Embedded
+    @FutureOrPresent
     private Period period;
 
     @Column
@@ -30,10 +34,12 @@ public class Absence {
 
     @ManyToOne
     @JoinColumn(name = "employee_id", nullable = false)
+    @NotNull(message = "Employee can not be null")
     private Employee employee;
 
     @ManyToOne
     @JoinColumn(name = "admin_id", nullable = false)
+    @NotNull(message = "Admin can not be null")
     private Admin admin;
 
 }

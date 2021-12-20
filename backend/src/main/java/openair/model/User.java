@@ -10,6 +10,7 @@ import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
 
 import javax.persistence.*;
+import javax.validation.constraints.*;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.List;
@@ -24,22 +25,32 @@ public class User implements UserDetails {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
+    @NotNull
     private Long id;
 
     @Column
+    @NotBlank(message = "Name can not be blank")
+    @Size(min = 1, max = 30, message = "Name must be between 1 and 30")
     private String name;
 
     @Column
+    @NotBlank(message = "Surname can not be blank")
+    @Size(min = 1, max = 30, message = "Surname must be between 1 and 30")
     private String surname;
 
     @Column
+    @Email(message = "Email must be valid")
+    @NotNull(message = "Email can not be null")
     private String email;
 
     @Column
+    @NotBlank(message = "Username can not be blank")
+    @Size(min = 1, max = 30, message = "Username must be between 1 and 30")
     private String username;
 
     @JsonIgnore
     @Column
+    @NotBlank(message = "Password can not be blank")
     private String password;
 
     @Column
@@ -47,6 +58,7 @@ public class User implements UserDetails {
 
     @Column(name = "usertype", nullable = false)
     @Enumerated(EnumType.STRING)
+    @NotNull(message = "Usertype can not be null")
     private UserType userType;
 
 
