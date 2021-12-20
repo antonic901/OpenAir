@@ -6,6 +6,7 @@ import lombok.NoArgsConstructor;
 import lombok.Setter;
 
 import javax.persistence.*;
+import javax.validation.constraints.NotNull;
 import java.time.LocalDate;
 
 @Entity
@@ -18,6 +19,7 @@ public class TimeSheetDay {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
+    @NotNull
     private Long id;
 
     @Column
@@ -28,10 +30,12 @@ public class TimeSheetDay {
 
     @ManyToOne
     @JoinColumn(name = "employee_id", nullable = false)
+    @NotNull
     private Employee employee;
 
     @ManyToOne
     @JoinColumn(name = "task_id", nullable = false)
+    @NotNull
     private Task task;
 
 }

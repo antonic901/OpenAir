@@ -10,6 +10,9 @@ import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
 
 import javax.persistence.*;
+import javax.validation.constraints.Email;
+import javax.validation.constraints.NotBlank;
+import javax.validation.constraints.NotNull;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.List;
@@ -24,22 +27,28 @@ public class User implements UserDetails {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
+    @NotNull
     private Long id;
 
     @Column
+    @NotBlank
     private String name;
 
     @Column
+    @NotNull
     private String surname;
 
     @Column
+    @Email
     private String email;
 
     @Column
+    @NotNull
     private String username;
 
     @JsonIgnore
     @Column
+    @NotBlank
     private String password;
 
     @Column
@@ -47,6 +56,7 @@ public class User implements UserDetails {
 
     @Column(name = "usertype", nullable = false)
     @Enumerated(EnumType.STRING)
+    @NotNull
     private UserType userType;
 
 
