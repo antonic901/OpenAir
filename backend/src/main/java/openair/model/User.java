@@ -35,7 +35,7 @@ public class User implements UserDetails {
     private String name;
 
     @Column
-    @NotNull
+    @NotBlank
     private String surname;
 
     @Column
@@ -43,7 +43,7 @@ public class User implements UserDetails {
     private String email;
 
     @Column
-    @NotNull
+    @NotBlank
     private String username;
 
     @JsonIgnore

@@ -26,7 +26,7 @@ public class Role implements GrantedAuthority {
 
     @Column
     @Enumerated(EnumType.STRING)
-    @NotBlank
+    @NotNull
     private UserType name;
 
     @Override
