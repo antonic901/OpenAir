@@ -17,9 +17,9 @@ import java.util.List;
 @Service
 public class AbsenceService implements IAbsenceService {
 
-    private AbsenceRepository  absenceRepository;
-    private EmployeeRepository employeeRepository;
-    private UserRepository userRepository;
+    private final AbsenceRepository  absenceRepository;
+    private final EmployeeRepository employeeRepository;
+    private final UserRepository userRepository;
 
     @Autowired
     public AbsenceService(AbsenceRepository absenceRepository, EmployeeRepository employeeRepository, UserRepository userRepository) {
@@ -32,12 +32,14 @@ public class AbsenceService implements IAbsenceService {
     public List<Absence> getAllByUserId(Long id) {
 
         User user = userRepository.findById(id).orElseThrow(() -> new NotFoundException(id, "User with ID: " + id + " is not found."));
+
         if(user.getUserType().name().equals("ROLE_ADMIN")){
             return absenceRepository.findAllByAdminId(id);
         }
         else if (user.getUserType().name().equals("ROLE_EMPLOYEE")){
             return absenceRepository.findAllByEmployeeId(id);
         }
+        //TODO Da li treba obrisati ovaj else jer uvek ima neku od ove dve uloge?
         else {
             throw new NotFoundException(id, "User with UserType: " + user.getUserType().name() + " is not found.");
         }

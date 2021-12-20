@@ -71,14 +71,4 @@ public class AdminServiceTest {
         assertThat(adminService.findByUsername("admiin")).isNull();
     }
 
-    @Test
-    public void testGetEmployees() {
-        Admin admin = AdminTestData.createAdmin();
-
-        when(adminRepository.findById(1L)).thenReturn(Optional.of((admin)));
-
-        assertThat(adminService.getEmployees(1L)).hasSize(4);
-        assertThrows(NotFoundException.class, () -> adminService.getEmployees(2L), "User not found");
-    }
-
 }

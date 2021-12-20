@@ -7,5 +7,4 @@ import java.util.List;
 
 public interface IAdminService {
     Admin findByUsername(String username);
-    List<Employee> getEmployees(Long id);
 }
