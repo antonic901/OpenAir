@@ -28,9 +28,6 @@ public class ExpenseReportServiceTest {
     private ExpenseReportRepository expenseReportRepository;
 
     @Mock
-    private ProjectRepository projectRepository;
-
-    @Mock
     private EmployeeRepository employeeRepository;
 
     @Mock

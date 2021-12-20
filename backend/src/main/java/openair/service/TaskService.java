@@ -20,21 +20,10 @@ import java.util.Optional;
 public class TaskService implements ITaskService {
 
     private TaskRepository taskRepository;
-    private ProjectRepository projectRepository;
-    private EmployeeRepository employeeRepository;
-    private TimeSheetDayRepository timeSheetDayRepository;
-
-    private ProjectService projectService;
 
     @Autowired
-    public TaskService(TaskRepository taskRepository, ProjectRepository projectRepository,
-                       EmployeeRepository employeeRepository, TimeSheetDayRepository timeSheetDayRepository,
-                       ProjectService projectService) {
+    public TaskService(TaskRepository taskRepository) {
         this.taskRepository = taskRepository;
-        this.projectRepository = projectRepository;
-        this.employeeRepository = employeeRepository;
-        this.timeSheetDayRepository = timeSheetDayRepository;
-        this.projectService = projectService;
     }
 
     @Override

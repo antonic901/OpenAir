@@ -30,32 +30,9 @@ public class AdminServiceTest {
     @Mock
     private AdminRepository adminRepository;
 
-    @Mock
-    private EmployeeRepository employeeRepository;
-
-    @Mock
-    private RoleRepository roleRepository;
-
-    @Mock
-    private PasswordEncoder passwordEncoder;
-
-    @Mock
-    private EmployeeService employeeService;
-
     @Spy
     @InjectMocks
     private AdminService adminService;
-
-    @Test
-    public void testRegisterEmployee() {
-
-        when(passwordEncoder.encode(any(String.class))).thenReturn("##?A4@!");
-        when(employeeRepository.save(any(Employee.class))).thenReturn(AdminTestData.createEmployee());
-
-        List<Employee> employeeList = AdminTestData.createEmployees();
-
-        assertThat(employeeService.add(employeeList.get(1))).isNotNull();
-    }
 
     @Test
     public void testFindByUsername() {

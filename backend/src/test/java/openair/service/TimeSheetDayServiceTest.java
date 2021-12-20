@@ -21,15 +21,6 @@ public class TimeSheetDayServiceTest {
     @Mock
     private TimeSheetDayRepository timeSheetDayRepository;
 
-    @Mock
-    private EmployeeRepository employeeRepository;
-
-    @Mock
-    private TaskRepository taskRepository;
-
-    @Mock
-    private TaskService taskService;
-
     @Spy
     @InjectMocks
     private TimeSheetDayService timeSheetDayService;

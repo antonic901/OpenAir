@@ -27,12 +27,6 @@ public class TaskServiceTest {
     @Mock
     private TaskRepository taskRepository;
 
-    @Mock
-    private EmployeeRepository employeeRepository;
-
-    @Mock
-    private ProjectRepository projectRepository;
-
     @Spy
     @InjectMocks
     private TaskService taskService;

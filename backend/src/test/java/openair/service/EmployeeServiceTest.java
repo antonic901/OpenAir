@@ -27,9 +27,6 @@ public class EmployeeServiceTest {
     private EmployeeRepository employeeRepository;
 
     @Mock
-    private ProjectRepository projectRepository;
-
-    @Mock
     private PasswordEncoder passwordEncoder;
 
     @Spy

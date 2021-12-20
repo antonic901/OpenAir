@@ -91,12 +91,8 @@ public class ProjectService implements IProjectService {
 
     @Override
     public List<Employee> findAllEmployeesByProjectId(Long projectId) {
-        Optional<Project> projectOptional =  projectRepository.findById(projectId);
-
-        if(projectOptional.isEmpty())
-            throw new NotFoundException("Project with id " + projectId + " does not exist.");
-
-        return projectOptional.get().getEmployeeList();
+        Project project = projectRepository.findById(projectId).orElseThrow(() -> new NotFoundException("Project with id " + projectId + " does not exist."));
+        return project.getEmployeeList();
     }
 
     private boolean checkIsRefunded(Long projectId, Long employeeId) {
