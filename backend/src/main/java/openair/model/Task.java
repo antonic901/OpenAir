@@ -9,6 +9,7 @@ import lombok.Setter;
 import javax.persistence.*;
 import javax.validation.constraints.NotBlank;
 import javax.validation.constraints.NotNull;
+import javax.validation.constraints.Size;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -27,6 +28,7 @@ public class Task {
 
     @Column
     @NotBlank(message = "Name can not be blank")
+    @Size(min = 1, max = 30, message = "Name must be between 1 and 30")
     private String name;
 
     @ManyToOne
