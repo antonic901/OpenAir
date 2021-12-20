@@ -62,6 +62,17 @@ public class GlobalExceptionHandler {
         return new ResponseEntity<>(errors, headers, status);
     }
 
+    @ExceptionHandler({ValidationException.class})
+    public final ResponseEntity<List<String>> handleException(ValidationException ex, WebRequest request){
+
+        HttpHeaders headers = new HttpHeaders();
+        HttpStatus status = HttpStatus.BAD_REQUEST;
+        List<String> errors = Collections.singletonList(ex.getMessage());
+        request.setAttribute(WebUtils.ERROR_EXCEPTION_ATTRIBUTE, ex, WebRequest.SCOPE_REQUEST);
+
+        return new ResponseEntity<>(errors, headers, status);
+    }
+
     @ExceptionHandler({Exception.class})
     public final ResponseEntity<List<String>> handleException(Exception ex, WebRequest request){
 
