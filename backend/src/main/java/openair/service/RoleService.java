@@ -22,15 +22,7 @@ public class RoleService implements IRoleService {
 
     @Override
     public Role findById(Long id) {
-        Optional<Role> optionalRole = roleRepository.findById(id);
-        Role role;
-        if(optionalRole.isPresent()) {
-            role = optionalRole.get();
-        }
-        else {
-            throw new NotFoundException(id, "Role with ID: " + id + " is not found.");
-        }
-        return role;
+        return roleRepository.findById(id).orElseThrow(() -> new NotFoundException(id, "Role with ID: " + id + " is not found."));
     }
 
     @Override

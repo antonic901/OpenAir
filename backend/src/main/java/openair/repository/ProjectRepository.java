@@ -18,4 +18,5 @@ public interface ProjectRepository extends JpaRepository<Project, Long> {
             nativeQuery = true
     )
     List<Project> findAllByEmployeeId(Long id);
+    List<Project> findAllByAdminId(Long id);
 }

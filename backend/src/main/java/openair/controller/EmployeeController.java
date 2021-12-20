@@ -72,7 +72,6 @@ public class EmployeeController {
             throw new NotFoundException("Role with user type: " + registerEmployeeDTO.getUserType() + " not found");
 
         employee.getRoles().add(role);
-        registerEmployeeDTO.setAdminId(admin.getId());
 
         employeeService.add(employee);
         //HttpHeaders headers = new HttpHeaders();

@@ -13,7 +13,6 @@ import org.springframework.stereotype.Service;
 
 import java.time.LocalDateTime;
 import java.util.List;
-import java.util.Optional;
 
 @Service
 public class AbsenceService implements IAbsenceService {
@@ -31,33 +30,22 @@ public class AbsenceService implements IAbsenceService {
 
     @Override
     public List<Absence> getAllByUserId(Long id) {
-        Optional<User> userOptional = userRepository.findById(id);
 
-        if(userOptional.isEmpty()) {
-            throw new NotFoundException(id, "User with ID: " + id + " is not found.");
-        }
-        else if(userOptional.get().getUserType().name().equals("ROLE_ADMIN")){
+        User user = userRepository.findById(id).orElseThrow(() -> new NotFoundException(id, "User with ID: " + id + " is not found."));
+        if(user.getUserType().name().equals("ROLE_ADMIN")){
             return absenceRepository.findAllByAdminId(id);
         }
-        else if (userOptional.get().getUserType().name().equals("ROLE_EMPLOYEE")){
+        else if (user.getUserType().name().equals("ROLE_EMPLOYEE")){
             return absenceRepository.findAllByEmployeeId(id);
         }
         else {
-            throw new NotFoundException(id, "User with UserType: " + userOptional.get().getUserType() + " is not found.");
+            throw new NotFoundException(id, "User with UserType: " + user.getUserType().name() + " is not found.");
         }
     }
 
     @Override
     public Absence add(Absence absence, Long id) {
-
-        Optional<Employee> employeeOptional = employeeRepository.findById(id);
-        Employee employee;
-        if(employeeOptional.isPresent()) {
-            employee = employeeOptional.get();
-        }
-        else {
-            throw new NotFoundException(id, "User with ID: " + id + " is not found.");
-        }
+        Employee employee = employeeRepository.findById(id).orElseThrow(() -> new NotFoundException(id, "User with ID: " + id + " is not found."));
 
         if(absence.getPeriod().getStartTime().isAfter(absence.getPeriod().getEndTime())) {
             throw new PeriodConflictException(id, "User with ID: " + id + " have selected wrong period (start after end))");
@@ -94,14 +82,7 @@ public class AbsenceService implements IAbsenceService {
 
     @Override
     public Absence review(Long id, Status status) {
-        Optional<Absence> optionalAbsence = absenceRepository.findById(id);
-        Absence absence;
-        if(optionalAbsence.isPresent()) {
-            absence = optionalAbsence.get();
-        }
-        else {
-            throw new NotFoundException(id, "Absence with ID: " + id + " is not found.");
-        }
+        Absence absence = absenceRepository.findById(id).orElseThrow(() -> new NotFoundException(id, "Absence with ID: " + id + " is not found."));
         absence.setStatus(status);
         return absenceRepository.save(absence);
     }

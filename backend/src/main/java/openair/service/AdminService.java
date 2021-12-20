@@ -9,7 +9,6 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
-import java.util.Optional;
 
 @Service
 public class AdminService implements IAdminService {
@@ -19,7 +18,6 @@ public class AdminService implements IAdminService {
     @Autowired
     public AdminService(AdminRepository adminRepository) {
         this.adminRepository = adminRepository;
-
     }
 
     @Override
@@ -29,11 +27,7 @@ public class AdminService implements IAdminService {
 
     @Override
     public List<Employee> getEmployees(Long id) {
-        Optional<Admin> optionalAdmin = adminRepository.findById(id);
-        if(!optionalAdmin.isPresent()) {
-            throw new NotFoundException(id, "User with ID: " + id + " is not found.");
-        }
-        Admin admin = optionalAdmin.get();
+        Admin admin = adminRepository.findById(id).orElseThrow(() -> new NotFoundException(id, "User with ID: " + id + " is not found."));
         return admin.getEmployeeList();
     }
 }

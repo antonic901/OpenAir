@@ -52,7 +52,7 @@ public class ExpenseReport {
 
     @Column
     @NotNull(message = "Document cannot be null")
-    @Size(min = 1, max = 50, message
+    @Size(min = 1, max = 150, message
             = "Name must be between 1 and 50 characters")
     private String document;
 

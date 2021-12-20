@@ -20,12 +20,10 @@ public class Absence {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    @NotNull(message = "Id can not be null")
     private Long id;
 
     @Column(name = "period", nullable = false)
     @Embedded
-    @FutureOrPresent
     private Period period;
 
     @Column
