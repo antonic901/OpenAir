@@ -180,7 +180,7 @@ export default {
     methods: {
         getTasks() {
             this.e1 = 2;
-            this.axios.get("/api/task/find-all-by-project-employee-id/" + this.project.id, {headers: {'Authorization': `Bearer ` + localStorage.jws}})
+            this.axios.get("/tasks/projects/" + this.project.id + "/employees/" + this.$store.getters.getUserId, {headers: {'Authorization': `Bearer ` + localStorage.jws}})
                 .then(r => {
                     this.tasks = r.data;
                 })
@@ -189,7 +189,7 @@ export default {
         log() {
             this.dates.forEach(d => {
                 var time = this.getDateTimeFromString(d, "00:00").getTime();
-                this.axios.post("/api/timesheetday/add-by-employee", {date: time, workTime: this.hours, taskId:this.task.id}, {headers: {'Authorization': `Bearer ` + localStorage.jws}})
+                this.axios.post("/timesheetdays", {date: time, workTime: this.hours, taskId:this.task.id}, {headers: {'Authorization': `Bearer ` + localStorage.jws}})
                 .then(() => {
                     this.e1 = 4;
                 })
@@ -214,7 +214,7 @@ export default {
         }
     },
     mounted() {
-        this.axios.get("/api/project/find-all-by-user-id/" + this.$store.getters.getUserId, {headers: {'Authorization': `Bearer ` + localStorage.jws}})
+        this.axios.get("/users/" + this.$store.getters.getUserId + "/projects", {headers: {'Authorization': `Bearer ` + localStorage.jws}})
             .then(r => {
                 this.projects = r.data;
             })

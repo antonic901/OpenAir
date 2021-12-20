@@ -63,14 +63,14 @@ export default {
     },
     methods: {
         review(item, status) {
-            this.axios.post("/api/absence/approve/" + item.id + "/" + status, null,{headers: {'Content-Type': 'application/json', 'Authorization': `Bearer ` + localStorage.jws}})
+            this.axios.put("/absences/" + item.id, status,{headers: {'Content-Type': 'application/json', 'Authorization': `Bearer ` + localStorage.jws}})
                 .then(() => {
                     item.status = status;
                 })
         }
     },
     mounted() {
-        this.axios.get("/api/absence/get-absences/" + this.$store.getters.getUserId, {headers: {'Authorization': `Bearer ` + localStorage.jws}})
+        this.axios.get("/absences/" + this.$store.getters.getUserId, {headers: {'Authorization': `Bearer ` + localStorage.jws}})
             .then(r => {
                 this.absences = r.data
             })

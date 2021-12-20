@@ -74,7 +74,7 @@ export default {
             }
         },
         create() {
-          this.axios.post("/api/project/add", {name: this.name, projectType: this.projectType}, {headers: {'Authorization': `Bearer ` + localStorage.jws}})
+          this.axios.post("/projects", {name: this.name, projectType: this.projectType}, {headers: {'Authorization': `Bearer ` + localStorage.jws}})
             .then(() => {
                 alert("New project is sucessfuly added.");
                 this.message = '';

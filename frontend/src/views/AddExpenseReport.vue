@@ -215,7 +215,7 @@ export default {
             imageName = date + '-image-' + this.$store.getters.getUserId + ".jpg";
             fileToUpload.append('file', this.image, imageName);
             var imageUrl = "https://nistagramstorage.s3.eu-central-1.amazonaws.com/" + imageName;
-            this.axios.post("/api/upload/upload-file", fileToUpload, {headers: {'Authorization': `Bearer ` + localStorage.jws}})
+            this.axios.post("/uploads/upload-file", fileToUpload, {headers: {'Authorization': `Bearer ` + localStorage.jws}})
                 .catch(e => {
                     alert("Failed to upload to Amazon S3 storage.")
                 })
@@ -230,7 +230,7 @@ export default {
                 document: imageUrl,
                 projectId: this.project.id
             }
-            this.axios.post("/api/expensereport/add", create, {headers: {'Authorization': `Bearer ` + localStorage.jws}})
+            this.axios.post("/expense-reports", create, {headers: {'Authorization': `Bearer ` + localStorage.jws}})
                 .then(() => {
                     this.e1 = 3
                 })
@@ -243,7 +243,7 @@ export default {
         }
     },
     mounted() {
-        this.axios.get("/api/project/find-all-not-refunded/" + this.$store.getters.getUserId, {headers: {'Authorization': `Bearer ` + localStorage.jws}})
+        this.axios.get("/users/" + this.$store.getters.getUserId + "/not-refunded-projects", {headers: {'Authorization': `Bearer ` + localStorage.jws}})
             .then(r => {
                 this.projects = r.data;
             })

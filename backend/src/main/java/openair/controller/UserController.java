@@ -43,6 +43,7 @@ public class UserController {
     //jer ne moze pristupiti metodi ako nije ulogovan??
     //i u web config da se doda da toj putanji ne mogu svi da pristupe nego admin i employee samo
     @GetMapping("/{userId}")
+    @PreAuthorize("hasRole('ADMIN') || hasRole('EMPLOYEE')")
     public ResponseEntity<UserBasicInformationDTO> findByUsername(Principal loggedUser) {
         User user = null;
         if(loggedUser != null) {

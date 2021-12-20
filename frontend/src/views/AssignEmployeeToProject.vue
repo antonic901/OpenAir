@@ -146,7 +146,7 @@ export default {
     },
     methods: {
         getEmployee() {
-            this.axios.get("/api/admin/get-employees",{headers: {'Authorization': `Bearer ` + localStorage.jws}})
+            this.axios.get("/admin/employees",{headers: {'Authorization': `Bearer ` + localStorage.jws}})
                 .then(r => {
                     this.emploies = r.data;
                 })
@@ -166,11 +166,11 @@ export default {
                 employeeId: this.selectedEmployee.id,
                 projectId: this.selectedProject.id
             }
-            this.axios.post("/api/project/add-employee", add ,{headers: {'Authorization': `Bearer ` + localStorage.jws}})
+            this.axios.put("/projects/" + this.selectedProject.id + "/employees", this.selectedEmployee.id,{headers: {'Content-Type': 'application/json', 'Authorization': `Bearer ` + localStorage.jws}})
         }
     },
     mounted() {
-        this.axios.get("/api/project/find-all-by-user-id/" + this.$store.getters.getUserId,{headers: {'Authorization': `Bearer ` + localStorage.jws}})
+        this.axios.get("/users/" + this.$store.getters.getUserId + "/projects",{headers: {'Authorization': `Bearer ` + localStorage.jws}})
             .then(r => {
                 this.projects = r.data;
             })

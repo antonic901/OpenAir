@@ -120,7 +120,7 @@ router.beforeEach((to, from, next) => {
     if(!localStorage.jws) {
       next({path: '/login'})
     } else {
-      axios.get("/auth/get-role", {headers: {'Authorization': `Bearer ` + localStorage.jws}})
+      axios.get("/auth/role", {headers: {'Authorization': `Bearer ` + localStorage.jws}})
         .then(r => {
           if(r.data != 'ROLE_EMPLOYEE') {
             next({path: '/'})
@@ -136,7 +136,7 @@ router.beforeEach((to, from, next) => {
     if(!localStorage.jws) {
       next({path: '/login'})
     } else {
-      axios.get("/auth/get-role", {headers: {'Authorization': `Bearer ` + localStorage.jws}})
+      axios.get("/auth/role", {headers: {'Authorization': `Bearer ` + localStorage.jws}})
         .then(r => {
           if(r.data != 'ROLE_ADMIN') {
             next({path: '/'})

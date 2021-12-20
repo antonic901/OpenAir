@@ -41,7 +41,7 @@ export default {
         }
     },
     mounted() {
-        this.axios.get("/auth/get-basic-informations", {headers: {'Content-Type': 'application/json', 'Authorization': `Bearer ` + localStorage.jws}})
+        this.axios.get("/users/" + this.$store.getters.getUserId, {headers: {'Content-Type': 'application/json', 'Authorization': `Bearer ` + localStorage.jws}})
             .then(r => {
                 this.user = r.data;
             })
