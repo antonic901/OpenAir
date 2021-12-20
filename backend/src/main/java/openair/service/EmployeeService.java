@@ -3,8 +3,6 @@ package openair.service;
 import openair.model.Mail;
 import openair.exception.NotFoundException;
 import openair.model.Employee;
-import openair.model.TimeSheetDay;
-import openair.model.enums.Status;
 import openair.repository.AbsenceRepository;
 import openair.repository.EmployeeRepository;
 import openair.repository.TimeSheetDayRepository;
@@ -13,39 +11,52 @@ import openair.service.interfaces.IEmployeeService;
 import openair.utils.AbsenceInterface;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.scheduling.annotation.Scheduled;
+import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
 import java.time.*;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Optional;
 import java.util.stream.IntStream;
 
 @Service
 public class EmployeeService implements IEmployeeService {
 
-    private EmployeeRepository employeeRepository;
-    private MailService mailService;
-    private TimeSheetDayRepository timeSheetDayRepository;
-    private AbsenceRepository absenceRepository;
+    private final EmployeeRepository employeeRepository;
+    private final MailService mailService;
+    private final TimeSheetDayRepository timeSheetDayRepository;
+    private final AbsenceRepository absenceRepository;
+    private final PasswordEncoder passwordEncoder;
 
     @Autowired
     public EmployeeService(EmployeeRepository employeeRepository, MailService mailService,
-                           TimeSheetDayRepository timeSheetDayRepository, AbsenceRepository absenceRepository) {
+                           TimeSheetDayRepository timeSheetDayRepository,
+                           AbsenceRepository absenceRepository, PasswordEncoder passwordEncoder) {
         this.employeeRepository = employeeRepository;
         this.mailService = mailService;
         this.timeSheetDayRepository = timeSheetDayRepository;
         this.absenceRepository = absenceRepository;
+        this.passwordEncoder = passwordEncoder;
     }
 
     @Override
     public Employee add(Employee employee) {
+        employee.setPassword(passwordEncoder.encode(employee.getPassword()));
+
+        employee.setFreeDays(8);
+        employee.setDateOfHiring(LocalDate.now());
+
         return employeeRepository.save(employee);
     }
 
     @Override
     public List<Employee> findAll() {
         return employeeRepository.findAll();
+    }
+
+    @Override
+    public List<Employee> findAllEmployeesByAdminId(Long id) {
+        return employeeRepository.findAllByAdminId(id);
     }
 
     @Override
@@ -62,23 +73,20 @@ public class EmployeeService implements IEmployeeService {
     @Scheduled(cron = "0 0 0 1 * ?")
     public List<Employee> increaseEmployeeFreeDays() {
 
-        List<Employee> employeeList = employeeRepository.findAll();
+        List<Employee> employees = employeeRepository.findAll().stream().peek(
+                employee -> employee.setFreeDays(
+                        (int) (employee.getFreeDays() + increaseByHowMuch(employee.getDateOfHiring()))))
+                .toList();
 
-        for (Employee employee : employeeList) {
-            employee.setFreeDays((int) (employee.getFreeDays() +
-                    increaseByHowMuch(employee.getDateOfHiring())));
-        }
-
-        return employeeRepository.saveAll(employeeList);
+        return employeeRepository.saveAll(employees);
     }
 
     private long increaseByHowMuch(LocalDate dateOfHiring){
         long increaseBy = 2;
         long numOfYearsInCompany = java.time.temporal.ChronoUnit.YEARS.between(dateOfHiring, LocalDate.now());
 
-        if (numOfYearsInCompany % 5 == 0) {
+        if (numOfYearsInCompany % 5 == 0)
             increaseBy += numOfYearsInCompany / 5;
-        }
 
         return increaseBy;
     }
@@ -95,8 +103,8 @@ public class EmployeeService implements IEmployeeService {
             StringBuilder emailContent = new StringBuilder("Dear, you forgot to fill in your working hours for: ");
             int detector = 0;
 
-            List<LocalDate> filledDates = timeSheetDayRepository.findAllOfCurrentMonth(employee.getId(), LocalDateTime.now().getMonth().getValue(),LocalDateTime.now().getYear());;
-            List<LocalDate> absentDates = findAbsentDates(employee.getId(), Status.APPROVED);
+            List<LocalDate> filledDates = timeSheetDayRepository.findAllOfCurrentMonth(employee.getId(), LocalDateTime.now().getMonth().getValue(),LocalDateTime.now().getYear());
+            List<LocalDate> absentDates = findAbsentDates(employee.getId());
 
             for (LocalDate workDate : workDayList) {
                 //date filled or employee on vacation
@@ -112,12 +120,13 @@ public class EmployeeService implements IEmployeeService {
         }
     }
 
-    private List<LocalDate> findAbsentDates(Long employeeId,Status status){
+    private List<LocalDate> findAbsentDates(Long employeeId){
+
         List<LocalDate> absentDays = new ArrayList<>();
 
         //vacation starts in current month
         List<AbsenceInterface> absences = absenceRepository.findAllOfCurrentMonth(employeeId, LocalDateTime.now().getMonth().getValue(),LocalDateTime.now().getYear());
-
+        
         //extract dates to list
         for (AbsenceInterface absence : absences) {
             absentDays.addAll(findAllDatesBetweenTwoDates(absence.getStartDate(),
@@ -161,19 +170,6 @@ public class EmployeeService implements IEmployeeService {
                 .forEach(workDayList::add);
 
         return workDayList;
-    }
-
-
-    private List<LocalDate> findFilledDates(List<TimeSheetDay> timeSheetDays){
-
-        List<LocalDate> filledDates = new ArrayList<>();
-
-        //treba proci kroz listu timeSheetDays i povaditi datume u filledDates
-        for(TimeSheetDay timeSheetDay : timeSheetDays) {
-            filledDates.add(timeSheetDay.getDate());
-        }
-
-        return filledDates;
     }
 
     private void sendMail(String emailAddress, String emailContent){

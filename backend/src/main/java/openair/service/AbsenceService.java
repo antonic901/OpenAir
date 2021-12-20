@@ -5,7 +5,6 @@ import openair.exception.NotFoundException;
 import openair.model.*;
 import openair.model.enums.Status;
 import openair.repository.AbsenceRepository;
-import openair.repository.AdminRepository;
 import openair.repository.EmployeeRepository;
 import openair.repository.UserRepository;
 import openair.service.interfaces.IAbsenceService;
@@ -14,49 +13,50 @@ import org.springframework.stereotype.Service;
 
 import java.time.LocalDateTime;
 import java.util.List;
-import java.util.Optional;
 
 @Service
 public class AbsenceService implements IAbsenceService {
 
-    private AbsenceRepository  absenceRepository;
-    private EmployeeRepository employeeRepository;
-    private AdminRepository adminRepository;
-    private UserRepository userRepository;
+    private final AbsenceRepository  absenceRepository;
+    private final EmployeeRepository employeeRepository;
+    private final UserRepository userRepository;
 
     @Autowired
-    public AbsenceService(AbsenceRepository absenceRepository, EmployeeRepository employeeRepository, AdminRepository adminRepository, UserRepository userRepository) {
+    public AbsenceService(AbsenceRepository absenceRepository, EmployeeRepository employeeRepository, UserRepository userRepository) {
         this.absenceRepository = absenceRepository;
         this.employeeRepository = employeeRepository;
-        this.adminRepository = adminRepository;
         this.userRepository = userRepository;
     }
 
     @Override
     public List<Absence> getAllByUserId(Long id) {
+
         User user = userRepository.findById(id).orElseThrow(() -> new NotFoundException(id, "User with ID: " + id + " is not found."));
+
         if(user.getUserType().name().equals("ROLE_ADMIN")){
             return absenceRepository.findAllByAdminId(id);
         }
         else if (user.getUserType().name().equals("ROLE_EMPLOYEE")){
             return absenceRepository.findAllByEmployeeId(id);
         }
+        //TODO Da li treba obrisati ovaj else jer uvek ima neku od ove dve uloge?
         else {
-            throw new NotFoundException(id, "User with UserType: " + user.getUserType() + " is not found.");
+            throw new NotFoundException(id, "User with UserType: " + user.getUserType().name() + " is not found.");
         }
     }
 
     @Override
     public Absence add(Absence absence, Long id) {
-        Employee employee = employeeRepository.findById(id).orElseThrow(() -> new NotFoundException(id, "User with ID: " + id + " is not found."));
 
         if(absence.getPeriod().getStartTime().isAfter(absence.getPeriod().getEndTime())) {
             throw new PeriodConflictException(id, "User with ID: " + id + " have selected wrong period (start after end))");
         }
 
-        else if(checkIsAbsenceConflicting(employee, absence.getPeriod().getStartTime(), absence.getPeriod().getEndTime())) {
+        else if(checkIsAbsenceConflicting(id, absence.getPeriod().getStartTime(), absence.getPeriod().getEndTime())) {
             throw new PeriodConflictException(id, "User with ID: " + id + " have requested absence which is in conflict with other absence");
         }
+
+        Employee employee = employeeRepository.findById(id).orElseThrow(() -> new NotFoundException(id, "User with ID: " + id + " is not found."));
 
         Period period = new Period(absence.getPeriod().getStartTime(),absence.getPeriod().getEndTime());
         absence.setPeriod(period);
@@ -66,38 +66,20 @@ public class AbsenceService implements IAbsenceService {
         return absenceRepository.save(absence);
     }
 
-    boolean checkIsAbsenceConflicting(Employee employee, LocalDateTime startTime, LocalDateTime endTime) {
-        List<Absence> absences = absenceRepository.findAllByEmployeeId(employee.getId());
-
+    boolean checkIsAbsenceConflicting(Long id, LocalDateTime startTime, LocalDateTime endTime) {
+        List<Absence> absences = absenceRepository.findAllByEmployeeIdAndStatus(id);
+        boolean isConflict = false;
         for(Absence absence : absences) {
-            if(absence.getPeriod().getStartTime().isEqual(startTime) && absence.getPeriod().getEndTime().isEqual(endTime)) {
-                return  true;
-            }
-            if(absence.getStatus() == Status.INPROCESS) {
-                if(checkConflict(absence, startTime, endTime)) {
-                    return true;
-                }
-            }
-            if(absence.getStatus() == Status.APPROVED && absence.getPeriod().getStartTime().isAfter(LocalDateTime.now())) {
-                if(checkConflict(absence, startTime, endTime)) {
-                    return true;
-                }
-            }
+            isConflict = checkConflict(absence,startTime,endTime);
         }
-        return false;
+        return isConflict;
     }
 
     boolean checkConflict(Absence absence, LocalDateTime startTime, LocalDateTime endTime) {
-        if(startTime.isBefore(absence.getPeriod().getEndTime()) && endTime.isAfter(absence.getPeriod().getEndTime())) {
-            return  true;
-        }
-        if(startTime.isBefore(absence.getPeriod().getStartTime()) && endTime.isAfter(absence.getPeriod().getStartTime())) {
-            return  true;
-        }
-        if(absence.getPeriod().getStartTime().isBefore(startTime) && absence.getPeriod().getEndTime().isAfter(endTime)) {
-            return true;
-        }
-        return false;
+        return (absence.getPeriod().getStartTime().isEqual(startTime) && absence.getPeriod().getEndTime().isEqual(endTime)) ||
+                (startTime.isBefore(absence.getPeriod().getEndTime()) && endTime.isAfter(absence.getPeriod().getEndTime())) ||
+                (startTime.isBefore(absence.getPeriod().getStartTime()) && endTime.isAfter(absence.getPeriod().getStartTime())) ||
+                (absence.getPeriod().getStartTime().isBefore(startTime) && absence.getPeriod().getEndTime().isAfter(endTime));
     }
 
     @Override

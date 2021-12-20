@@ -7,7 +7,6 @@ import openair.model.enums.Currency;
 import openair.model.enums.Status;
 import openair.repository.EmployeeRepository;
 import openair.repository.ExpenseReportRepository;
-import openair.repository.ProjectRepository;
 import openair.service.interfaces.IExpenseReportService;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -15,25 +14,21 @@ import org.springframework.stereotype.Service;
 
 import java.time.LocalDate;
 import java.time.format.DateTimeFormatter;
-import java.util.ArrayList;
 import java.util.List;
-import java.util.Optional;
 
 @Service
 public class ExpenseReportService implements IExpenseReportService {
 
-    private ExpenseReportRepository expenseReportRepository;
-    private EmployeeRepository employeeRepository;
-    private ProjectRepository projectRepository;
-    private MoneyService moneyService;
+    private final ExpenseReportRepository expenseReportRepository;
+    private final EmployeeRepository employeeRepository;
+    private final MoneyService moneyService;
 
     @Autowired
     public ExpenseReportService(ExpenseReportRepository expenseReportRepository, EmployeeRepository employeeRepository,
-                                MoneyService moneyService, ProjectRepository projectRepository){
+                                MoneyService moneyService){
         this.expenseReportRepository = expenseReportRepository;
         this.employeeRepository = employeeRepository;
         this.moneyService = moneyService;
-        this.projectRepository = projectRepository;
     }
 
     @Override
@@ -52,7 +47,7 @@ public class ExpenseReportService implements IExpenseReportService {
     @Override
     public ExpenseReport reviewReport(Long reportId, Status status) {
 
-        ExpenseReport expenseReport = expenseReportRepository.findById(reportId).orElseThrow(() -> new NotFoundException("Expense report with id " + reportId.toString() + "does not exist."));
+        ExpenseReport expenseReport = expenseReportRepository.findById(reportId).orElseThrow(() -> new NotFoundException("Expense report with id " + reportId + "does not exist."));
 
         //odobrim zahtev
         expenseReport.setStatus(status);

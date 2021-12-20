@@ -8,17 +8,17 @@ import openair.service.interfaces.ITimeSheetDay;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import java.util.Objects;
+
 @Service
 public class TimeSheetDayService implements ITimeSheetDay {
 
     private TimeSheetDayRepository timeSheetDayRepository;
 
-    private TaskService taskService;
-
     @Autowired
-    public TimeSheetDayService(TimeSheetDayRepository timeSheetDayRepository, TaskService taskService){
+    public TimeSheetDayService(TimeSheetDayRepository timeSheetDayRepository){
         this.timeSheetDayRepository = timeSheetDayRepository;
-        this.taskService = taskService;
+
     }
 
     @Override
@@ -33,5 +33,5 @@ public class TimeSheetDayService implements ITimeSheetDay {
 
         return timeSheetDayRepository.save(timeSheetDay);
     }
-    
+
 }

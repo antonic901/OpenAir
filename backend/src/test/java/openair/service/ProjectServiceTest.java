@@ -16,6 +16,7 @@ import org.mockito.Spy;
 import org.springframework.boot.test.context.SpringBootTest;
 import static org.assertj.core.api.Assertions.assertThat;
 
+import java.util.ArrayList;
 import java.util.Optional;
 
 import static org.junit.jupiter.api.Assertions.assertThrows;
@@ -27,13 +28,6 @@ public class ProjectServiceTest {
     @Mock
     private ProjectRepository projectRepository;
 
-    @Spy
-    @InjectMocks
-    private ProjectService projectService;
-
-    @Mock
-    private AdminRepository adminRepository;
-
     @Mock
     private EmployeeRepository employeeRepository;
 
@@ -42,6 +36,10 @@ public class ProjectServiceTest {
 
     @Mock
     private ExpenseReportRepository expenseReportRepository;
+
+    @Spy
+    @InjectMocks
+    private ProjectService projectService;
 
     @Test
     public void testFindProjectByName(){
@@ -104,18 +102,18 @@ public class ProjectServiceTest {
         //given
         User user1 = ProjectTestData.createUser1();
         User user2 = ProjectTestData.createUser2();
-        Admin admin = ProjectTestData.createAdmin();
         Employee employee = ProjectTestData.createEmployee();
 
         //when
         when(userRepository.findById(1L)).thenReturn(Optional.of(user1));
         when(userRepository.findById(2L)).thenReturn(Optional.of(user2));
-        when(adminRepository.findById(1L)).thenReturn(Optional.of(admin));
         when(employeeRepository.findById(2L)).thenReturn(Optional.of(employee));
+        when(projectRepository.findAllByAdminId(1L)).thenReturn(ProjectTestData.createProjectList());
+        when(projectRepository.findAllByEmployeeId(2L)).thenReturn(new ArrayList<Project>());
 
         //then
         assertThat(projectService.findAllByUserId(1L)).hasSize(2);
-        assertThat(projectService.findAllByUserId(2L)).hasSize(2);
+        assertThat(projectService.findAllByUserId(2L)).hasSize(0);
         assertThrows(NotFoundException.class, () -> projectService.findAllByUserId(3L));
     }
 

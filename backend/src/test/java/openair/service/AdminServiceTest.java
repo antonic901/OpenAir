@@ -30,33 +30,9 @@ public class AdminServiceTest {
     @Mock
     private AdminRepository adminRepository;
 
-    @Mock
-    private EmployeeRepository employeeRepository;
-
-    @Mock
-    private RoleRepository roleRepository;
-
-    @Mock
-    private PasswordEncoder passwordEncoder;
-
     @Spy
     @InjectMocks
     private AdminService adminService;
-
-    @Test
-    public void testRegisterEmployee() {
-        Admin admin = AdminTestData.createAdmin();
-
-        when(passwordEncoder.encode(any(String.class))).thenReturn("##?A4@!");
-        when(roleRepository.findByName(UserType.ROLE_EMPLOYEE)).thenReturn(new Role(1L, UserType.ROLE_EMPLOYEE));
-        when(roleRepository.findByName(UserType.ROLE_ADMIN)).thenReturn(new Role(1L, UserType.ROLE_ADMIN));
-        when(adminRepository.findById(1L)).thenReturn(Optional.of(admin));
-        when(employeeRepository.save(any(Employee.class))).thenReturn(AdminTestData.createEmployee());
-
-        List<Employee> employeeList = AdminTestData.createEmployees();
-
-        assertThat(adminService.registerEmployee(employeeList.get(1))).isNotNull();
-    }
 
     @Test
     public void testFindByUsername() {
@@ -66,16 +42,6 @@ public class AdminServiceTest {
 
         assertThat(adminService.findByUsername("admin")).isExactlyInstanceOf(Admin.class);
         assertThat(adminService.findByUsername("admiin")).isNull();
-    }
-
-    @Test
-    public void testGetEmployees() {
-        Admin admin = AdminTestData.createAdmin();
-
-        when(adminRepository.findById(1L)).thenReturn(Optional.of((admin)));
-
-        assertThat(adminService.getEmployees(1L)).hasSize(4);
-        assertThrows(NotFoundException.class, () -> adminService.getEmployees(2L), "User not found");
     }
 
 }

@@ -12,6 +12,7 @@ import org.mockito.Spy;
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.junit.jupiter.api.Assertions.assertThrows;
 import org.springframework.boot.test.context.SpringBootTest;
+import org.springframework.security.crypto.password.PasswordEncoder;
 
 import java.util.List;
 import java.util.Optional;
@@ -26,14 +27,11 @@ public class EmployeeServiceTest {
     private EmployeeRepository employeeRepository;
 
     @Mock
-    private ProjectRepository projectRepository;
+    private PasswordEncoder passwordEncoder;
 
     @Spy
     @InjectMocks
     private EmployeeService employeeService;
-
-    @Mock
-    private ProjectService projectService;
 
     @Test
     public void testFindAnEmployeeByEmployeeId() {
@@ -79,6 +77,7 @@ public class EmployeeServiceTest {
         Employee employee = EmployeeTestData.createEmployee();
 
         //when
+        when(passwordEncoder.encode(any(String.class))).thenReturn("#!#@a1@12");
         when(employeeRepository.save(any(Employee.class))).thenReturn(employee);
 
         //then

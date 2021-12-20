@@ -12,14 +12,10 @@ import java.util.List;
 
 @Entity
 @DiscriminatorValue("Admin")
-//@AllArgsConstructor
-//@NoArgsConstructor
 @Getter
 @Setter
 public class Admin extends User {
 
-    @JsonIgnore
-    @OneToMany(fetch = FetchType.LAZY, mappedBy="admin", cascade = CascadeType.ALL)
-    private List<Employee> employeeList = new ArrayList<Employee>();
+
 
 }

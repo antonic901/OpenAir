@@ -1,6 +1,7 @@
 package openair.repository;
 
 import openair.model.Absence;
+import openair.model.enums.Status;
 import openair.utils.AbsenceInterface;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
@@ -9,6 +10,13 @@ import java.util.List;
 
 public interface AbsenceRepository extends JpaRepository<Absence, Long> {
     List<Absence> findAllByEmployeeId(Long id);
+    @Query(value = "select a " +
+            "from absences a " +
+            "where a.employee_id = ?1 AND " +
+            "a.status like 'APPROVED' OR " +
+            "a.status like 'INPROCESS'", nativeQuery = true)
+    List<Absence> findAllByEmployeeIdAndStatus(Long id);
+
     List<Absence> findAllByAdminId(Long id);
 
     @Query(value = "select a.start_time as Start_date, a.end_time as End_date " +

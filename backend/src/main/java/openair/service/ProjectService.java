@@ -17,19 +17,17 @@ import java.util.Optional;
 @Service
 public class ProjectService implements IProjectService {
 
-    private ProjectRepository projectRepository;
-    private EmployeeRepository employeeRepository;
-    private UserRepository userRepository;
-    private AdminRepository adminRepository;
-    private ExpenseReportRepository expenseReportRepository;
+    private final ProjectRepository projectRepository;
+    private final EmployeeRepository employeeRepository;
+    private final UserRepository userRepository;
+    private final ExpenseReportRepository expenseReportRepository;
 
     @Autowired
     public ProjectService(ProjectRepository projectRepository, EmployeeRepository employeeRepository,
-                          UserRepository userRepository, AdminRepository adminRepository, ExpenseReportRepository expenseReportRepository){
+                          UserRepository userRepository, ExpenseReportRepository expenseReportRepository){
         this.projectRepository = projectRepository;
         this.employeeRepository = employeeRepository;
         this.userRepository = userRepository;
-        this.adminRepository = adminRepository;
         this.expenseReportRepository = expenseReportRepository;
     }
 
@@ -49,13 +47,13 @@ public class ProjectService implements IProjectService {
 
     @Override
     public Project findProjectById(Long projectId) {
-        return projectRepository.findById(projectId).orElseThrow(() -> new NotFoundException("Project with id " + projectId.toString() + " does not exist."));
+        return projectRepository.findById(projectId).orElseThrow(() -> new NotFoundException("Project with id " + projectId + " does not exist."));
     }
 
     @Override
     public Project addEmployeeToProject(Long employeeId, Long projectId) {
-        Project project = projectRepository.findById(projectId).orElseThrow(() -> new NotFoundException("Project with id " + projectId.toString() + " does not exist."));
-        Employee employee = employeeRepository.findById(employeeId).orElseThrow(() -> new NotFoundException("Employee with id " + employeeId.toString() + " does not exist."));
+        Project project = projectRepository.findById(projectId).orElseThrow(() -> new NotFoundException("Project with id " + projectId + " does not exist."));
+        Employee employee = employeeRepository.findById(employeeId).orElseThrow(() -> new NotFoundException("Employee with id " + employeeId + " does not exist."));
 
         List<Employee> employeeList = project.getEmployeeList();
 
@@ -69,7 +67,7 @@ public class ProjectService implements IProjectService {
 }
     @Override
     public List<Project> findAllByUserId(Long userId) {
-        User user = userRepository.findById(userId).orElseThrow(() -> new NotFoundException("User with id " + userId.toString() + " does not exist."));
+        User user = userRepository.findById(userId).orElseThrow(() -> new NotFoundException("User with id " + userId + " does not exist."));
         if(user.getUserType().name().equals("ROLE_ADMIN")){
             return projectRepository.findAllByAdminId(userId);
         }else if (user.getUserType().name().equals("ROLE_EMPLOYEE")){
@@ -80,7 +78,7 @@ public class ProjectService implements IProjectService {
 
     @Override
     public List<Project> findAllNotRefundedByEmployeeId(Long id) {
-        Employee employee = employeeRepository.findById(id).orElseThrow(() -> new NotFoundException("Employee with id " + id.toString() + " does not exist."));
+        Employee employee = employeeRepository.findById(id).orElseThrow(() -> new NotFoundException("Employee with id " + id + " does not exist."));
 
         List<Project> projects = new ArrayList<>();
 
@@ -93,25 +91,14 @@ public class ProjectService implements IProjectService {
 
     @Override
     public List<Employee> findAllEmployeesByProjectId(Long projectId) {
-
-        Optional<Project> projectOptional =  projectRepository.findById(projectId);
-
-        if(!projectOptional.isPresent())
-            throw new NotFoundException("Project with id " + projectId.toString() + " does not exist.");
-
-        return projectOptional.get().getEmployeeList();
+        Project project = projectRepository.findById(projectId).orElseThrow(() -> new NotFoundException("Project with id " + projectId + " does not exist."));
+        return project.getEmployeeList();
     }
 
     private boolean checkIsRefunded(Long projectId, Long employeeId) {
 
-        Optional<ExpenseReport> expenseReport = expenseReportRepository.findByProjectIdAndEmployeeId(projectId,employeeId);
+        return expenseReportRepository.findByProjectIdAndEmployeeId(projectId,employeeId)
+                .filter(report -> report.getStatus() != Status.REJECTED).isPresent();
 
-        if(!expenseReport.isPresent())
-            return false;
-
-        if(expenseReport.get().getStatus() != Status.REJECTED)
-            return true;
-
-        return false;
     }
 }
