@@ -67,7 +67,6 @@ public class EmployeeController {
         Admin admin = adminService.findByUsername(loggedAdmin.getName());
         employee.setAdmin(admin);
 
-
         Role role = roleService.findByName(registerEmployeeDTO.getUserType());
         if(role == null)
             throw new NotFoundException("Role with user type: " + registerEmployeeDTO.getUserType() + " not found");
@@ -75,7 +74,7 @@ public class EmployeeController {
         employee.getRoles().add(role);
         registerEmployeeDTO.setAdminId(admin.getId());
 
-        adminService.registerEmployee(employee);
+        employeeService.add(employee);
         //HttpHeaders headers = new HttpHeaders();
         //headers.setLocation(ucBuilder.path("/api/employee/{userId}").buildAndExpand(employee.getId()).toUri());
         return new ResponseEntity<>(HttpStatus.CREATED);

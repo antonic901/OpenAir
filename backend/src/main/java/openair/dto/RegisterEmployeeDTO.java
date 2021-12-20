@@ -8,6 +8,7 @@ import openair.model.enums.Department;
 import openair.model.enums.UserType;
 
 import javax.validation.constraints.Pattern;
+import java.time.LocalDate;
 
 @NoArgsConstructor
 @AllArgsConstructor

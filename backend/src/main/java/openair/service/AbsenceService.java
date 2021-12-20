@@ -5,7 +5,6 @@ import openair.exception.NotFoundException;
 import openair.model.*;
 import openair.model.enums.Status;
 import openair.repository.AbsenceRepository;
-import openair.repository.AdminRepository;
 import openair.repository.EmployeeRepository;
 import openair.repository.UserRepository;
 import openair.service.interfaces.IAbsenceService;
@@ -21,35 +20,30 @@ public class AbsenceService implements IAbsenceService {
 
     private AbsenceRepository  absenceRepository;
     private EmployeeRepository employeeRepository;
-    private AdminRepository adminRepository;
     private UserRepository userRepository;
 
     @Autowired
-    public AbsenceService(AbsenceRepository absenceRepository, EmployeeRepository employeeRepository, AdminRepository adminRepository, UserRepository userRepository) {
+    public AbsenceService(AbsenceRepository absenceRepository, EmployeeRepository employeeRepository, UserRepository userRepository) {
         this.absenceRepository = absenceRepository;
         this.employeeRepository = employeeRepository;
-        this.adminRepository = adminRepository;
         this.userRepository = userRepository;
     }
 
     @Override
     public List<Absence> getAllByUserId(Long id) {
         Optional<User> userOptional = userRepository.findById(id);
-        User user;
-        if(userOptional.isPresent()) {
-            user = userOptional.get();
-        }
-        else {
+
+        if(userOptional.isEmpty()) {
             throw new NotFoundException(id, "User with ID: " + id + " is not found.");
-        };
-        if(user.getUserType().name().equals("ROLE_ADMIN")){
+        }
+        else if(userOptional.get().getUserType().name().equals("ROLE_ADMIN")){
             return absenceRepository.findAllByAdminId(id);
         }
-        else if (user.getUserType().name().equals("ROLE_EMPLOYEE")){
+        else if (userOptional.get().getUserType().name().equals("ROLE_EMPLOYEE")){
             return absenceRepository.findAllByEmployeeId(id);
         }
         else {
-            throw new NotFoundException(id, "User with UserType: " + user.getUserType() + " is not found.");
+            throw new NotFoundException(id, "User with UserType: " + userOptional.get().getUserType() + " is not found.");
         }
     }
 
@@ -82,37 +76,20 @@ public class AbsenceService implements IAbsenceService {
     }
 
     boolean checkIsAbsenceConflicting(Employee employee, LocalDateTime startTime, LocalDateTime endTime) {
-        List<Absence> absences = absenceRepository.findAllByEmployeeId(employee.getId());
 
+        List<Absence> absences = absenceRepository.findAllByEmployeeIdAndStatus(employee.getId());
+        boolean isConflict = false;
         for(Absence absence : absences) {
-            if(absence.getPeriod().getStartTime().isEqual(startTime) && absence.getPeriod().getEndTime().isEqual(endTime)) {
-                return  true;
-            }
-            if(absence.getStatus() == Status.INPROCESS) {
-                if(checkConflict(absence, startTime, endTime)) {
-                    return true;
-                }
-            }
-            if(absence.getStatus() == Status.APPROVED && absence.getPeriod().getStartTime().isAfter(LocalDateTime.now())) {
-                if(checkConflict(absence, startTime, endTime)) {
-                    return true;
-                }
-            }
+            isConflict = checkConflict(absence,startTime,endTime);
         }
-        return false;
+        return isConflict;
     }
 
     boolean checkConflict(Absence absence, LocalDateTime startTime, LocalDateTime endTime) {
-        if(startTime.isBefore(absence.getPeriod().getEndTime()) && endTime.isAfter(absence.getPeriod().getEndTime())) {
-            return  true;
-        }
-        if(startTime.isBefore(absence.getPeriod().getStartTime()) && endTime.isAfter(absence.getPeriod().getStartTime())) {
-            return  true;
-        }
-        if(absence.getPeriod().getStartTime().isBefore(startTime) && absence.getPeriod().getEndTime().isAfter(endTime)) {
-            return true;
-        }
-        return false;
+        return (absence.getPeriod().getStartTime().isEqual(startTime) && absence.getPeriod().getEndTime().isEqual(endTime)) ||
+                (startTime.isBefore(absence.getPeriod().getEndTime()) && endTime.isAfter(absence.getPeriod().getEndTime())) ||
+                (startTime.isBefore(absence.getPeriod().getStartTime()) && endTime.isAfter(absence.getPeriod().getStartTime())) ||
+                (absence.getPeriod().getStartTime().isBefore(startTime) && absence.getPeriod().getEndTime().isAfter(endTime));
     }
 
     @Override

@@ -8,17 +8,17 @@ import openair.service.interfaces.ITimeSheetDay;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import java.util.Objects;
+
 @Service
 public class TimeSheetDayService implements ITimeSheetDay {
 
     private TimeSheetDayRepository timeSheetDayRepository;
 
-    private TaskService taskService;
-
     @Autowired
-    public TimeSheetDayService(TimeSheetDayRepository timeSheetDayRepository, TaskService taskService){
+    public TimeSheetDayService(TimeSheetDayRepository timeSheetDayRepository){
         this.timeSheetDayRepository = timeSheetDayRepository;
-        this.taskService = taskService;
+
     }
 
     @Override
@@ -32,15 +32,5 @@ public class TimeSheetDayService implements ITimeSheetDay {
             throw new ResourceConflictException(exist.getId(),"Task is already logged for " + exist.getDate().toString() + ".");
 
         return timeSheetDayRepository.save(timeSheetDay);
-    }
-
-    @Override
-    public TimeSheetDay getByTaskIdEmployeeId(Long taskId, Long employeeId) {
-        for(TimeSheetDay timeSheetDay : timeSheetDayRepository.findAll()) {
-            if(timeSheetDay.getTask().getId() == taskId && timeSheetDay.getEmployee().getId() == employeeId)
-                return timeSheetDay;
-        }
-
-        return null;
     }
 }

@@ -39,6 +39,9 @@ public class AdminServiceTest {
     @Mock
     private PasswordEncoder passwordEncoder;
 
+    @Mock
+    private EmployeeService employeeService;
+
     @Spy
     @InjectMocks
     private AdminService adminService;
@@ -55,7 +58,7 @@ public class AdminServiceTest {
 
         List<Employee> employeeList = AdminTestData.createEmployees();
 
-        assertThat(adminService.registerEmployee(employeeList.get(1))).isNotNull();
+        assertThat(employeeService.add(employeeList.get(1))).isNotNull();
     }
 
     @Test
