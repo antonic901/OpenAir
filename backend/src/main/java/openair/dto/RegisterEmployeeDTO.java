@@ -7,6 +7,8 @@ import lombok.Setter;
 import openair.model.enums.Department;
 import openair.model.enums.UserType;
 
+import javax.validation.constraints.Pattern;
+
 @NoArgsConstructor
 @AllArgsConstructor
 @Getter
@@ -21,6 +23,7 @@ public class RegisterEmployeeDTO {
 
     private String username;
 
+    @Pattern(regexp="^(?=.[0-9])(?=.[a-z])(?=.[A-Z])(?=.[@#$%^&-+=()])(?=\\S+$).{8,20}$", message="Invalid password!")
     private String password;
 
     private String phone;
