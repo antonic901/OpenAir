@@ -19,7 +19,6 @@ public class TimeSheetDay {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    @NotNull
     private Long id;
 
     @Column

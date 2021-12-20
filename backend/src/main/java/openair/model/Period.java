@@ -9,6 +9,7 @@ import openair.utils.UnixToLocalDateTimeConverter;
 
 import javax.persistence.Embeddable;
 import javax.validation.constraints.Future;
+import javax.validation.constraints.FutureOrPresent;
 import javax.validation.constraints.NotNull;
 import java.time.LocalDateTime;
 
@@ -22,13 +23,11 @@ public class Period {
     @JsonDeserialize(using = UnixToLocalDateTimeConverter.class)
     @Future
     @NotNull(message = "Start time cannot be null")
-    //@Column
     private LocalDateTime startTime;
 
     @JsonDeserialize(using = UnixToLocalDateTimeConverter.class)
     @Future
     @NotNull(message = "End time cannot be null")
-   // @Column
     private LocalDateTime endTime;
 
 }

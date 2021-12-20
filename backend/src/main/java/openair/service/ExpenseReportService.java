@@ -38,54 +38,47 @@ public class ExpenseReportService implements IExpenseReportService {
 
     @Override
     public List<ExpenseReport> getAllByAdminId(Long id) {
-
         return expenseReportRepository.findAllByAdminId(id);
-
     }
 
     @Override
     public ExpenseReport addReport(ExpenseReport expenseReport) {
-
         expenseReport.setDateOfCreation(LocalDate.now());
         expenseReport.setStatus(Status.INPROCESS);
         expenseReport.getRefund().setDate(LocalDate.now());
-
         return expenseReportRepository.save(expenseReport);
     }
 
     @Override
     public ExpenseReport reviewReport(Long reportId, Status status) {
 
-        Optional<ExpenseReport> expenseReportOpt = expenseReportRepository.findById(reportId);
-
-        if(!expenseReportOpt.isPresent())
-            throw  new NotFoundException("Expense report with id " + reportId.toString() + "does not exist.");
+        ExpenseReport expenseReport = expenseReportRepository.findById(reportId).orElseThrow(() -> new NotFoundException("Expense report with id " + reportId.toString() + "does not exist."));
 
         //odobrim zahtev
-        expenseReportOpt.get().setStatus(status);
+        expenseReport.setStatus(status);
 
         //pronadjem radnika da bi mu uvecala platu za onliko koliko je navedeno u reportu
         if(status == Status.APPROVED) {
 
-            Employee employee = expenseReportOpt.get().getEmployee();
+            Employee employee = expenseReport.getEmployee();
 
-            if(expenseReportOpt.get().getRefund().getCurrency() == Currency.RSD) {
+            if(expenseReport.getRefund().getCurrency() == Currency.RSD) {
 
                 //ako je u RSD konvertujemo u EUR i tek onda dodajemo na platu
                 double converted = moneyService.convert(DateTimeFormatter.ofPattern("yyyy-MM-dd").
-                        format(expenseReportOpt.get().getDateOfCreation()), Currency.RSD.toString(), Currency.EUR.toString(),
-                               expenseReportOpt.get().getRefund().getQuantity());
+                        format(expenseReport.getDateOfCreation()), Currency.RSD.toString(), Currency.EUR.toString(),
+                        expenseReport.getRefund().getQuantity());
 
                 employee.setSalary(employee.getSalary() + converted);
             }
             else {
-                employee.setSalary(employee.getSalary() + expenseReportOpt.get().getRefund().getQuantity());
+                employee.setSalary(employee.getSalary() + expenseReport.getRefund().getQuantity());
             }
 
             employeeRepository.save(employee);
         }
 
-        return expenseReportRepository.save(expenseReportOpt.get());
+        return expenseReportRepository.save(expenseReport);
     }
 
 }

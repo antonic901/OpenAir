@@ -33,8 +33,6 @@ public class AdminService implements IAdminService {
         this.passwordEncoder = passwordEncoder;
     }
 
-
-
     @Override
     public Employee registerEmployee(Employee employee) {
         employee.setPassword(passwordEncoder.encode(employee.getPassword()));
@@ -52,11 +50,7 @@ public class AdminService implements IAdminService {
 
     @Override
     public List<Employee> getEmployees(Long id) {
-        Optional<Admin> optionalAdmin = adminRepository.findById(id);
-        if(!optionalAdmin.isPresent()) {
-            throw new NotFoundException(id, "User with ID: " + id + " is not found.");
-        }
-        Admin admin = optionalAdmin.get();
+        Admin admin = adminRepository.findById(id).orElseThrow(() -> new NotFoundException(id, "User with ID: " + id + " is not found."));
         return admin.getEmployeeList();
     }
 }

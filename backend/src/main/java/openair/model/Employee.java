@@ -36,7 +36,7 @@ public class Employee extends User{
     private LocalDate dateOfHiring;
 
     @ManyToOne
-    @JoinColumn(name = "admin_id", nullable = false)
+    @JoinColumn(name = "admin_id")
     private Admin admin;
 
     @ManyToMany(fetch = FetchType.LAZY)

@@ -33,14 +33,5 @@ public class TimeSheetDayService implements ITimeSheetDay {
 
         return timeSheetDayRepository.save(timeSheetDay);
     }
-
-    @Override
-    public TimeSheetDay getByTaskIdEmployeeId(Long taskId, Long employeeId) {
-        for(TimeSheetDay timeSheetDay : timeSheetDayRepository.findAll()) {
-            if(timeSheetDay.getTask().getId() == taskId && timeSheetDay.getEmployee().getId() == employeeId)
-                return timeSheetDay;
-        }
-
-        return null;
-    }
+    
 }
