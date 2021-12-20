@@ -70,7 +70,7 @@ export default {
         }
     },
     mounted() {
-        this.axios.get("/absences/" + this.$store.getters.getUserId, {headers: {'Authorization': `Bearer ` + localStorage.jws}})
+        this.axios.get("/users/" + this.$store.getters.getUserId + '/absences', {headers: {'Authorization': `Bearer ` + localStorage.jws}})
             .then(r => {
                 this.absences = r.data
             })

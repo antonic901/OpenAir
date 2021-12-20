@@ -70,9 +70,8 @@ public class EmployeeController {
         registerEmployeeDTO.setAdminId(admin.getId());
 
         adminService.registerEmployee(employee);
-        HttpHeaders headers = new HttpHeaders();
-        //TODO STA IDE OVDE ZA PUTANJU???????
-        headers.setLocation(ucBuilder.path("/api/employee/{userId}").buildAndExpand(employee.getId()).toUri());
+        //HttpHeaders headers = new HttpHeaders();
+        //headers.setLocation(ucBuilder.path("/api/employee/{userId}").buildAndExpand(employee.getId()).toUri());
         return new ResponseEntity<>(HttpStatus.CREATED);
     }
 
