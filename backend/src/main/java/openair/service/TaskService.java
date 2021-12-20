@@ -63,16 +63,4 @@ public class TaskService implements ITaskService {
         return taskRepository.findById(taskId).orElseThrow(() -> new NotFoundException("Task with id " + taskId + " does not exist."));
     }
 
-    @Override
-    public Task addTaskToProject(Long taskId, Long projectId, Long employeeId) {
-        Project project = projectRepository.findById(projectId).orElseThrow(() -> new NotFoundException(projectId, "Project with ID: " + projectId + " not found."));
-        Employee employee = employeeRepository.findById(employeeId).orElseThrow(() -> new NotFoundException(employeeId, "Employee with ID: " + employeeId + " not found."));
-        Task task = taskRepository.findById(taskId).orElseThrow(() -> new NotFoundException(taskId, "Task with ID: " + taskId + " not found."));
-
-        List<Task> taskList = project.getTasks();
-        if(!taskList.contains(task))
-            taskList.add(task);
-
-        return taskRepository.save(task);
-    }
 }

@@ -80,34 +80,6 @@ public class TaskServiceTest {
         assertThat(taskService.addTask(task)).isNotNull();
     }
 
-    //  method args: Long taskId, Long projectId, Long employeeId
-    @Test
-    public void testAddTaskToProject() {
-        //  Treba da se zavrsi...
-
-        //  given
-        List<Task> taskList = TaskTestData.createTaskList();
-
-        Project project = new Project();
-        project.setId(1L);
-        project.getTasks().add(taskList.get(1));
-
-        Task task1 = new Task();
-        task1.setId(1L);
-
-        Employee employee = new Employee();
-        employee.setId(2L);
-
-        //  when
-        when(taskRepository.save(any(Task.class))).thenReturn(new Task());
-        when(projectRepository.findById(1L)).thenReturn(Optional.of(project));
-        when(employeeRepository.findById(2L)).thenReturn(Optional.of(employee));
-        when(taskRepository.findById(1L)).thenReturn(Optional.of(task1));
-
-        assertThat(taskService.addTaskToProject(1L, 1L, 2L)).isExactlyInstanceOf(Task.class);
-        assertThrows(NotFoundException.class, () -> taskService.addTaskToProject(5L, 1L, 2L), "Task is not found.");
-    }
-
     /*
      @Override
     public List<Task> findAllByProjectId(Long projectId) {

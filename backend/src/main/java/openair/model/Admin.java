@@ -12,8 +12,8 @@ import java.util.List;
 
 @Entity
 @DiscriminatorValue("Admin")
-@AllArgsConstructor
-@NoArgsConstructor
+//@AllArgsConstructor
+//@NoArgsConstructor
 @Getter
 @Setter
 public class Admin extends User {
@@ -21,13 +21,5 @@ public class Admin extends User {
     @JsonIgnore
     @OneToMany(fetch = FetchType.LAZY, mappedBy="admin", cascade = CascadeType.ALL)
     private List<Employee> employeeList = new ArrayList<Employee>();
-
-    @JsonIgnore
-    @OneToMany(fetch = FetchType.LAZY, mappedBy="admin", cascade = CascadeType.ALL)
-    private List<Project> projects = new ArrayList<Project>();
-
-    @JsonIgnore
-    @OneToMany(fetch = FetchType.LAZY, mappedBy="admin", cascade = CascadeType.ALL)
-    private List<Absence> absences = new ArrayList<Absence>();
 
 }

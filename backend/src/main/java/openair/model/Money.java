@@ -39,8 +39,4 @@ public class Money {
     @NotNull(message = "Date cannot be null")
     private LocalDate date;
 
-    @JsonIgnore
-    @OneToOne(mappedBy = "refund")
-    private ExpenseReport expenseReport;
-
 }

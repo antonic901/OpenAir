@@ -60,7 +60,6 @@ public class User implements UserDetails {
     @NotNull(message = "Usertype can not be null")
     private UserType userType;
 
-
     @ManyToMany(fetch = FetchType.EAGER)
     @JoinTable(name = "user_role",
             joinColumns = @JoinColumn(name = "user_id", referencedColumnName = "id"),

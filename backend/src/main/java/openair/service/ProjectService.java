@@ -71,11 +71,9 @@ public class ProjectService implements IProjectService {
     public List<Project> findAllByUserId(Long userId) {
         User user = userRepository.findById(userId).orElseThrow(() -> new NotFoundException("User with id " + userId.toString() + " does not exist."));
         if(user.getUserType().name().equals("ROLE_ADMIN")){
-            Admin admin = adminRepository.findById(userId).get();
-            return admin.getProjects();
+            return projectRepository.findAllByAdminId(userId);
         }else if (user.getUserType().name().equals("ROLE_EMPLOYEE")){
-            Employee employee = employeeRepository.findById(userId).get();
-            return employee.getProjects();
+            return projectRepository.findAllByEmployeeId(userId);
         }
         return null;
     }
