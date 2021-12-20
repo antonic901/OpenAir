@@ -8,6 +8,8 @@ import lombok.Setter;
 import openair.model.enums.Department;
 
 import javax.persistence.*;
+import javax.validation.constraints.FutureOrPresent;
+import javax.validation.constraints.NotNull;
 import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.List;
@@ -20,22 +22,22 @@ import java.util.List;
 @Setter
 public class Employee extends User{
 
-    @Column(nullable = true)
+    @Column
     @Enumerated(EnumType.STRING)
     private Department department;
 
-    @Column(nullable = true)
+    @Column
     private double salary;
 
-    @Column(nullable = true)
+    @Column
     private Integer freeDays;
 
-    //datum zaposlednja
-    @Column(nullable = true)
+    @Column
+    @FutureOrPresent
     private LocalDate dateOfHiring;
 
     @ManyToOne
-    @JoinColumn(name = "admin_id", nullable = true)
+    @JoinColumn(name = "admin_id", nullable = false)
     private Admin admin;
 
     @ManyToMany(fetch = FetchType.LAZY)
@@ -44,21 +46,21 @@ public class Employee extends User{
             joinColumns = @JoinColumn(name = "employee_id", referencedColumnName = "id"),
             inverseJoinColumns = @JoinColumn(name = "project_id", referencedColumnName = "id")
     )
-    private List<Project> projects = new ArrayList<Project>();
+    private List<Project> projects = new ArrayList<>();
 
     @JsonIgnore
     @OneToMany(fetch = FetchType.LAZY, mappedBy="employee", cascade = CascadeType.ALL)
-    private List<Task> tasks = new ArrayList<Task>();
+    private List<Task> tasks = new ArrayList<>();
 
     @JsonIgnore
     @OneToMany(fetch = FetchType.LAZY, mappedBy="employee", cascade = CascadeType.ALL)
-    private List<Absence> absences = new ArrayList<Absence>();
+    private List<Absence> absences = new ArrayList<>();
 
     @JsonIgnore
     @OneToMany(fetch = FetchType.LAZY, mappedBy="employee", cascade = CascadeType.ALL)
-    private List<TimeSheetDay> timeSheetDays = new ArrayList<TimeSheetDay>();
+    private List<TimeSheetDay> timeSheetDays = new ArrayList<>();
 
     @JsonIgnore
     @OneToMany(fetch = FetchType.LAZY, mappedBy="employee", cascade = CascadeType.ALL)
-    private List<ExpenseReport> expenseReports = new ArrayList<ExpenseReport>();
+    private List<ExpenseReport> expenseReports = new ArrayList<>();
 }

@@ -7,8 +7,9 @@ import lombok.NoArgsConstructor;
 import lombok.Setter;
 import openair.utils.UnixToLocalDateTimeConverter;
 
-import javax.persistence.Column;
 import javax.persistence.Embeddable;
+import javax.validation.constraints.Future;
+import javax.validation.constraints.NotNull;
 import java.time.LocalDateTime;
 
 @Embeddable
@@ -19,11 +20,15 @@ import java.time.LocalDateTime;
 public class Period {
 
     @JsonDeserialize(using = UnixToLocalDateTimeConverter.class)
-    @Column
+    @Future
+    @NotNull(message = "Start time cannot be null")
+    //@Column
     private LocalDateTime startTime;
 
     @JsonDeserialize(using = UnixToLocalDateTimeConverter.class)
-    @Column
+    @Future
+    @NotNull(message = "End time cannot be null")
+   // @Column
     private LocalDateTime endTime;
 
 }
