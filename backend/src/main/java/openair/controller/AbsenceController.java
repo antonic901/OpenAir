@@ -1,13 +1,11 @@
 package openair.controller;
 
-import openair.dto.AbsenceBasicInformationDTO;
 import openair.dto.RequestAbsenceDTO;
 import openair.model.*;
 import openair.model.enums.Status;
 import openair.service.AbsenceService;
 import openair.service.AdminService;
 import openair.service.EmployeeService;
-import openair.utils.ObjectMapperUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
@@ -16,7 +14,6 @@ import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 
 import java.security.Principal;
-import java.util.List;
 
 @RestController
 @RequestMapping(value = "/absences", produces = MediaType.APPLICATION_JSON_VALUE)
@@ -31,14 +28,6 @@ public class AbsenceController {
         this.absenceService = absenceService;
         this.employeeService = employeeService;
         this.adminService = adminService;
-    }
-
-    @GetMapping("/{id}")
-    @PreAuthorize("hasRole('ADMIN')")
-    public ResponseEntity<List<AbsenceBasicInformationDTO>> findById(@PathVariable Long id) {
-        List<Absence> absences = absenceService.getAllByUserId(id);
-        List<AbsenceBasicInformationDTO> response = ObjectMapperUtils.mapAll(absences, AbsenceBasicInformationDTO.class);
-        return new ResponseEntity<>(response, HttpStatus.OK);
     }
 
     @PostMapping

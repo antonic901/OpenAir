@@ -15,12 +15,14 @@ import ApproveAbsence from '../views/ApproveAbsence.vue'
 import LogTask from '../views/LogTask.vue'
 import AddExpenseReport from '../views/AddExpenseReport.vue'
 import ReviewExpenseReport from '../views/ReviewExpenseReport.vue'
+import NotFound from '../views/NotFound.vue'
 
 const routes = [
   {
     path:"/",
     name:"Home",
-    component: Home
+    component: Home,
+    meta: { requiresAuth: true}
   },
   {
     path: "/login",
@@ -43,47 +45,61 @@ const routes = [
       
     // },
     name: "Register",
-    component: Register
+    component: Register,
+    meta: { requiresAdmin: true}
   },
   {
     path: "/addProject",
     name: "AddProject",
-    component: AddProject
+    component: AddProject,
+    meta: { requiresAdmin: true}
   },
   {
     path: "/assignEmployeeToProject",
     name: "AssignEmployeeToProject",
-    component: AssignEmployeeToProject
+    component: AssignEmployeeToProject,
+    meta: { requiresAdmin: true}
   },
   {
     path: "/addTask",
     name: "AddTask",
-    component: AddTask
+    component: AddTask,
+    meta: { requiresAdmin: true}
   },
   {
     path: "/requestAbsence",
     name: "RequestAbsence",
-    component: RequestAbsence
+    component: RequestAbsence,
+    meta: { requiresEmployee: true}
   },
   {
     path: "/approveAbsence",
     name: "ApproveAbsence",
-    component: ApproveAbsence
+    component: ApproveAbsence,
+    meta: { requiresAdmin: true}
   },
   {
     path: "/logTask",
     name: "LogTask",
-    component: LogTask
+    component: LogTask,
+    meta: { requiresEmployee: true}
   },
   {
     path: "/addExpenseReport",
     name: "AddExpenseReport",
-    component: AddExpenseReport
+    component: AddExpenseReport,
+    meta: { requiresEmployee: true}
   },
   {
     path: "/reviewExpenseReport",
     name: "ReviewExpenseReport",
-    component: ReviewExpenseReport
+    component: ReviewExpenseReport,
+    meta: { requiresAdmin: true}
+  },
+  {
+    path: '/:catchAll(.*)',
+    name: 'NotFound',
+    component: NotFound
   }
 ]
 
@@ -91,6 +107,50 @@ const router = new VueRouter({
   mode: 'history',
   base: process.env.BASE_URL,
   routes
+})
+
+router.beforeEach((to, from, next) => {
+  if(to.matched.some(record => record.meta.requiresAuth)) {
+    if(!localStorage.jws) {
+      next({path: '/login'})
+    } else {
+      next()
+    }
+  } else if(to.matched.some(record => record.meta.requiresEmployee)) {
+    if(!localStorage.jws) {
+      next({path: '/login'})
+    } else {
+      axios.get("/auth/role", {headers: {'Authorization': `Bearer ` + localStorage.jws}})
+        .then(r => {
+          if(r.data != 'ROLE_EMPLOYEE') {
+            next({path: '/'})
+          } else {
+            next()
+          }
+        })
+        .catch(() => {
+          next({path: '/login'})
+        })
+    }
+  } else if (to.matched.some(record => record.meta.requiresAdmin)) {
+    if(!localStorage.jws) {
+      next({path: '/login'})
+    } else {
+      axios.get("/auth/role", {headers: {'Authorization': `Bearer ` + localStorage.jws}})
+        .then(r => {
+          if(r.data != 'ROLE_ADMIN') {
+            next({path: '/'})
+          } else {
+            next()
+          }
+        })
+        .catch(() => {
+          next({path: '/login'})
+        })
+    }
+   } else {
+    next()
+  }
 })
 
 export default router

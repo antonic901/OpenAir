@@ -55,7 +55,7 @@ export default {
                 startTime: this.getDateTimeFromString(this.dates[0], "00:00").getTime(),
                 endTime: this.getDateTimeFromString(this.dates[1], "00:00").getTime()
             }
-            this.axios.post("/api/absence/add", period, {headers: {'Authorization': `Bearer ` + this.$store.getters.getJwt}})
+            this.axios.post("/absences", period, {headers: {'Authorization': `Bearer ` + localStorage.jws}})
                 .then(() => {
                     alert("Succesfully requested.");
                     this.dates = [];

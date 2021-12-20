@@ -52,19 +52,6 @@ public class ProjectController {
         return new ResponseEntity<>(HttpStatus.CREATED);
     }
 
-    //TODO koriste li se gde ove dve metode??
-    /*@GetMapping("/{name}}")
-    public ResponseEntity<ProjectBasicInformationDTO> findProjectByName(@PathVariable String name){
-        Project project = projectService.findProjectByName(name);
-        return new ResponseEntity<>(modelMapper.map(project,ProjectBasicInformationDTO.class), HttpStatus.OK);
-    }
-
-    @GetMapping("/{projectId}")
-    public ResponseEntity<ProjectBasicInformationDTO> findProjectById(@PathVariable Long projectId){
-        Project project = projectService.findProjectById(projectId);
-        return new ResponseEntity<>(modelMapper.map(project,ProjectBasicInformationDTO.class), HttpStatus.OK);
-    }*/
-
     @PutMapping("/{projectId}/employees")
     @PreAuthorize("hasRole('ADMIN')")
     public ResponseEntity<ProjectBasicInformationDTO> addEmployeeToProject(@PathVariable Long projectId, @RequestBody Long employeeId) {

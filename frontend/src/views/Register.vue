@@ -188,7 +188,7 @@ export default {
         register() {
           this.messageShow = false;
           var user = this.user;
-          this.axios.post("/api/admin/register", user, {headers: {'Authorization': `Bearer ` + this.$store.getters.getJwt}})
+          this.axios.post("/employees", user, {headers: {'Authorization': `Bearer ` + localStorage.jws}})
             .then(() => {
               alert("New employee is sucessfuly added.");
               this.user.username = '';

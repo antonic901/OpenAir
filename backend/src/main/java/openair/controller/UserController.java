@@ -1,9 +1,12 @@
 package openair.controller;
 
+import openair.dto.AbsenceBasicInformationDTO;
 import openair.dto.ProjectBasicInformationDTO;
 import openair.dto.UserBasicInformationDTO;
+import openair.model.Absence;
 import openair.model.Project;
 import openair.model.User;
+import openair.service.AbsenceService;
 import openair.service.AdminService;
 import openair.service.ProjectService;
 import openair.service.UserService;
@@ -29,20 +32,27 @@ public class UserController {
     private UserService userService;
     private ModelMapper modelMapper;
     private ProjectService projectService;
+    private AbsenceService absenceService;
 
     @Autowired
-    public UserController(UserService userService,ModelMapper modelMapper,ProjectService projectService) {
+    public UserController(UserService userService,ModelMapper modelMapper,ProjectService projectService,
+                          AbsenceService absenceService) {
         this.userService = userService;
         this.modelMapper = modelMapper;
         this.projectService = projectService;
-
+        this.absenceService = absenceService;
     }
 
-    //ovo je putanja za get basic info o useru
-    //TODO ako se dobavljaju podaci o ulogovanom korisniku onda ima smisla dodati autorizaciju
-    //jer ne moze pristupiti metodi ako nije ulogovan??
-    //i u web config da se doda da toj putanji ne mogu svi da pristupe nego admin i employee samo
+    @GetMapping("/{id}/absences")
+    @PreAuthorize("hasRole('ADMIN')")
+    public ResponseEntity<List<AbsenceBasicInformationDTO>> findAllAbsencesByUserId(@PathVariable Long id) {
+        List<Absence> absences = absenceService.getAllByUserId(id);
+        List<AbsenceBasicInformationDTO> response = ObjectMapperUtils.mapAll(absences, AbsenceBasicInformationDTO.class);
+        return new ResponseEntity<>(response, HttpStatus.OK);
+    }
+    
     @GetMapping("/{userId}")
+    @PreAuthorize("hasRole('ADMIN') || hasRole('EMPLOYEE')")
     public ResponseEntity<UserBasicInformationDTO> findByUsername(Principal loggedUser) {
         User user = null;
         if(loggedUser != null) {

@@ -66,37 +66,15 @@ public class AuthenticationController {
         return ResponseEntity.ok(tokenUtils.getRoleFromToken(token));
     }
 
-//    // U slucaju isteka vazenja JWT tokena, endpoint koji se poziva da se token osvezi
-//    @PostMapping(value = "/refresh")
-//    public ResponseEntity<UserTokenState> refreshAuthenticationToken(HttpServletRequest request) {
-//
-//        String token = tokenUtils.getToken(request);
-//        String username = this.tokenUtils.getUsernameFromToken(token);
-//        User user = (User) this.userService.loadUserByUsername(username);
-//
-//        if (this.tokenUtils.canTokenBeRefreshed(token, user.getLastPasswordResetDate())) {
-//            String refreshedToken = tokenUtils.refreshToken(token);
-//            int expiresIn = tokenUtils.getExpiredIn();
-//
-//            return ResponseEntity.ok(new UserTokenState(refreshedToken, expiresIn));
-//        } else {
-//            UserTokenState userTokenState = new UserTokenState();
-//            return ResponseEntity.badRequest().body(userTokenState);
-//        }
-//    }
-
-//    @RequestMapping(value = "/change-password", method = RequestMethod.POST)
-//    @PreAuthorize("hasRole('USER')")
-//    public ResponseEntity<?> changePassword(@RequestBody PasswordChanger passwordChanger) {
-//        userDetailsService.changePassword(passwordChanger.oldPassword, passwordChanger.newPassword);
-//
-//        Map<String, String> result = new HashMap<>();
-//        result.put("result", "success");
-//        return ResponseEntity.accepted().body(result);
-//    }
-//
-//    static class PasswordChanger {
-//        public String oldPassword;
-//        public String newPassword;
-//    }
+    // U slucaju isteka vazenja JWT tokena, endpoint koji se poziva da se token osvezi
+    @PostMapping(value = "/refresh")
+    public ResponseEntity<UserTokenState> refreshAuthenticationToken(HttpServletRequest request) {
+        String token = tokenUtils.getToken(request);
+        String username = this.tokenUtils.getUsernameFromToken(token);
+        User user = (User) this.userService.loadUserByUsername(username);
+        String refreshedToken = tokenUtils.refreshToken(token);
+        int expiresIn = tokenUtils.getExpiredIn();
+        return ResponseEntity.ok(new UserTokenState(refreshedToken, expiresIn));
+    }
+    
 }

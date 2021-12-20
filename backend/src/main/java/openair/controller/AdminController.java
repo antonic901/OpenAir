@@ -41,7 +41,7 @@ public class AdminController {
 
     @GetMapping("/expense-reports")
     @PreAuthorize("hasRole('ADMIN')")
-    public ResponseEntity<List<ExpenseBasicInformationDTO>> findAddExpenseReportsByAdminId(Principal loggedAdmin) {
+    public ResponseEntity<List<ExpenseBasicInformationDTO>> findAllExpenseReportsByAdminId(Principal loggedAdmin) {
         Admin admin = adminService.findByUsername(loggedAdmin.getName());
         List<ExpenseReport> expenseReports = expenseReportService.getAllByAdminId(admin.getId());
         List<ExpenseBasicInformationDTO> response = ObjectMapperUtils.mapAll(expenseReports, ExpenseBasicInformationDTO.class);

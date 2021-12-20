@@ -10,7 +10,20 @@ Vue.config.productionTip = false
 
 Vue.use(VueAxios,axios)
 
-axios.defaults.baseURL = process.env.VUE_APP_API_ENDPOINT
+axios.defaults.baseURL = process.env.VUE_APP_API_ENDPOINT;
+// axios.defaults.headers.common['Authorization'] = 'Bearer ' + localStorage.jws;
+// axios.defaults.headers.common['Content-Type'] = 'application/json';
+
+axios.interceptors.response.use(
+  (response) => {
+    return response;
+  },
+  (err) => {
+    if(err.response.status === 401) {
+      console.log("Refresh token.")
+    }
+  }
+)
 
 new Vue({
   vuetify,
