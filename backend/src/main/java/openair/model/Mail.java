@@ -1,8 +1,9 @@
 package openair.model;
 
 import lombok.*;
-import openair.dto.MailDTO;
 
+import javax.validation.constraints.Email;
+import javax.validation.constraints.NotNull;
 import java.util.List;
 
 @Data
@@ -11,22 +12,25 @@ import java.util.List;
 @Getter
 @Setter
 public class Mail {
-    public Mail(MailDTO mailDTO) {
-		this.mailFrom = mailDTO.getMailFrom();
-		this.mailTo = mailDTO.getMailTo();
-		this.mailCc = mailDTO.getMailCc();
-		this.mailBcc = mailDTO.getMailBcc();
-		this.mailSubject = mailDTO.getMailSubject();
-		this.mailContent = mailDTO.getMailContent();
-		this.contentType = mailDTO.getContentType();
-		this.attachments = mailDTO.getAttachments();
-	}
+
+	@Email(message = "Email should be valid")
+    @NotNull(message = "Sender cannot be null")
 	private String mailFrom;
+
+	@Email(message = "Email should be valid")
+    @NotNull(message = "Recipient cannot be null")
     private String mailTo;
+
+	@Email(message = "Email should be valid")
     private String mailCc;
+
+	@Email(message = "Email should be valid")
     private String mailBcc;
+
+	//subject and content has no size limit
     private String mailSubject;
     private String mailContent;
+
     private String contentType;
     private List <Object> attachments;
 }

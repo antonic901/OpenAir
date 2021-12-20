@@ -7,6 +7,8 @@ import lombok.Setter;
 import openair.model.enums.Department;
 import openair.model.enums.UserType;
 
+import javax.validation.constraints.Pattern;
+
 @NoArgsConstructor
 @AllArgsConstructor
 @Getter

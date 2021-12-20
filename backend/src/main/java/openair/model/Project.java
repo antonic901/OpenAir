@@ -8,6 +8,7 @@ import lombok.Setter;
 import openair.model.enums.ProjectType;
 
 import javax.persistence.*;
+import javax.validation.constraints.*;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -24,15 +25,19 @@ public class Project {
     private Long id;
 
     @Column
+    @NotNull(message = "Name cannot be null")
+    @Size(min = 1, max = 30, message
+            = "Name must be between 1 and 30 characters")
     private String name;
 
     @Column
     @Enumerated(value = EnumType.STRING)
+    @NotNull(message = "Project type cannot be null")
     private ProjectType projectType;
 
     @JsonIgnore
     @OneToMany(fetch = FetchType.LAZY, mappedBy="project", cascade = CascadeType.ALL)
-    private List<Task> tasks = new ArrayList<Task>();
+    private List<Task> tasks = new ArrayList<>();
 
     @ManyToOne
     @JoinColumn(name = "admin_id", nullable = false)
@@ -45,10 +50,10 @@ public class Project {
             joinColumns = @JoinColumn(name = "project_id", referencedColumnName = "id"),
             inverseJoinColumns = @JoinColumn(name = "employee_id", referencedColumnName = "id")
     )
-    private List<Employee> employeeList = new ArrayList<Employee>();
+    private List<Employee> employeeList = new ArrayList<>();
 
     @JsonIgnore
     @OneToMany(fetch = FetchType.LAZY, mappedBy="project", cascade = CascadeType.ALL)
-    private List<ExpenseReport> expenseReports = new ArrayList<ExpenseReport>();
+    private List<ExpenseReport> expenseReports = new ArrayList<>();
 
 }
