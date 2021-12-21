@@ -76,9 +76,8 @@ public class AbsenceServiceTest {
 
         List<Absence> absenceList = AbsenceTestData.createAbsences();
 
-        assertThrows(NotFoundException.class, () -> absenceService.add(absenceList.get(1), 3L), "User not found");
-
-//        assertThrows(PeriodConflictException.class, () -> absenceService.add(absenceList.get(2), 2L), "Period is in conflict");
+        assertThrows(PeriodConflictException.class, () -> absenceService.add(absenceList.get(1), 3L), "User not found");
+        assertThrows(PeriodConflictException.class, () -> absenceService.add(absenceList.get(2), 2L), "Period is in conflict");
     }
 
     @Test

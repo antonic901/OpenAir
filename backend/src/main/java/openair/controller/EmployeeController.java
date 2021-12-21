@@ -96,4 +96,13 @@ public class EmployeeController {
         timeSheetDay.setTask(task);
         return new ResponseEntity<>(modelMapper.map(timeSheetDayService.addTimeSheetDay(timeSheetDay,employee), TimeBasicInformationDTO.class), HttpStatus.CREATED);
     }
+
+    @GetMapping("/{employeeId}/projects/{projectId}/tasks")
+    @PreAuthorize("hasRole('EMPLOYEE')")
+    public ResponseEntity<List<TaskBasicInformationDTO>> findAllTasksByProjectIdAndEmployeeId(@PathVariable Long projectId, Principal loggedEmployee) {
+        Employee employee = employeeService.findByUsername(loggedEmployee.getName());
+        List<Task> tasks = taskService.findAllByProjectEmployeeId(projectId,employee.getId());
+        List<TaskBasicInformationDTO> response = ObjectMapperUtils.mapAll(tasks, TaskBasicInformationDTO.class);
+        return new ResponseEntity<>(response, HttpStatus.OK);
+    }
 }
