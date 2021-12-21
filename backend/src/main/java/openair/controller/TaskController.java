@@ -55,15 +55,4 @@ public class TaskController {
 
         return new ResponseEntity<>(HttpStatus.CREATED);
     }
-
-    //TODO ovo mozda moze jednostavnije??
-    @GetMapping("/projects/{projectId}/employees/{employeeId}")
-    @PreAuthorize("hasRole('EMPLOYEE')")
-    public ResponseEntity<List<TaskBasicInformationDTO>> findAllTasksByProjectIdAndEmployeeId(@PathVariable Long projectId, Principal loggedEmployee) {
-        Employee employee = employeeService.findByUsername(loggedEmployee.getName());
-        List<Task> tasks = taskService.findAllByProjectEmployeeId(projectId,employee.getId());
-        List<TaskBasicInformationDTO> response = ObjectMapperUtils.mapAll(tasks, TaskBasicInformationDTO.class);
-        return new ResponseEntity<>(response, HttpStatus.OK);
-    }
-
 }
