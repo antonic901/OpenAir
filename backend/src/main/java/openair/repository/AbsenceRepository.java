@@ -6,16 +6,18 @@ import openair.utils.AbsenceInterface;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
 
+import java.time.LocalDateTime;
 import java.util.List;
+import java.util.Optional;
 
 public interface AbsenceRepository extends JpaRepository<Absence, Long> {
     List<Absence> findAllByEmployeeId(Long id);
     @Query(value = "select a " +
             "from absences a " +
             "where a.employee_id = ?1 AND " +
-            "a.status like 'APPROVED' OR " +
-            "a.status like 'INPROCESS'", nativeQuery = true)
-    List<Absence> findAllByEmployeeIdAndStatus(Long id);
+            "a.status like 'APPROVED' OR a.status like 'INPROCESS' " +
+            "(?2 <= a.end_time) AND (a.start_time <= ?3) ", nativeQuery = true)
+    Optional<Absence> findAllByEmployeeIdAndStatus(Long id, LocalDateTime start, LocalDateTime end);
 
     List<Absence> findAllByAdminId(Long id);
 
