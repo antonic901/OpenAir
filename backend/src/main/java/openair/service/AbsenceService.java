@@ -45,7 +45,10 @@ public class AbsenceService implements IAbsenceService {
         if(absence.getPeriod().getStartTime().isAfter(absence.getPeriod().getEndTime())) {
             throw new PeriodConflictException(id, "User with ID: " + id + " have selected wrong period (start after end))");
         }
-        Absence absence1 = absenceRepository.findAllByEmployeeIdAndStatus(id,absence.getPeriod().getStartTime(),absence.getPeriod().getEndTime()).orElseThrow(() -> new PeriodConflictException(id, "User with ID: " + id + " have requested absence which is in conflict with other absence"));
+
+        absenceRepository.findAllByEmployeeIdAndStatus(id,absence.getPeriod().getStartTime(),absence.getPeriod().getEndTime()).ifPresent(value -> {
+            throw new PeriodConflictException(id, "User with ID: " + id + " have requested absence which is in conflict with absence with ID: " + value.getId() + ".");
+        });
 
         Employee employee = employeeRepository.findById(id).orElseThrow(() -> new NotFoundException(id, "User with ID: " + id + " is not found."));
 
