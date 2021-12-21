@@ -12,11 +12,11 @@ import java.util.Optional;
 
 public interface AbsenceRepository extends JpaRepository<Absence, Long> {
     List<Absence> findAllByEmployeeId(Long id);
-    @Query(value = "select a " +
+    @Query(value = "select * " +
             "from absences a " +
             "where a.employee_id = ?1 AND " +
             "a.status like 'APPROVED' OR a.status like 'INPROCESS' " +
-            "(?2 <= a.end_time) AND (a.start_time <= ?3) ", nativeQuery = true)
+            "AND (?2 <= a.end_time) AND (a.start_time <= ?3) ", nativeQuery = true)
     Optional<Absence> findAllByEmployeeIdAndStatus(Long id, LocalDateTime start, LocalDateTime end);
 
     List<Absence> findAllByAdminId(Long id);

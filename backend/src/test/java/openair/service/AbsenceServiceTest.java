@@ -9,6 +9,7 @@ import openair.repository.AbsenceRepository;
 import openair.repository.AdminRepository;
 import openair.repository.EmployeeRepository;
 import openair.repository.UserRepository;
+import org.checkerframework.checker.nullness.Opt;
 import org.junit.jupiter.api.Test;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
@@ -71,13 +72,11 @@ public class AbsenceServiceTest {
         List<Absence> absences = AbsenceTestData.createAbsences();
 
         when(employeeRepository.findById(2L)).thenReturn(Optional.of(employee));
-        when(absenceRepository.findAllByEmployeeId(2L)).thenReturn(absences);
+        when(absenceRepository.findAllByEmployeeIdAndStatus(2L, absences.get(2).getPeriod().getStartTime(), absences.get(2).getPeriod().getEndTime())).thenReturn(Optional.of(absences.get(1)));
         when(absenceRepository.save(any(Absence.class))).thenReturn(new Absence());
 
-        List<Absence> absenceList = AbsenceTestData.createAbsences();
-
-        assertThrows(PeriodConflictException.class, () -> absenceService.add(absenceList.get(1), 3L), "User not found");
-        assertThrows(PeriodConflictException.class, () -> absenceService.add(absenceList.get(2), 2L), "Period is in conflict");
+        assertThrows(NotFoundException.class, () -> absenceService.add(absences.get(1), 3L), "User not found");
+        assertThrows(PeriodConflictException.class, () -> absenceService.add(absences.get(2), 2L), "Period is in conflict");
     }
 
     @Test

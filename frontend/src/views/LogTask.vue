@@ -180,7 +180,7 @@ export default {
     methods: {
         getTasks() {
             this.e1 = 2;
-            this.axios.get("/tasks/projects/" + this.project.id + "/employees/" + this.$store.getters.getUserId, {headers: {'Authorization': `Bearer ` + localStorage.jws}})
+            this.axios.get("/employees/" + this.$store.getters.getUserId + "/projects/" + this.project.id + "/tasks", {headers: {'Authorization': `Bearer ` + localStorage.jws}})
                 .then(r => {
                     this.tasks = r.data;
                 })

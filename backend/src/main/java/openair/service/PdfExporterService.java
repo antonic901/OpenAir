@@ -3,6 +3,8 @@ package openair.service;
 import java.io.File;
 import java.io.FileOutputStream;
 import java.io.IOException;
+import java.nio.file.Files;
+import java.nio.file.Path;
 import java.time.LocalDateTime;
 import java.util.List;
 
@@ -68,7 +70,9 @@ public class PdfExporterService implements IPdfExporterService {
     public String export(String username) throws DocumentException, IOException {
         Document document = new Document(PageSize.A4);
 
-        File file = new File(LocalDateTime.now() + "-" + username + ".pdf");
+        Path tempFile = Files.createTempFile(username, ".pdf");
+
+        File file = new File(tempFile.toString());
         file.createNewFile();
         FileOutputStream fos = new FileOutputStream(file);
         PdfWriter.getInstance(document, fos);
@@ -88,6 +92,6 @@ public class PdfExporterService implements IPdfExporterService {
 
         storageService.upload(file);
 
-        return file.getName();
+        return tempFile.getFileName().toString();
     }
 }
