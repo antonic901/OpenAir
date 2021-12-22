@@ -9,6 +9,8 @@ import openair.repository.TimeSheetDayRepository;
 import openair.service.interfaces.IEmployeeService;
 
 import openair.utils.AbsenceInterface;
+import openair.utils.Dates;
+import org.apache.tomcat.jni.Local;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.security.crypto.password.PasswordEncoder;
@@ -105,12 +107,16 @@ public class EmployeeService implements IEmployeeService {
             StringBuilder emailContent = new StringBuilder("Dear, you forgot to fill in your working hours for: ");
             int detector = 0;
 
-            List<LocalDate> filledDates = timeSheetDayRepository.findAllOfCurrentMonth(employee.getId(), LocalDateTime.now().getMonth().getValue(),LocalDateTime.now().getYear());
-            List<LocalDate> absentDates = findAbsentDates(employee.getId());
+            List<Dates> filledDates = timeSheetDayRepository.findAllOfCurrentMonth(employee.getId(), LocalDateTime.now().getMonth().getValue(),LocalDateTime.now().getYear());
+            List<LocalDate> filledDatesList = new ArrayList<>();
+            for(Dates date: filledDates){
+                filledDatesList.add(date.getDate());
+            }
 
+            List<LocalDate> absentDates = findAbsentDates(employee.getId());
             for (LocalDate workDate : workDayList) {
                 //date filled or employee on vacation
-                if (!filledDates.contains(workDate) && !absentDates.contains(workDate)) {
+                if (!filledDatesList.contains(workDate) && !absentDates.contains(workDate)) {
                     detector = 1;
                     emailContent.append(workDate.toString()).append(" ");
                 }
@@ -128,11 +134,11 @@ public class EmployeeService implements IEmployeeService {
 
         //vacation starts in current month
         List<AbsenceInterface> absences = absenceRepository.findAllOfCurrentMonth(employeeId, LocalDateTime.now().getMonth().getValue(),LocalDateTime.now().getYear());
-        
+
         //extract dates to list
         for (AbsenceInterface absence : absences) {
-            absentDays.addAll(findAllDatesBetweenTwoDates(absence.getStartDate(),
-                    absence.getEndDate()));
+            absentDays.addAll(findAllDatesBetweenTwoDates(absence.getStart(),
+                    absence.getEnd()));
 
         }
 
@@ -142,12 +148,12 @@ public class EmployeeService implements IEmployeeService {
         return absentDays;
     }
 
-    private List<LocalDate> findAllDatesBetweenTwoDates(LocalDate start, LocalDate end){
+    private List<LocalDate> findAllDatesBetweenTwoDates(LocalDateTime start, LocalDateTime end){
 
         List<LocalDate> totalDates = new ArrayList<>();
 
         while (!start.isAfter(end)) {
-            totalDates.add(start);
+            totalDates.add(LocalDate.from(start));
             start = start.plusDays(1);
         }
 

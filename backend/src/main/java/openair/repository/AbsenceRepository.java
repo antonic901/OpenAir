@@ -20,7 +20,7 @@ public interface AbsenceRepository extends JpaRepository<Absence, Long> {
 
     List<Absence> findAllByAdminId(Long id);
 
-    @Query(value = "select a.start_time as Start_date, a.end_time as End_date " +
+    @Query(value = "select a.start_time as Start, a.end_time as End " +
             "from absences a " +
             "where a.employee_id = ?1 AND " +
             "a.status like 'APPROVED' AND " +

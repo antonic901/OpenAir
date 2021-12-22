@@ -1,8 +1,8 @@
 package openair.utils;
 
-import java.time.LocalDate;
+import java.time.LocalDateTime;
 
 public interface AbsenceInterface {
-    LocalDate getStartDate();
-    LocalDate getEndDate();
+    LocalDateTime getStart();
+    LocalDateTime getEnd();
 }
