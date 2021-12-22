@@ -1,11 +1,13 @@
 package openair.repository;
 
 import openair.model.TimeSheetDay;
+import openair.utils.Dates;
 import openair.utils.PdfTableDataOutput;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
 
 import java.time.LocalDate;
+import java.time.LocalDateTime;
 import java.util.List;
 
 public interface TimeSheetDayRepository extends JpaRepository<TimeSheetDay, Long> {
@@ -29,6 +31,6 @@ public interface TimeSheetDayRepository extends JpaRepository<TimeSheetDay, Long
             "where tsd.employee_id = ?1 AND " +
             "(extract(month from tsd.date) = ?2 AND " +
             "extract(year from tsd.date) = ?3)", nativeQuery = true)
-    List<LocalDate> findAllOfCurrentMonth(Long employeeId, int value, int year);
+    List<Dates> findAllOfCurrentMonth(Long employeeId, int value, int year);
 
 }
