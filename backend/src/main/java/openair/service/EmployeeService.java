@@ -10,7 +10,6 @@ import openair.service.interfaces.IEmployeeService;
 
 import openair.utils.AbsenceInterface;
 import openair.utils.Dates;
-import org.apache.tomcat.jni.Local;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.security.crypto.password.PasswordEncoder;

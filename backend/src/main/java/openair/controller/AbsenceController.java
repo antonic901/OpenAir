@@ -45,9 +45,7 @@ public class AbsenceController {
     @PutMapping("/{id}")
     @PreAuthorize("hasRole('ADMIN')")
     public ResponseEntity<String> reviewAbsence(@PathVariable Long id, @RequestBody Status status)  {
-        System.out.println("Prosao;");
         absenceService.review(id, status);
-        System.out.println("Prosao;");
         return new ResponseEntity<>(HttpStatus.NO_CONTENT);
     }
 }

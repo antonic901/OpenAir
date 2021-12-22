@@ -15,6 +15,39 @@
 	<description>OpenAir</description>
 	<properties>
 		<java.version>17</java.version>
+		<project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
+		<sonar.host.url>http://localhost:9000</sonar.host.url>
+		<sonar.projectKey>openair:openair</sonar.projectKey>
+		<sonar.projectName>openair</sonar.projectName>
+		<sonar.java.binaries>target/classes</sonar.java.binaries>
+		<sonar.login>admin</sonar.login>
+		<sonar.password>root</sonar.password>
+		<sonar.exclusions>
+<!--			**/exception/*.java,-->
+<!--			**/utils/*.java,-->
+<!--			**/security/auth/TokenBasedAuthentication.java,-->
+<!--			**/service/StorageService.java,-->
+<!--			**/service/EmailService.java,-->
+<!--			pom.xml,-->
+<!--			src/test/java/openair/**-->
+
+				**/config/*.java,
+				**/dto/*.java,
+				**/exception/*.java,
+				**/model/**,
+				**/repository/*.java,
+				**/security/auth/*.java,
+				**/service/StorageService.java,
+				**/service/MailService.java,
+				**/service/PdfExporterService.java,
+				**/utils/*.java,
+				pom.xml
+		</sonar.exclusions>
+
+		<sonar.issue.ignore.multicriteria>e1</sonar.issue.ignore.multicriteria>
+		<sonar.issue.ignore.multicriteria.e1.ruleKey>java:S1192</sonar.issue.ignore.multicriteria.e1.ruleKey>
+		<sonar.issue.ignore.multicriteria.e1.resourceKey>**/service/*.java</sonar.issue.ignore.multicriteria.e1.resourceKey>
+		<sonar.dynamic>reuseReports</sonar.dynamic>
 	</properties>
 	<dependencies>
 		<dependency>
