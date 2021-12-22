@@ -250,8 +250,9 @@ export default {
                 .then(() => {
                     this.e1 = 5;
                 })
-                .catch(() => {
-                    this.e1 = 3
+                .catch(e => {
+                    this.e1 = 4
+                    alert(e.response.data)
                 })
             })
         }, 

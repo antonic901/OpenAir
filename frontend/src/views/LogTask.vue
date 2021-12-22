@@ -193,8 +193,9 @@ export default {
                 .then(() => {
                     this.e1 = 4;
                 })
-                .catch(() => {
+                .catch(e => {
                     this.e1 = 3
+                    alert(e.response.data)
                 })
             })
         }, 

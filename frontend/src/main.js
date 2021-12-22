@@ -14,16 +14,23 @@ axios.defaults.baseURL = process.env.VUE_APP_API_ENDPOINT;
 // axios.defaults.headers.common['Authorization'] = 'Bearer ' + localStorage.jws;
 // axios.defaults.headers.common['Content-Type'] = 'application/json';
 
-axios.interceptors.response.use(
-  (response) => {
-    return response;
-  },
-  (err) => {
-    if(err.response.status === 401) {
-      console.log("Refresh token.")
-    }
-  }
-)
+// axios.interceptors.response.use(
+//   (response) => {
+//     return response;
+//   },
+//   (err) => {
+//     console.log(err)
+//     if(err.response.status === 401) {
+//       alert("Token expired, pleae login again.")
+//     }
+//     else if(err.response.status === 409) {
+//       alert(err.data)
+//     }
+//     else if(err.response.status === 404) {
+//       alert(err.data)
+//     }
+//   }
+// )
 
 new Vue({
   vuetify,

@@ -193,8 +193,8 @@ export default {
               alert("New employee is sucessfuly added.");
               this.user.username = '';
             })
-            .catch(() => {
-              alert("Something went wrong.")
+            .catch(e => {
+              alert(e.response.data)
             })
         }
     }
