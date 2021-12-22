@@ -60,8 +60,8 @@ export default {
                     alert("Succesfully requested.");
                     this.dates = [];
                 })
-                .catch(() => {
-                    alert("Something went wrong.");
+                .catch(e => {
+                    alert(e.response.data)
                     this.dates = [];
                 })
         },
