@@ -1,20 +1,13 @@
 package openair.service;
 
 import openair.exception.NotFoundException;
-import openair.model.Employee;
-import openair.model.Project;
 import openair.model.Task;
-import openair.repository.EmployeeRepository;
-import openair.repository.ProjectRepository;
 import openair.repository.TaskRepository;
-import openair.repository.TimeSheetDayRepository;
 import openair.service.interfaces.ITaskService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
-
-import java.util.Optional;
 
 @Service
 public class TaskService implements ITaskService {

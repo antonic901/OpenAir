@@ -5,6 +5,8 @@ import java.io.FileOutputStream;
 import java.io.IOException;
 
 import openair.service.interfaces.IStorageService;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
@@ -19,6 +21,8 @@ import com.amazonaws.util.IOUtils;
 
 @Service
 public class StorageService implements IStorageService {
+
+    private static final Logger logger = LoggerFactory.getLogger(StorageService.class);
 
     @Value("${application.bucket.name}")
     private String bucketName;
@@ -58,7 +62,7 @@ public class StorageService implements IStorageService {
         } catch (IOException e) {
             e.printStackTrace();
         }
-        return null;
+        return new byte[0];
     }
 
     @Override
@@ -72,7 +76,7 @@ public class StorageService implements IStorageService {
         try (FileOutputStream fos = new FileOutputStream(convertedFile)) {
             fos.write(file.getBytes());
         } catch (IOException e) {
-            System.out.println("Error converting multipartFile to File: " + e);
+            logger.error("Error converting multipartFile to File: {}", e.getMessage());
         }
         return convertedFile;
     }

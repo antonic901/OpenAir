@@ -1,7 +1,6 @@
 package openair.repository;
 
 import openair.model.Absence;
-import openair.model.enums.Status;
 import openair.utils.AbsenceInterface;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;

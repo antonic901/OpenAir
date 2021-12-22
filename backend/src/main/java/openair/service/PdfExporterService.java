@@ -5,7 +5,6 @@ import java.io.FileOutputStream;
 import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Path;
-import java.time.LocalDateTime;
 import java.util.List;
 
 import com.lowagie.text.Document;
@@ -62,8 +61,8 @@ public class PdfExporterService implements IPdfExporterService {
         for(PdfTableDataOutput pdfTableDataOutput : pdfTableDataOutputList) {
             table.addCell(pdfTableDataOutput.getEmployee());
             table.addCell(pdfTableDataOutput.getProject());
-            table.addCell(String.valueOf(pdfTableDataOutput.getWork_time()));
-            table.addCell(pdfTableDataOutput.getProject_type());
+            table.addCell(String.valueOf(pdfTableDataOutput.getWorkTime()));
+            table.addCell(pdfTableDataOutput.getProjectType());
         }
     }
 

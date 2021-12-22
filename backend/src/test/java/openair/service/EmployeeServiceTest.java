@@ -2,26 +2,24 @@ package openair.service;
 
 import openair.exception.NotFoundException;
 import openair.model.Employee;
-
 import openair.repository.EmployeeRepository;
-import openair.repository.ProjectRepository;
 import org.junit.jupiter.api.Test;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.Spy;
-import static org.assertj.core.api.Assertions.assertThat;
-import static org.junit.jupiter.api.Assertions.assertThrows;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.security.crypto.password.PasswordEncoder;
 
 import java.util.List;
 import java.util.Optional;
 
+import static org.assertj.core.api.Assertions.assertThat;
+import static org.junit.jupiter.api.Assertions.assertThrows;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.Mockito.when;
 
 @SpringBootTest
-public class EmployeeServiceTest {
+class EmployeeServiceTest {
 
     @Mock
     private EmployeeRepository employeeRepository;
@@ -34,7 +32,7 @@ public class EmployeeServiceTest {
     private EmployeeService employeeService;
 
     @Test
-    public void testFindAnEmployeeByEmployeeId() {
+    void testFindAnEmployeeByEmployeeId() {
         //given
         Employee employee = EmployeeTestData.createEmployee();
 
@@ -47,7 +45,7 @@ public class EmployeeServiceTest {
     }
 
     @Test
-    public void testFindAllEmployees() {
+    void testFindAllEmployees() {
         //given
         List<Employee> employees = EmployeeTestData.createEmployeeList();
 
@@ -59,7 +57,7 @@ public class EmployeeServiceTest {
     }
 
     @Test
-    public void testFindEmployeeByUsername() {
+    void testFindEmployeeByUsername() {
         //given
         Employee employee = EmployeeTestData.createEmployee();
 
@@ -72,7 +70,7 @@ public class EmployeeServiceTest {
     }
 
     @Test
-    public void testAddEmployee() {
+    void testAddEmployee() {
         //given
         Employee employee = EmployeeTestData.createEmployee();
 

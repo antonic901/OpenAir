@@ -7,11 +7,11 @@ import lombok.Setter;
 @Setter
 public class PeriodConflictException extends  RuntimeException {
 
-    private Long resourceId;
+    private final Long resourceId;
 
     public PeriodConflictException(Long resourceId, String message) {
         super(message);
-        this.setResourceId(resourceId);
+        this.resourceId = resourceId;
     }
 
 }

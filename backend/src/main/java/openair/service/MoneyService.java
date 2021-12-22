@@ -11,7 +11,7 @@ import org.springframework.web.client.RestTemplate;
 public class MoneyService implements IMoneyService {
 
     @Value("${exchangeratesapi.token}")
-    private String API_KEY;
+    private String apiKey;
 
     private MoneyRepository moneyRepository;
     private RestTemplate restTemplate;
@@ -46,8 +46,7 @@ public class MoneyService implements IMoneyService {
 
         String value = split[split.length-1].replace("}", "");
 
-        double rate = Double.parseDouble(value);
+        return Double.parseDouble(value);
 
-        return rate;
     }
 }

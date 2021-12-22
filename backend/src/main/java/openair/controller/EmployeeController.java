@@ -14,7 +14,6 @@ import openair.utils.ObjectMapperUtils;
 import openair.utils.ValidationUtils;
 import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
@@ -22,7 +21,6 @@ import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.util.UriComponentsBuilder;
 
-import javax.validation.ConstraintViolationException;
 import java.security.Principal;
 import java.util.List;
 
@@ -51,7 +49,7 @@ public class EmployeeController {
 
     @PostMapping
     @PreAuthorize("hasRole('ADMIN')")
-    public ResponseEntity addEmployee(@RequestBody RegisterEmployeeDTO registerEmployeeDTO, Principal loggedAdmin, UriComponentsBuilder ucBuilder) {
+    public ResponseEntity<String> addEmployee(@RequestBody RegisterEmployeeDTO registerEmployeeDTO, Principal loggedAdmin, UriComponentsBuilder ucBuilder) {
 
         User existUser = this.userService.findByUsername(registerEmployeeDTO.getUsername());
 
@@ -74,8 +72,6 @@ public class EmployeeController {
         employee.getRoles().add(role);
 
         employeeService.add(employee);
-        //HttpHeaders headers = new HttpHeaders();
-        //headers.setLocation(ucBuilder.path("/api/employee/{userId}").buildAndExpand(employee.getId()).toUri());
         return new ResponseEntity<>(HttpStatus.CREATED);
     }
 

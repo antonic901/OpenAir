@@ -28,7 +28,7 @@ public class PdfExporterController {
     @GetMapping("/export-pdf")
     @PreAuthorize("hasRole('ADMIN')")
     public ResponseEntity<String> exportPDF(Principal loggedAdmin) throws DocumentException, IOException {
-        return new ResponseEntity<String>(pdfExporterService.export(loggedAdmin.getName()), HttpStatus.OK);
+        return new ResponseEntity<>(pdfExporterService.export(loggedAdmin.getName()), HttpStatus.OK);
     }
 
 }

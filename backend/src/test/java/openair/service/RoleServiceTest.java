@@ -13,13 +13,11 @@ import org.springframework.boot.test.context.SpringBootTest;
 import java.util.Optional;
 
 import static org.assertj.core.api.Assertions.assertThat;
-import static org.mockito.ArgumentMatchers.any;
-import static org.mockito.Mockito.*;
-
 import static org.junit.jupiter.api.Assertions.assertThrows;
+import static org.mockito.Mockito.when;
 
 @SpringBootTest
-public class RoleServiceTest {
+class RoleServiceTest {
 
     @Mock
     private RoleRepository roleRepository;
@@ -29,7 +27,7 @@ public class RoleServiceTest {
     private RoleService roleService;
 
     @Test
-    public void testFindById() {
+    void testFindById() {
         Role role = RoleTestData.createRole();
 
         when(roleRepository.findById(1L)).thenReturn(Optional.of(role));
@@ -39,7 +37,7 @@ public class RoleServiceTest {
     }
 
     @Test
-    public void testFindByName() {
+    void testFindByName() {
         Role role = RoleTestData.createRole();
 
         when(roleRepository.findByName(UserType.ROLE_EMPLOYEE)).thenReturn(role);

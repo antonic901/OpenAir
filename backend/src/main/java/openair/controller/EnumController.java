@@ -1,6 +1,5 @@
 package openair.controller;
 
-import openair.model.User;
 import openair.model.enums.*;
 import org.springframework.http.MediaType;
 import org.springframework.security.access.prepost.PreAuthorize;
@@ -19,31 +18,31 @@ public class EnumController {
     @GetMapping("/currencies")
     @PreAuthorize("hasRole('ADMIN') || hasRole('EMPLOYEE')")
     public List<Currency> getCurrency() {
-        return new ArrayList<Currency>(EnumSet.allOf(Currency.class));
+        return new ArrayList<>(EnumSet.allOf(Currency.class));
     }
 
     @GetMapping("/departments")
     @PreAuthorize("hasRole('ADMIN')")
     public List<Department> getDepartment() {
-        return new ArrayList<Department>(EnumSet.allOf(Department.class));
+        return new ArrayList<>(EnumSet.allOf(Department.class));
     }
 
     @GetMapping("/project-types")
     @PreAuthorize("hasRole('ADMIN')")
     public List<ProjectType> getProjectType() {
-        return new ArrayList<ProjectType>(EnumSet.allOf(ProjectType.class));
+        return new ArrayList<>(EnumSet.allOf(ProjectType.class));
     }
 
     @GetMapping("/statuses")
     @PreAuthorize("hasRole('ADMIN')")
     public List<Status> getStatus() {
-        return new ArrayList<Status>(EnumSet.allOf(Status.class));
+        return new ArrayList<>(EnumSet.allOf(Status.class));
     }
 
     @GetMapping("/user-types")
     @PreAuthorize("hasRole('ADMIN')")
     public List<UserType> getUserType() {
-        return new ArrayList<UserType>(EnumSet.allOf(UserType.class));
+        return new ArrayList<>(EnumSet.allOf(UserType.class));
     }
 
 }

@@ -19,13 +19,13 @@ public class MailService implements IMailService {
     private static final Logger logger = LoggerFactory.getLogger(MailService.class);
 
     @Value("${spring.mail.username}")
-    private String MAIL_FROM;
+    private String mailFrom;
 
     @Value("${custom.addr}")
-    private String ADDR;
+    private String addr;
 
     @Value("${custom.fport}")
-    private String PORT;
+    private String port;
 
     @Autowired
     public MailService(JavaMailSender javaMailSender) {
@@ -39,7 +39,7 @@ public class MailService implements IMailService {
             MimeMessageHelper mimeHelper = new MimeMessageHelper(mimeMessage, true);
 
             mimeHelper.setSubject(mail.getMailSubject());
-            mimeHelper.setFrom(MAIL_FROM);
+            mimeHelper.setFrom(mailFrom);
             mimeHelper.setTo(mail.getMailTo());
             mimeHelper.setText(mail.getMailContent());
             javaMailSender.send(mimeHelper.getMimeMessage());

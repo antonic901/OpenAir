@@ -39,7 +39,7 @@ public class ExpenseReportController {
 
     @PostMapping
     @PreAuthorize("hasRole('EMPLOYEE')")
-    public ResponseEntity addReport(@RequestBody ExspenseReportDTO expenseReportDTO, Principal loggedEmployee) {
+    public ResponseEntity<String> addReport(@RequestBody ExspenseReportDTO expenseReportDTO, Principal loggedEmployee) {
         Employee employee = employeeService.findByUsername(loggedEmployee.getName());
         Project project = projectService.findProjectById(expenseReportDTO.getProjectId());
         ExpenseReport expenseReport = new ExpenseReport();
@@ -52,7 +52,7 @@ public class ExpenseReportController {
 
     @PutMapping("/{reportId}")
     @PreAuthorize("hasRole('ADMIN')")
-    public ResponseEntity reviewReport(@PathVariable Long reportId, @RequestBody Status status) {
+    public ResponseEntity<String> reviewReport(@PathVariable Long reportId, @RequestBody Status status) {
         expenseReportService.reviewReport(reportId, status);
         return new ResponseEntity<>(HttpStatus.NO_CONTENT);
     }

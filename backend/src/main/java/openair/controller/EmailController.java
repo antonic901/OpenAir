@@ -21,7 +21,7 @@ public class EmailController {
 
 	@ResponseStatus(HttpStatus.OK)
 	@PostMapping(value = "/send-mail", produces = MediaType.APPLICATION_JSON_VALUE, consumes = MediaType.APPLICATION_JSON_VALUE)
-	public boolean sendMail(@RequestBody MailDTO emailDTO) throws Exception{
+	public boolean sendMail(@RequestBody MailDTO emailDTO){
 		Mail mail = new Mail(emailDTO.getMailFrom(),emailDTO.getMailTo(),emailDTO.getMailCc(),emailDTO.getMailBcc(),
 				emailDTO.getMailSubject(),emailDTO.getMailContent(),emailDTO.getContentType(),emailDTO.getAttachments());
 		return emailService.sendMail(mail);

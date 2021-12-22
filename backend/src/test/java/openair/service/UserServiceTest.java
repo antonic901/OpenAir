@@ -13,7 +13,7 @@ import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.Mockito.when;
 
 @SpringBootTest
-public class UserServiceTest {
+class UserServiceTest {
     @Mock
     private UserRepository userRepository;
 
@@ -22,7 +22,7 @@ public class UserServiceTest {
     private UserService userService;
 
     @Test
-    public void testAddUser() {
+    void testAddUser() {
         User user = UserTestData.createUser();
 
         when(userRepository.save(any(User.class))).thenReturn(new User());
@@ -31,7 +31,7 @@ public class UserServiceTest {
     }
 
     @Test
-    public void testFindByUsername() {
+    void testFindByUsername() {
         //  given
         User user = new User();
         String username1 = "strahinja";

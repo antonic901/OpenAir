@@ -1,6 +1,5 @@
 package openair.controller;
 
-import openair.dto.TaskBasicInformationDTO;
 import openair.dto.TaskDTO;
 import openair.exception.ResourceConflictException;
 import openair.model.Employee;
@@ -9,16 +8,14 @@ import openair.model.Task;
 import openair.service.EmployeeService;
 import openair.service.ProjectService;
 import openair.service.TaskService;
-import openair.utils.ObjectMapperUtils;
-
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
-import org.springframework.web.bind.annotation.*;
-
-import java.security.Principal;
-import java.util.List;
+import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RestController;
 
 
 @RestController
@@ -38,7 +35,7 @@ public class TaskController {
 
     @PostMapping
     @PreAuthorize("hasRole('ADMIN')")
-    public ResponseEntity addTask(@RequestBody TaskDTO taskDTO) {
+    public ResponseEntity<String> addTask(@RequestBody TaskDTO taskDTO) {
         Task existTask = this.taskService.findTaskByName(taskDTO.getName());
         if(existTask != null)
             throw new ResourceConflictException(existTask.getId(), "Task already exists");

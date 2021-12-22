@@ -1,6 +1,5 @@
 package openair.model;
 
-import com.fasterxml.jackson.annotation.JsonIgnore;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
@@ -10,8 +9,6 @@ import openair.model.enums.Department;
 import javax.persistence.*;
 import javax.validation.constraints.FutureOrPresent;
 import java.time.LocalDate;
-import java.util.ArrayList;
-import java.util.List;
 
 @Entity
 @DiscriminatorValue("Employee")

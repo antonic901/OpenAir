@@ -8,7 +8,6 @@ import openair.service.interfaces.ITimeSheetDay;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
-import java.util.Objects;
 
 @Service
 public class TimeSheetDayService implements ITimeSheetDay {

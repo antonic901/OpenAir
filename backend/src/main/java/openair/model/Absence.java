@@ -7,7 +7,6 @@ import lombok.Setter;
 import openair.model.enums.Status;
 
 import javax.persistence.*;
-import javax.validation.constraints.FutureOrPresent;
 import javax.validation.constraints.NotNull;
 
 @Entity

@@ -44,7 +44,7 @@ public class ProjectController {
 
     @PostMapping
     @PreAuthorize("hasRole('ADMIN')")
-    public ResponseEntity addProject(@RequestBody ProjectDTO projectDTO, Principal loggedAdmin) {
+    public ResponseEntity<String> addProject(@RequestBody ProjectDTO projectDTO, Principal loggedAdmin) {
         Admin admin = adminService.findByUsername(loggedAdmin.getName());
         Project project = new Project();
         modelMapper.map(projectDTO, project);
