@@ -38,11 +38,3 @@ public class TimeSheetDay {
     private Task task;
 
 }
-
-// -> dodati u ProjectRepository List<Project> findAllByEmployeeId();
-// -> iterirati kroz sve projekte dobavljenje za zaposlenog
-// -> dodati u TimeSheetDayRepository   findAllByEmployeeIdAndProjectId();
-// -> iterirati kroz sve TimeSheetDay-ove i sumirati sate
-// -> kada iskoci iz for-a za TimeSheetDay sacuvati to negde gde se cuva sta ce biti generisano u pdf
-// -> prelazi se na sledeceg zaposlenog i za njega se isto radi
-// -> kada se iskoci iz for-a za employee generisati pdf gde su projekti sortirani po tipu projekta

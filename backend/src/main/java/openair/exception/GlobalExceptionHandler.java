@@ -6,6 +6,7 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.ControllerAdvice;
 import org.springframework.web.bind.annotation.ExceptionHandler;
+import org.springframework.web.context.request.RequestAttributes;
 import org.springframework.web.context.request.WebRequest;
 import org.springframework.web.util.WebUtils;
 
@@ -48,6 +49,7 @@ public class GlobalExceptionHandler {
         HttpHeaders headers = new HttpHeaders();
         HttpStatus status = HttpStatus.UNAUTHORIZED;
         List<String> errors = Collections.singletonList(ex.getMessage());
+
         return new ResponseEntity<>(errors, headers, status);
     }
 
@@ -57,7 +59,6 @@ public class GlobalExceptionHandler {
         HttpHeaders headers = new HttpHeaders();
         HttpStatus status = HttpStatus.BAD_REQUEST;
         List<String> errors = Collections.singletonList(ex.getMessage());
-        request.setAttribute(WebUtils.ERROR_EXCEPTION_ATTRIBUTE, ex, WebRequest.SCOPE_REQUEST);
 
         return new ResponseEntity<>(errors, headers, status);
     }
@@ -68,7 +69,6 @@ public class GlobalExceptionHandler {
         HttpHeaders headers = new HttpHeaders();
         HttpStatus status = HttpStatus.BAD_REQUEST;
         List<String> errors = Collections.singletonList(ex.getMessage());
-        request.setAttribute(WebUtils.ERROR_EXCEPTION_ATTRIBUTE, ex, WebRequest.SCOPE_REQUEST);
 
         return new ResponseEntity<>(errors, headers, status);
     }
@@ -79,7 +79,7 @@ public class GlobalExceptionHandler {
         HttpHeaders headers = new HttpHeaders();
         HttpStatus status = HttpStatus.INTERNAL_SERVER_ERROR;
         List<String> errors = Collections.singletonList(ex.getMessage());
-        request.setAttribute(WebUtils.ERROR_EXCEPTION_ATTRIBUTE, ex, WebRequest.SCOPE_REQUEST);
+        request.setAttribute(WebUtils.ERROR_EXCEPTION_ATTRIBUTE, ex, RequestAttributes.SCOPE_REQUEST);
 
         return new ResponseEntity<>(errors, headers, status);
     }

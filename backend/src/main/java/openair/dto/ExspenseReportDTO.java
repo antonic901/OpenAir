@@ -4,13 +4,8 @@ import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
-import openair.model.Employee;
 import openair.model.Money;
-import openair.model.Project;
 import openair.model.enums.Status;
-
-import javax.persistence.*;
-import java.time.LocalDate;
 
 @NoArgsConstructor
 @AllArgsConstructor
@@ -21,8 +16,6 @@ public class ExspenseReportDTO {
     private String trackingNumber;
     private String name;
     private Money refund;
-    //DATUM SE GENERISE U SERVISU PRILIKOM KREIRANJA
-    //private LocalDate dateOfCreation;
     private String document;
     private String description;
     private Status status;

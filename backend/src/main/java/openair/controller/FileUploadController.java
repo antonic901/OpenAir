@@ -25,6 +25,6 @@ public class FileUploadController {
     @PostMapping("/upload-file")
     @PreAuthorize("hasRole('ADMIN') || hasRole('EMPLOYEE')")
     public ResponseEntity<String> uploadFile(@RequestParam("file") MultipartFile file) {
-        return new ResponseEntity<String>(storageService.uploadFile(file), HttpStatus.OK);
+        return new ResponseEntity<>(storageService.uploadFile(file), HttpStatus.OK);
     }
 }

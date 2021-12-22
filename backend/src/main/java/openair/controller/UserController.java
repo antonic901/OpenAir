@@ -7,7 +7,6 @@ import openair.model.Absence;
 import openair.model.Project;
 import openair.model.User;
 import openair.service.AbsenceService;
-import openair.service.AdminService;
 import openair.service.ProjectService;
 import openair.service.UserService;
 import openair.utils.ObjectMapperUtils;
@@ -44,7 +43,7 @@ public class UserController {
     }
 
     @GetMapping("/{id}/absences")
-    @PreAuthorize("hasRole('ADMIN')")
+    @PreAuthorize("hasRole('ADMIN') || hasRole('EMPLOYEE')")
     public ResponseEntity<List<AbsenceBasicInformationDTO>> findAllAbsencesByUserId(@PathVariable Long id) {
         List<Absence> absences = absenceService.getAllByUserId(id);
         List<AbsenceBasicInformationDTO> response = ObjectMapperUtils.mapAll(absences, AbsenceBasicInformationDTO.class);

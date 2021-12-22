@@ -2,33 +2,33 @@ package openair.dto;
 
 public class UserTokenState {
 
-    private String access_token;
-    private Long expires_in;
+    private String accessToken;
+    private Long expiresIn;
 
     public UserTokenState() {
-        this.access_token = null;
-        this.expires_in = null;
+        this.accessToken = null;
+        this.expiresIn = null;
     }
 
-    public UserTokenState(String access_token, long expires_in) {
-        this.access_token = access_token;
-        this.expires_in = expires_in;
+    public UserTokenState(String accessToken, long expiresIn) {
+        this.accessToken = accessToken;
+        this.expiresIn = expiresIn;
     }
 
-    public String getAccess_token() {
-        return access_token;
+    public String getAccessToken() {
+        return accessToken;
     }
 
-    public void setAccess_token(String access_token) {
-        this.access_token = access_token;
+    public void setAccessToken(String accessToken) {
+        this.accessToken = accessToken;
     }
 
-    public Long getExpires_in() {
-        return expires_in;
+    public Long getExpiresIn() {
+        return expiresIn;
     }
 
-    public void setExpires_in(Long expires_in) {
-        this.expires_in = expires_in;
+    public void setExpiresIn(Long expiresIn) {
+        this.expiresIn = expiresIn;
     }
 
 }

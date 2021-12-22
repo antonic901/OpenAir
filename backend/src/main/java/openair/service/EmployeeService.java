@@ -66,17 +66,19 @@ public class EmployeeService implements IEmployeeService {
 
     @Override
     public Employee findEmployeeById(Long employeeID) {
-        return employeeRepository.findById(employeeID).orElseThrow(() -> new NotFoundException("Employee with id " + employeeID + " does not exist."));
+        return employeeRepository.findById(employeeID).orElseThrow(() -> new NotFoundException(employeeID,"Employee with id " + employeeID + " does not exist."));
     }
 
     //At 00:00:00am, on the 1st day, every month
     @Scheduled(cron = "0 0 0 1 * ?")
     public List<Employee> increaseEmployeeFreeDays() {
 
-        List<Employee> employees = employeeRepository.findAll().stream().peek(
-                employee -> employee.setFreeDays(
-                        (int) (employee.getFreeDays() + increaseByHowMuch(employee.getDateOfHiring()))))
-                .toList();
+        List<Employee> employees = employeeRepository.findAll();
+
+        for(Employee employee: employees){
+            employee.setFreeDays(
+                    (int) (employee.getFreeDays() + increaseByHowMuch(employee.getDateOfHiring())));
+        }
 
         return employeeRepository.saveAll(employees);
     }

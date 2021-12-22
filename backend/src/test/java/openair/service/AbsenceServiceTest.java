@@ -1,42 +1,37 @@
 package openair.service;
 
-import openair.dto.RequestAbsenceDTO;
 import openair.exception.NotFoundException;
 import openair.exception.PeriodConflictException;
-import openair.model.*;
+import openair.model.Absence;
+import openair.model.Admin;
+import openair.model.Employee;
+import openair.model.User;
 import openair.model.enums.Status;
 import openair.repository.AbsenceRepository;
-import openair.repository.AdminRepository;
 import openair.repository.EmployeeRepository;
 import openair.repository.UserRepository;
-import org.checkerframework.checker.nullness.Opt;
 import org.junit.jupiter.api.Test;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.Spy;
 import org.springframework.boot.test.context.SpringBootTest;
 
-import java.time.LocalDateTime;
 import java.util.List;
 import java.util.Optional;
 
 import static org.assertj.core.api.Assertions.assertThat;
-import static org.mockito.ArgumentMatchers.any;
-import static org.mockito.Mockito.*;
-
 import static org.junit.jupiter.api.Assertions.assertThrows;
+import static org.mockito.ArgumentMatchers.any;
+import static org.mockito.Mockito.when;
 
 @SpringBootTest
-public class AbsenceServiceTest {
+class AbsenceServiceTest {
 
     @Mock
     private AbsenceRepository absenceRepository;
 
     @Mock
     private EmployeeRepository employeeRepository;
-
-    @Mock
-    private AdminRepository adminRepository;
 
     @Mock
     private UserRepository userRepository;
@@ -46,7 +41,7 @@ public class AbsenceServiceTest {
     private AbsenceService absenceService;
 
     @Test
-    public void testGetAllByUserId() {
+    void testGetAllByUserId() {
 
         Admin admin = AbsenceTestData.createAdmin();
 
@@ -67,7 +62,7 @@ public class AbsenceServiceTest {
     }
 
     @Test
-    public void testAdd() {
+    void testAdd() {
         Employee employee = AbsenceTestData.createEmployee();
         List<Absence> absences = AbsenceTestData.createAbsences();
 
@@ -80,7 +75,7 @@ public class AbsenceServiceTest {
     }
 
     @Test
-    public void review() {
+    void review() {
         Absence absence = AbsenceTestData.createAbsences().get(0);
 
         when(absenceRepository.findById(1L)).thenReturn(Optional.of(absence));

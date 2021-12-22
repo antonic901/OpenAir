@@ -1,14 +1,12 @@
 package openair.service;
 
 import openair.exception.NotFoundException;
-import openair.dto.ExspenseReportDTO;
 import openair.model.Employee;
 import openair.model.ExpenseReport;
 import openair.model.enums.Currency;
 import openair.model.enums.Status;
 import openair.repository.EmployeeRepository;
 import openair.repository.ExpenseReportRepository;
-import openair.repository.ProjectRepository;
 import org.junit.jupiter.api.Test;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
@@ -19,11 +17,11 @@ import java.util.Optional;
 
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.junit.jupiter.api.Assertions.assertThrows;
-import static org.mockito.ArgumentMatchers.*;
+import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.Mockito.when;
 
 @SpringBootTest
-public class ExpenseReportServiceTest {
+class ExpenseReportServiceTest {
     @Mock
     private ExpenseReportRepository expenseReportRepository;
 
@@ -38,7 +36,7 @@ public class ExpenseReportServiceTest {
     private ExpenseReportService expenseReportService;
 
     @Test
-    public void testAddReport(){
+    void testAddReport(){
         //given
         ExpenseReport expenseReport1 = ExpenseReportTestData.createReport();
 
@@ -51,7 +49,7 @@ public class ExpenseReportServiceTest {
 
 
     @Test
-    public void reviewReport(){
+    void reviewReport(){
         //given
         ExpenseReport expenseReport = ExpenseReportTestData.createReport();
         ExpenseReport expenseReport1 = ExpenseReportTestData.createReport();

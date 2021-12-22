@@ -1,11 +1,7 @@
 package openair.service;
 
 import openair.exception.NotFoundException;
-import openair.model.Employee;
-import openair.model.Project;
 import openair.model.Task;
-import openair.repository.EmployeeRepository;
-import openair.repository.ProjectRepository;
 import openair.repository.TaskRepository;
 import org.junit.jupiter.api.Test;
 import org.mockito.InjectMocks;
@@ -23,7 +19,7 @@ import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.Mockito.when;
 
 @SpringBootTest
-public class TaskServiceTest {
+class TaskServiceTest {
     @Mock
     private TaskRepository taskRepository;
 
@@ -32,7 +28,7 @@ public class TaskServiceTest {
     private TaskService taskService;
 
     @Test
-    public void testFindById() {
+    void testFindById() {
         //  given
         Task task = new Task();
         task.setId(1L);
@@ -48,7 +44,7 @@ public class TaskServiceTest {
     }
 
     @Test
-    public void testFindTaskByName() {
+    void testFindTaskByName() {
         Task task = new Task();
         String name1 = "testovi";
         String name2 = "refactoring";
@@ -65,7 +61,7 @@ public class TaskServiceTest {
     }
 
     @Test
-    public void testAddTask() {
+    void testAddTask() {
         Task task = new Task();
         task.setId(1L);
 
@@ -74,20 +70,8 @@ public class TaskServiceTest {
         assertThat(taskService.addTask(task)).isNotNull();
     }
 
-    /*
-     @Override
-    public List<Task> findAllByProjectId(Long projectId) {
-        return taskRepository.findAllByProjectId(projectId);
-    }
-
-    @Override
-    public List<Task> findAllByEmployeeId(Long employeeId) {
-        return taskRepository.findAllByEmployeeId(employeeId);
-    }
-    * */
-
     @Test
-    public void testFindAllByProjectId() {
+    void testFindAllByProjectId() {
         List<Task> taskList = TaskTestData.createTaskList();
         List<Task> novaLista = new ArrayList<Task>();
         novaLista.add(taskList.get(1));
@@ -95,18 +79,18 @@ public class TaskServiceTest {
         when(taskRepository.findAllByProjectId(1L)).thenReturn(novaLista);
 
         assertThat(taskService.findAllByProjectId(1L)).hasSize(1);
-        assertThat(taskService.findAllByProjectId(10L)).hasSize(0);
+        assertThat(taskService.findAllByProjectId(10L)).isEmpty();
     }
 
     @Test
-    public void testFindAllByEmployeeId() {
+    void testFindAllByEmployeeId() {
         List<Task> taskList = TaskTestData.createTaskList();
-        List<Task> novaLista = new ArrayList<Task>();
+        List<Task> novaLista = new ArrayList<>();
         novaLista.add(taskList.get(1));
 
         when(taskRepository.findAllByEmployeeId(1L)).thenReturn(novaLista);
 
         assertThat(taskService.findAllByEmployeeId(1L)).hasSize(1);
-        assertThat(taskService.findAllByEmployeeId(10L)).hasSize(0);
+        assertThat(taskService.findAllByEmployeeId(10L)).isEmpty();
     }
 }

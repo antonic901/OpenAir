@@ -4,7 +4,6 @@ import openair.dto.RequestAbsenceDTO;
 import openair.model.*;
 import openair.model.enums.Status;
 import openair.service.AbsenceService;
-import openair.service.AdminService;
 import openair.service.EmployeeService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
@@ -21,18 +20,16 @@ public class AbsenceController {
 
     private AbsenceService absenceService;
     private EmployeeService employeeService;
-    private AdminService adminService;
 
     @Autowired
-    public AbsenceController(AbsenceService absenceService, EmployeeService employeeService, AdminService adminService) {
+    public AbsenceController(AbsenceService absenceService, EmployeeService employeeService) {
         this.absenceService = absenceService;
         this.employeeService = employeeService;
-        this.adminService = adminService;
     }
 
     @PostMapping
     @PreAuthorize("hasRole('EMPLOYEE')")
-    public ResponseEntity addAbsence(@RequestBody RequestAbsenceDTO requestAbsenceDTO, Principal loggedEmployee)  {
+    public ResponseEntity<String> addAbsence(@RequestBody RequestAbsenceDTO requestAbsenceDTO, Principal loggedEmployee)  {
         Employee employee = employeeService.findByUsername(loggedEmployee.getName());
 
         Absence absence = new Absence();
@@ -47,10 +44,8 @@ public class AbsenceController {
 
     @PutMapping("/{id}")
     @PreAuthorize("hasRole('ADMIN')")
-    public ResponseEntity reviewAbsence(@PathVariable Long id, @RequestBody Status status, Principal loggedAdmin)  {
-        Admin admin = adminService.findByUsername(loggedAdmin.getName());
-        Absence absence = absenceService.review(id, status);
+    public ResponseEntity<String> reviewAbsence(@PathVariable Long id, @RequestBody Status status, Principal loggedAdmin)  {
+        absenceService.review(id, status);
         return new ResponseEntity<>(HttpStatus.NO_CONTENT);
     }
-
 }

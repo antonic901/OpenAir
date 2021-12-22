@@ -6,7 +6,7 @@ import openair.model.User;
 import openair.dto.JwtAuthenticationRequest;
 import openair.service.UserService;
 import openair.utils.TokenUtils;
-import org.modelmapper.ModelMapper;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
@@ -27,14 +27,13 @@ public class AuthenticationController {
     private TokenUtils tokenUtils;
     private AuthenticationManager authenticationManager;
     private UserService userService;
-    private ModelMapper modelMapper;
 
     @Autowired
-    public AuthenticationController(TokenUtils tokenUtils, AuthenticationManager authenticationManager, UserService userService, ModelMapper modelMapper) {
+    public AuthenticationController(TokenUtils tokenUtils, AuthenticationManager authenticationManager,
+                                    UserService userService) {
         this.tokenUtils = tokenUtils;
         this.authenticationManager = authenticationManager;
         this.userService = userService;
-        this.modelMapper = modelMapper;
     }
 
     @PostMapping("/login")
@@ -51,7 +50,7 @@ public class AuthenticationController {
         int expiresIn = tokenUtils.getExpiredIn();
         UserTokenState userTokenState = new UserTokenState(jwt,expiresIn);
 
-        return ResponseEntity.ok(new LoginDTO(userTokenState.getAccess_token(),userTokenState.getExpires_in(),user.getUserType(), user.getId()));
+        return ResponseEntity.ok(new LoginDTO(userTokenState.getAccessToken(),userTokenState.getExpiresIn(),user.getUserType(), user.getId()));
     }
 
     @GetMapping("/check-username/{username}")
@@ -70,8 +69,6 @@ public class AuthenticationController {
     @PostMapping(value = "/refresh")
     public ResponseEntity<UserTokenState> refreshAuthenticationToken(HttpServletRequest request) {
         String token = tokenUtils.getToken(request);
-        String username = this.tokenUtils.getUsernameFromToken(token);
-        User user = (User) this.userService.loadUserByUsername(username);
         String refreshedToken = tokenUtils.refreshToken(token);
         int expiresIn = tokenUtils.getExpiredIn();
         return ResponseEntity.ok(new UserTokenState(refreshedToken, expiresIn));

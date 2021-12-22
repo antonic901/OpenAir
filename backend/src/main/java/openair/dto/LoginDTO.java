@@ -12,9 +12,9 @@ import openair.model.enums.UserType;
 @Setter
 public class LoginDTO {
 
-    private String access_token;
+    private String accessToken;
 
-    private Long expires_in;
+    private Long expiresIn;
 
     private UserType userType;
 

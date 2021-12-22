@@ -1,30 +1,31 @@
 package openair.service;
 
-
-import openair.dto.ProjectDTO;
 import openair.exception.NotFoundException;
 import openair.exception.ResourceConflictException;
 import openair.model.Admin;
 import openair.model.Employee;
 import openair.model.Project;
 import openair.model.User;
-import openair.repository.*;
+import openair.repository.EmployeeRepository;
+import openair.repository.ExpenseReportRepository;
+import openair.repository.ProjectRepository;
+import openair.repository.UserRepository;
 import org.junit.jupiter.api.Test;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.Spy;
 import org.springframework.boot.test.context.SpringBootTest;
-import static org.assertj.core.api.Assertions.assertThat;
 
 import java.util.ArrayList;
 import java.util.Optional;
 
+import static org.assertj.core.api.Assertions.assertThat;
 import static org.junit.jupiter.api.Assertions.assertThrows;
-import static org.mockito.ArgumentMatchers.*;
+import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.Mockito.when;
 
 @SpringBootTest
-public class ProjectServiceTest {
+class ProjectServiceTest {
     @Mock
     private ProjectRepository projectRepository;
 
@@ -42,7 +43,7 @@ public class ProjectServiceTest {
     private ProjectService projectService;
 
     @Test
-    public void testFindProjectByName(){
+    void testFindProjectByName(){
         //given
         Project project = ProjectTestData.createProject();
 
@@ -55,7 +56,7 @@ public class ProjectServiceTest {
     }
 
     @Test
-    public void testAddProject(){
+    void testAddProject(){
         //given
         Project project = ProjectTestData.createProject();
         project.setName("Othername");
@@ -72,7 +73,7 @@ public class ProjectServiceTest {
     }
 
     @Test
-    public void testFindProjectById(){
+    void testFindProjectById(){
         //given
         Project project = ProjectTestData.createProject();
 
@@ -85,7 +86,7 @@ public class ProjectServiceTest {
     }
 
     @Test
-    public void testFindAllEmployeesByProjectId(){
+    void testFindAllEmployeesByProjectId(){
         //given
         Project project = ProjectTestData.createProject();
 
@@ -98,7 +99,7 @@ public class ProjectServiceTest {
     }
 
     @Test
-    public void testFindAllByUserId(){
+    void testFindAllByUserId(){
         //given
         User user1 = ProjectTestData.createUser1();
         User user2 = ProjectTestData.createUser2();
@@ -109,16 +110,16 @@ public class ProjectServiceTest {
         when(userRepository.findById(2L)).thenReturn(Optional.of(user2));
         when(employeeRepository.findById(2L)).thenReturn(Optional.of(employee));
         when(projectRepository.findAllByAdminId(1L)).thenReturn(ProjectTestData.createProjectList());
-        when(projectRepository.findAllByEmployeeId(2L)).thenReturn(new ArrayList<Project>());
+        when(projectRepository.findAllByEmployeeId(2L)).thenReturn(new ArrayList<>());
 
         //then
         assertThat(projectService.findAllByUserId(1L)).hasSize(2);
-        assertThat(projectService.findAllByUserId(2L)).hasSize(0);
+        assertThat(projectService.findAllByUserId(2L)).isEmpty();
         assertThrows(NotFoundException.class, () -> projectService.findAllByUserId(3L));
     }
 
     @Test
-    public void testAddEmployeeToProject(){
+    void testAddEmployeeToProject(){
         //given
         Project project = ProjectTestData.createProject();
         Employee employee = ProjectTestData.createEmployee1();
@@ -135,7 +136,7 @@ public class ProjectServiceTest {
     }
 
     @Test
-    public void testFindAllNotRefunded(){
+    void testFindAllNotRefunded(){
         //given
         Employee employee = ProjectTestData.createEmployee1();
 

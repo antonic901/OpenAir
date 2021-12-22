@@ -11,8 +11,8 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
-import java.util.Optional;
 
 @Service
 public class ProjectService implements IProjectService {
@@ -73,7 +73,7 @@ public class ProjectService implements IProjectService {
         }else if (user.getUserType().name().equals("ROLE_EMPLOYEE")){
             return projectRepository.findAllByEmployeeId(userId);
         }
-        return null;
+        return Collections.emptyList();
     }
 
     @Override

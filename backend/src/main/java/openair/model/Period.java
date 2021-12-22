@@ -9,7 +9,6 @@ import openair.utils.UnixToLocalDateTimeConverter;
 
 import javax.persistence.Embeddable;
 import javax.validation.constraints.Future;
-import javax.validation.constraints.FutureOrPresent;
 import javax.validation.constraints.NotNull;
 import java.time.LocalDateTime;
 

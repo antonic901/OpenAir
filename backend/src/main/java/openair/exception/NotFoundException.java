@@ -7,14 +7,15 @@ import lombok.Setter;
 @Setter
 public class NotFoundException extends RuntimeException {
 
-    private Long resourceId;
+    private  Long resourceId;
 
-    public NotFoundException(String message) {
+    public NotFoundException(String message){
         super(message);
     }
 
     public NotFoundException(Long resourceId, String message) {
         super(message);
-        this.setResourceId(resourceId);
+        this.resourceId = resourceId;
     }
+
 }

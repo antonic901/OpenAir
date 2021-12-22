@@ -47,4 +47,19 @@ public class TimeSheetDayController {
         return new ResponseEntity<>(modelMapper.map(timeSheetDayService.addTimeSheetDay(timeSheetDay,employee),TimeBasicInformationDTO.class), HttpStatus.CREATED);
     }
 
+    @PostMapping("/{employeeId}")
+    @PreAuthorize("hasRole('ADMIN')")
+    public ResponseEntity<TimeBasicInformationDTO> addTimeSheetDayByAdmin(@RequestBody TimeSheetDayDTO timeSheetDayDTO, @PathVariable Long employeeId) {
+        TimeSheetDay timeSheetDay = new TimeSheetDay();
+        modelMapper.map(timeSheetDayDTO,timeSheetDay);
+
+        Task task = taskService.findById(timeSheetDayDTO.getTaskId());
+        timeSheetDay.setTask(task);
+
+        Employee employee = employeeService.findEmployeeById(employeeId);
+        timeSheetDay.setEmployee(employee);
+
+        return new ResponseEntity<>(modelMapper.map(timeSheetDayService.addTimeSheetDay(timeSheetDay,employee),TimeBasicInformationDTO.class), HttpStatus.CREATED);
+    }
+
 }

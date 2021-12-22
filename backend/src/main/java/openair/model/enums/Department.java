@@ -2,6 +2,6 @@ package openair.model.enums;
 
 public enum Department {
     JAVA,
-    dotNET,
+    DOT_NET,
     JAVASCRIPT
 }
