@@ -94,10 +94,9 @@ public class EmployeeController {
     }
 
     @GetMapping("/{employeeId}/projects/{projectId}/tasks")
-    @PreAuthorize("hasRole('EMPLOYEE')")
-    public ResponseEntity<List<TaskBasicInformationDTO>> findAllTasksByProjectIdAndEmployeeId(@PathVariable Long projectId, Principal loggedEmployee) {
-        Employee employee = employeeService.findByUsername(loggedEmployee.getName());
-        List<Task> tasks = taskService.findAllByProjectEmployeeId(projectId,employee.getId());
+    @PreAuthorize("hasRole('EMPLOYEE') || hasRole('ADMIN')")
+    public ResponseEntity<List<TaskBasicInformationDTO>> findAllTasksByProjectIdAndEmployeeId(@PathVariable Long employeeId, @PathVariable Long projectId) {
+        List<Task> tasks = taskService.findAllByProjectEmployeeId(projectId,employeeId);
         List<TaskBasicInformationDTO> response = ObjectMapperUtils.mapAll(tasks, TaskBasicInformationDTO.class);
         return new ResponseEntity<>(response, HttpStatus.OK);
     }

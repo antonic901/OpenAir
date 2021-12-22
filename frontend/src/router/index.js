@@ -16,6 +16,8 @@ import LogTask from '../views/LogTask.vue'
 import AddExpenseReport from '../views/AddExpenseReport.vue'
 import ReviewExpenseReport from '../views/ReviewExpenseReport.vue'
 import NotFound from '../views/NotFound.vue'
+import ViewAbsences from '../views/ViewAbsences.vue'
+import LogTaskAdmin from '../views/LogTaskAdmin.vue'
 
 const routes = [
   {
@@ -91,9 +93,21 @@ const routes = [
     meta: { requiresEmployee: true}
   },
   {
+    path: "/viewAbsences",
+    name: "ViewAbsences",
+    component: ViewAbsences,
+    meta: { requiresEmployee: true}
+  },
+  {
     path: "/reviewExpenseReport",
     name: "ReviewExpenseReport",
     component: ReviewExpenseReport,
+    meta: { requiresAdmin: true}
+  },
+  {
+    path: "/logTaskAdmin",
+    name: "LogTaskAdmin",
+    component: LogTaskAdmin,
     meta: { requiresAdmin: true}
   },
   {
