@@ -2,14 +2,62 @@
     <v-container>
         <v-stepper v-model="e1" vertical>
             <!-- <v-stepper-header> -->
+
             <v-stepper-step
                 :complete="e1 > 1"
                 step="1"
             >
+                Select employee
+            </v-stepper-step>
+            
+            <v-stepper-content step="1">
+                <v-card
+                class="mb-12"
+                >
+                    <v-list dense>
+                        <v-subheader>Employees:</v-subheader>
+                        <v-list-item-group
+                            color="primary"
+                        >
+                            <v-list-item
+                            v-for="(item, i) in employees"
+                            :key="i"
+                            @click="employee = item"
+                            >
+                            <v-list-item-icon>
+                                <v-icon v-text="item.id"></v-icon>
+                            </v-list-item-icon>
+                            <v-list-item-content>
+                                <v-list-item-title v-text="item.name"></v-list-item-title>
+                            </v-list-item-content>
+                            <v-list-item-content>
+                                <v-list-item-title v-text="item.surname"></v-list-item-title>
+                            </v-list-item-content>
+                            <v-list-item-content>
+                                <v-list-item-title v-text="item.username"></v-list-item-title>
+                            </v-list-item-content>
+                            </v-list-item>
+                        </v-list-item-group>
+                    </v-list>
+                </v-card>
+
+                <v-btn
+                color="primary"
+                :disabled="employee == null"
+                @click="getProjects"
+                >
+                Next
+                </v-btn>
+            </v-stepper-content>
+
+            <v-stepper-step
+                :complete="e1 > 2"
+                step="2"
+            >
                 Select project
             </v-stepper-step>
 
-            <v-stepper-content step="1">
+            <v-stepper-content step="2">
                 <v-card
                 class="mb-12"
                 >
@@ -48,13 +96,13 @@
             </v-stepper-content>
 
             <v-stepper-step
-                :complete="e1 > 2"
-                step="2"
+                :complete="e1 > 3"
+                step="3"
             >
                 Select task
             </v-stepper-step>
 
-            <v-stepper-content step="2">
+            <v-stepper-content step="3">
                 <v-card
                 class="mb-12"
                 >
@@ -90,24 +138,24 @@
                 <v-btn
                 color="primary"
                 :disabled="task == null"
-                @click="e1 = 3;"
+                @click="e1 = 4;"
                 >
                 Next
                 </v-btn>
                     
-                <v-btn text @click="e1 = 1">
+                <v-btn text @click="e1 = 2">
                 Back
                 </v-btn>
             </v-stepper-content>
 
             <v-stepper-step
-                :complete="e1 > 3"
-                step="3"
+                :complete="e1 > 4"
+                step="4"
             >
                 Log hours and select day
             </v-stepper-step>
 
-            <v-stepper-content step="3">
+            <v-stepper-content step="4">
                 <v-slider
                     v-model="hours"
                     thumb-label="always"
@@ -131,21 +179,21 @@
                 Log task
                 </v-btn>
                     
-                <v-btn text @click="e1 = 2">
+                <v-btn text @click="e1 = 3">
                 Back
                 </v-btn>
             </v-stepper-content>
 
             <v-stepper-step
-                :complete="e1 > 4"
-                step="4"
+                :complete="e1 > 5"
+                step="5"
             >
                 Succesfully logged task
             </v-stepper-step>
 
             <v-stepper-items>
 
-            <v-stepper-content step="4">
+            <v-stepper-content step="5">
                 <v-btn
                 color="success"
                 @click="e1 = 1"
@@ -168,19 +216,28 @@ export default {
     data() {
         return {
             e1: 1,
+            employees: [],
             projects: [],
             tasks: [],
             project: null,
             task: null,
+            employee: null,
             hours: 0,
             dates: [],
             today: null
         }
     },
     methods: {
-        getTasks() {
+        getProjects() {
             this.e1 = 2;
-            this.axios.get("/employees/" + this.$store.getters.getUserId + "/projects/" + this.project.id + "/tasks", {headers: {'Authorization': `Bearer ` + localStorage.jws}})
+            this.axios.get("/users/" + this.$store.getters.getUserId + "/projects", {headers: {'Authorization': `Bearer ` + localStorage.jws}})
+                .then(r => {
+                    this.projects = r.data;
+                })
+        },
+        getTasks() {
+            this.e1 = 3;
+            this.axios.get("/employees/" + this.employee.id + "/projects/" + this.project.id + "/tasks", {headers: {'Authorization': `Bearer ` + localStorage.jws}})
                 .then(r => {
                     this.tasks = r.data;
                 })
@@ -189,9 +246,9 @@ export default {
         log() {
             this.dates.forEach(d => {
                 var time = this.getDateTimeFromString(d, "00:00").getTime();
-                this.axios.post("/timesheetdays/" + this.$store.getters.getUserId, {date: time, workTime: this.hours, taskId:this.task.id}, {headers: {'Authorization': `Bearer ` + localStorage.jws}})
+                this.axios.post("/timesheetdays/" + this.employee.id, {date: time, workTime: this.hours, taskId:this.task.id}, {headers: {'Authorization': `Bearer ` + localStorage.jws}})
                 .then(() => {
-                    this.e1 = 4;
+                    this.e1 = 5;
                 })
                 .catch(() => {
                     this.e1 = 3
@@ -214,9 +271,9 @@ export default {
         }
     },
     mounted() {
-        this.axios.get("/users/" + this.$store.getters.getUserId + "/projects", {headers: {'Authorization': `Bearer ` + localStorage.jws}})
+        this.axios.get("/admin/employees", {headers: {'Authorization': `Bearer ` + localStorage.jws}})
             .then(r => {
-                this.projects = r.data;
+                this.employees = r.data;
             })
         var today = new Date();
         var dd = String(today.getDate()).padStart(2, '0');

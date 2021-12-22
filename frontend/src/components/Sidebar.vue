@@ -42,6 +42,16 @@
                 </router-link>
             </v-list>
             <v-list v-if="userType == 'ROLE_ADMIN'" shaped nav dense>
+                <router-link  to="/logTaskAdmin" style="text-decoration:none;">
+                    <v-list-item link>
+                        <v-list-item-icon >
+                            <v-icon color="white">mdi-equalizer</v-icon>
+                        </v-list-item-icon>
+                        <v-list-item-title style="color:white;">Log task</v-list-item-title>
+                    </v-list-item>
+                </router-link>
+            </v-list>
+            <v-list v-if="userType == 'ROLE_ADMIN'" shaped nav dense>
                 <router-link  to="/approveAbsence" style="text-decoration:none;">
                     <v-list-item link>
                         <v-list-item-icon >
@@ -68,6 +78,16 @@
                             <v-icon color="white">mdi-bed-empty</v-icon>
                         </v-list-item-icon>
                         <v-list-item-title style="color:white;">Request absence</v-list-item-title>
+                    </v-list-item>
+                </router-link>
+            </v-list>
+            <v-list v-if="userType == 'ROLE_EMPLOYEE'" shaped nav dense>
+                <router-link  to="/viewAbsences" style="text-decoration:none;">
+                    <v-list-item link>
+                        <v-list-item-icon >
+                            <v-icon color="white">mdi-bed</v-icon>
+                        </v-list-item-icon>
+                        <v-list-item-title style="color:white;">View absences</v-list-item-title>
                     </v-list-item>
                 </router-link>
             </v-list>

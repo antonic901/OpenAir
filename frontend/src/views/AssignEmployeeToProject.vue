@@ -42,7 +42,7 @@
                             <v-list-item
                             v-for="(item, i) in projects"
                             :key="i"
-                            v-on:click="selectProject(item)"
+                            v-on:click="selectedProject = item"
                             >
                             <v-list-item-icon>
                                 <v-icon v-text="item.id"></v-icon>
@@ -80,7 +80,7 @@
                             <v-list-item
                             v-for="(item, i) in emploies"
                             :key="i"
-                            v-on:click="selectEmployee(item)"
+                            v-on:click="selectedEmployee = item"
                             >
                             <v-list-item-icon>
                                 <v-icon v-text="item.id"></v-icon>
