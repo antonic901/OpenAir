@@ -16,7 +16,7 @@ public interface AbsenceRepository extends JpaRepository<Absence, Long> {
             "where a.employee_id = ?1 AND " +
             "(a.status like 'APPROVED' OR a.status like 'INPROCESS') " +
             "AND (?2 <= a.end_time) AND (a.start_time <= ?3) ", nativeQuery = true)
-    Optional<Absence> findAllByEmployeeIdAndStatus(Long id, LocalDateTime start, LocalDateTime end);
+    List<Absence> findAllByEmployeeIdAndStatus(Long id, LocalDateTime start, LocalDateTime end);
 
     List<Absence> findAllByAdminId(Long id);
 

@@ -67,7 +67,7 @@ class AbsenceServiceTest {
         List<Absence> absences = AbsenceTestData.createAbsences();
 
         when(employeeRepository.findById(2L)).thenReturn(Optional.of(employee));
-        when(absenceRepository.findAllByEmployeeIdAndStatus(2L, absences.get(2).getPeriod().getStartTime(), absences.get(2).getPeriod().getEndTime())).thenReturn(Optional.of(absences.get(1)));
+        when(absenceRepository.findAllByEmployeeIdAndStatus(2L, absences.get(2).getPeriod().getStartTime(), absences.get(2).getPeriod().getEndTime())).thenReturn(absences);
         when(absenceRepository.save(any(Absence.class))).thenReturn(new Absence());
 
         assertThrows(NotFoundException.class, () -> absenceService.add(absences.get(1), 3L), "User not found");

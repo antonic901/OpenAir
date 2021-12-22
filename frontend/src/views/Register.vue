@@ -127,7 +127,7 @@ export default {
                 department: null,
                 salary: 0
             },
-            departments: ['JAVA', 'dotNET', 'JAVASCRIPT']
+            departments: ['JAVA', 'DOT_NET', 'JAVASCRIPT']
             ,
             usernameRules: [
               v => !!v || 'Username is required',
